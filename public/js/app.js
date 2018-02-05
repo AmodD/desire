@@ -24446,7 +24446,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "panel panel-default" }, [
           _c("div", { staticClass: "panel-heading" }, [
-            _vm._v("Parsed Message")
+            _vm._v("ISO 8583 Message HEX")
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "panel-body" }, [

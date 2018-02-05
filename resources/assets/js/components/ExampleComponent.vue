@@ -42,7 +42,7 @@
     </button>
   </div> 
 		<div class="panel panel-default">
-		<div class="panel-heading">ISO Message HEX</div>
+		<div class="panel-heading">ISO 8583 Message HEX</div>
                     <div class="panel-body">
 			    {{ msg8583 }}
                     </div>
