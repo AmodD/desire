@@ -10,7 +10,18 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+//use kaperys\financial\src\Cache ;
 
 Route::get('/', function () {
     return view('home');
 });
+Route::get('/test', function() {
+	return ['shrihan', 'soham', 'baby' , 'vivaan'];
+	//
+	//
+});
+
+Route::get('/pack', 'TransactionsController@pack');
+Route::get('/unpack', 'TransactionsController@unpack');
+
+Route::get('/analyze', 'TransactionsController@analyze');
