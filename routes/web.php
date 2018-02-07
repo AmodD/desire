@@ -25,3 +25,4 @@ Route::get('/pack', 'TransactionsController@pack');
 Route::get('/unpack', 'TransactionsController@unpack');
 
 Route::get('/analyze', 'TransactionsController@analyze');
+Route::get('/generate', 'TransactionsController@generate');

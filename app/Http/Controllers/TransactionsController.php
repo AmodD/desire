@@ -4,7 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\JAK8583;
+
 use Exception;
+use DB;
+
+use App\Data;
+use App\Field;
+use App\Transaction;
 
 use Kaperys\Financial\Financial;
 use Kaperys\Financial\Cache\CacheManager;
@@ -17,11 +23,96 @@ class TransactionsController extends Controller
 {
 	public function analyze(Request $request)
 	{
-		return $this->pack($request);
+		$mti = "1200"; 
+		$dataElement = collect([]);
+		$dataElement->put("pan",$request->pan);
+		$dataElement->put("amnt",$request->amount);
+		$dataElement->put("country",$request->aqcountry);
+		$dataElement->put("currency",$request->currency);
+		$dataElement->put("de48",$request->prmsg6);
+
+		return "done";
+			
+		return $this->pack($mti,$dataElement);
+	}
+	
+	public function generate()
+	{
+		//return "abc";
+		$dataElement = collect([]);
+		$output = collect([]);
+
+//		$panA = mt_rand(100000000000000,999999999999999);
+//		$panB = mt_rand(1,9999);
+		//		$pan = $panA.$panB;
+		//
+
+		$mti = "1200"; 
+		$faker = \Faker\Factory::create('en_US');
+
+		$pan = $faker->creditCardNumber;
+		$amnt = str_pad(rand(100,99999), 12, '0', STR_PAD_LEFT);
+		$country = rand(100,999);
+		$currency = rand(100,999);
+		$de48 = $faker->word;
+
+
+
+		//dd($faker->creditCardNumber,$faker->numberBetween($min = 100, $max = 9000),$pan,$panA,$panB,$amntrand,$amntcount,str_random(rand(1,999)));
+
+		$dataElement->put("pan",$pan);
+		$dataElement->put("amnt",$amnt);
+		$dataElement->put("country",$country);
+		$dataElement->put("currency",$currency);
+		$dataElement->put("de48",$de48);
+
+		$isoMessage = $this->pack($mti,$dataElement);
+
+		if(!$isoMessage) return 'false'; 
+
+		$transaction = new Transaction();
+
+		$transaction->message = $isoMessage;
+
+		$transaction->save();
+		
+		$jak = new JAK8583();
+		$jak->addISO($isoMessage);
+
+	    	DB::table('data')->insert([
+		            ['transaction_id' => $transaction->id  , 'field_id' => 0 ,  'value' => $mti],
+		            ['transaction_id' => $transaction->id  , 'field_id' => 1 ,  'value' => $jak->getBitmap()],
+		            ['transaction_id' => $transaction->id  , 'field_id' => 2 ,  'value' => $pan],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 4 ,  'value' => $amnt],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 19 ,  'value' => $country],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 48 ,  'value' => $de48],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 49 ,  'value' => $currency]
+		    ]);
+
+
+		$transactions = Transaction::with('data')->take(10)->orderby('id','desc')->get();
+
+		return $transactions;
+
+		$output->put('msg',$isoMessage);
+		$output->put('bitmap',$jak->getBitmap());
+		$output->put('id',$transaction->id);
+		$output->put('time',$transaction->created_at);
+
+
+//get parsing result
+//print 'ISO: '. $isoMessage. "\n";
+//print 'MTI: '. $jak->getMTI(). "\n";
+//print 'Bitmap: '. $jak->getBitmap(). "\n";
+//print 'Data Element: '; print_r($jak->getData());
+//dd($isoMessage,$jak->getMTI(),bin2hex('0200'),str_pad(bin2hex('0200'), 8, 0, STR_PAD_LEFT));
+//dd($isoMessage,$jak,$jak->getMTI(),$jak->getBitmap(),$jak->getData());
+
+		return $output;
 	}
 
 
-	public function pack($request)
+	public function pack($mti,$dataElement)
 	{
 
 //		return 'in pack';
@@ -33,26 +124,27 @@ $cacheManager->generateSchemaCache(new ISO8583());
 /** @var ISO8583 $schemaManager */
 $schemaManager = new SchemaManager(new ISO8583(), $cacheManager);
 
-$schemaManager->setPan($request->pan);
-$schemaManager->setAmountTransaction($request->amount);
-$schemaManager->setCountryCodeAcquiring($request->aqcountry);
-$schemaManager->setCurrencyCodeTransaction($request->currency);
-$schemaManager->setPrivateReserved6($request->prmsg6);
+$schemaManager->setPan($dataElement->get('pan'));
+$schemaManager->setAmountTransaction($dataElement->get('amnt'));
+$schemaManager->setCountryCodeAcquiring($dataElement->get('country'));
+$schemaManager->setCurrencyCodeTransaction($dataElement->get('currency'));
+$schemaManager->setAdditionalDataPrivate($dataElement->get('de48'));
 
 
 
 /** @var MessagePacker $message */
 $message = (new Financial($cacheManager))->pack($schemaManager);
 
-$message->setHeaderLength(2);
-$message->setMti('0200');
+$message->setHeaderLength(0);
+$message->setMti($mti);
 
-
+//dd($message);
 	return $message->generate();
 
 } catch (Exception $e) {
 	
-	return $e->getmessage();
+	//	return $e->getmessage();
+	return false ;
 
 }
 

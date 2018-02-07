@@ -1690,6 +1690,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -1703,7 +1720,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			amount: '',
 			aqcountry: '',
 			msgnumber: 0,
-			prmsg6: ''
+			prmsg6: '',
+			msgdid: 0,
+			msgtime: '',
+			results: []
+
 		};
 	},
 	computed: {
@@ -1712,8 +1733,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		}
 	},
 	methods: {
-		analyze: function analyze() {
+		generate: function generate() {
 			var _this = this;
+
+			console.log("to generate ");
+			axios.get('/generate').then(function (response) {
+				return _this.results = response.data;
+			})
+			//			.then(function (response) {
+			//			    console.log(response);
+			//		    this.msg8583 = response.data.msg;
+			//			    this.msgid = response.data.id;
+			//		    this.msgtime = response.data.time;
+			//		    this.bitmap = response.data.bitmap;
+			//	this.results = response.data ;
+			//			  })
+			.catch(function (error) {
+				console.log(error);
+			});
+		},
+		analyze: function analyze() {
+			var _this2 = this;
 
 			console.log("to analyze " + this.msg8583);
 			axios.get('/analyze?pan=' + this.pan + '&currency=' + this.currency + '&prmsg6=' + this.prmsg6 + '&amount=' + this.amount + '&aqcountry=' + this.aqcountry)
@@ -1722,7 +1762,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			//			    this.msg8583 = response.data;
 			//			  })
 			.then(function (response) {
-				return _this.msg8583 = response.data;
+				return _this2.msg8583 = response.data;
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -24416,7 +24456,7 @@ var render = function() {
               }
             ],
             staticClass: "input",
-            attrs: { type: "text", placeholder: "Private Reserved Message" },
+            attrs: { type: "text", placeholder: "Additional Data Private" },
             domProps: { value: _vm.prmsg6 },
             on: {
               input: function($event) {
@@ -24432,30 +24472,124 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-        _c("div", { staticClass: "panel-block" }, [
-          _c(
-            "button",
-            {
-              staticClass: "button is-link is-outlined",
-              on: { click: _vm.analyze }
-            },
-            [_vm._v("\n      click to analyze\n    ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel panel-default" }, [
-          _c("div", { staticClass: "panel-heading" }, [
-            _vm._v("ISO 8583 Message HEX")
+      _c(
+        "div",
+        { staticClass: "col-md-8 col-md-offset-2" },
+        [
+          _c("div", { staticClass: "panel-block" }, [
+            _c(
+              "button",
+              {
+                staticClass: "button is-link is-outlined",
+                on: { click: _vm.analyze }
+              },
+              [_vm._v("\n      click to analyze\n    ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "button is-danger is-outlined",
+                on: { click: _vm.generate }
+              },
+              [_vm._v("\n      generate and see last 10 transactions\n    ")]
+            )
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "panel-body" }, [
-            _vm._v(
-              "\n\t\t\t    " + _vm._s(_vm.msg8583) + "\n                    "
-            )
-          ])
-        ])
-      ])
+          _c("div", [_vm._v(_vm._s(_vm.msg8583))]),
+          _vm._v(" "),
+          _vm._l(_vm.results, function(result) {
+            return _c("div", { staticClass: "box" }, [
+              _c(
+                "div",
+                { staticClass: "content" },
+                [
+                  _c("p", [
+                    _c("strong", [_vm._v("ID")]),
+                    _vm._v(" "),
+                    _c("small", [_vm._v(_vm._s(result.id))]),
+                    _vm._v(" "),
+                    _c("strong", [_vm._v("Time")]),
+                    _vm._v(" "),
+                    _c("small", [_vm._v(_vm._s(result.created_at))]),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("strong", [_vm._v("ISO8385 message")]),
+                    _c("small", [_vm._v("  " + _vm._s(result.message))])
+                  ]),
+                  _vm._l(result.data, function(detail) {
+                    return _c("div", [
+                      detail.field_id == 1
+                        ? _c("div", [
+                            _c("strong", [_vm._v("Vector")]),
+                            _vm._v(" "),
+                            _c("small", [_vm._v(_vm._s(detail.value))]),
+                            _vm._v(" "),
+                            _vm._m(5, true, false)
+                          ])
+                        : _vm._e(),
+                      _c("p", [
+                        detail.field_id == 0
+                          ? _c("span", [
+                              _c("strong", [_vm._v("MTI")]),
+                              _vm._v(" "),
+                              _c("small", [_vm._v(_vm._s(detail.value))])
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        detail.field_id == 2
+                          ? _c("span", [
+                              _c("strong", [_vm._v("PAN")]),
+                              _vm._v(" "),
+                              _c("small", [_vm._v(_vm._s(detail.value))])
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        detail.field_id == 4
+                          ? _c("span", [
+                              _c("strong", [_vm._v("Amount")]),
+                              _vm._v(" "),
+                              _c("small", [_vm._v(_vm._s(detail.value))])
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        detail.field_id == 19
+                          ? _c("span", [
+                              _c("strong", [_vm._v("Country")]),
+                              _vm._v(" "),
+                              _c("small", [_vm._v(_vm._s(detail.value))])
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        detail.field_id == 48
+                          ? _c("span", [
+                              _c("strong", [_vm._v("Additional Private Data")]),
+                              _vm._v(" "),
+                              _c("small", [_vm._v(_vm._s(detail.value))])
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        detail.field_id == 49
+                          ? _c("span", [
+                              _c("strong", [_vm._v("Currency")]),
+                              _vm._v(" "),
+                              _c("small", [_vm._v(_vm._s(detail.value))])
+                            ])
+                          : _vm._e()
+                      ])
+                    ])
+                  }),
+                  _vm._v(" "),
+                  _c("p")
+                ],
+                2
+              )
+            ])
+          })
+        ],
+        2
+      )
     ])
   ])
 }
@@ -24497,7 +24631,17 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 121")])
+      _c("label", { staticClass: "label" }, [_vm._v("Bit 48")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", [
+      _c("strong", [_vm._v("Score")]),
+      _vm._v(" "),
+      _c("small", [_vm._v("100")])
     ])
   }
 ]

@@ -21,32 +21,49 @@
 			<input class="input" type="text"  v-model="currency" placeholder="Currency Code of Transaction"></div></div>
 	        </div>			  
 		<div class="field is-horizontal">
-		  <div class="field-label is-normal"> <label class="label">Bit 121</label> </div>
+		  <div class="field-label is-normal"> <label class="label">Bit 48</label> </div>
 	          <div class="field-body"><div class="field">
-		        <input class="input" type="text"  v-model="prmsg6" placeholder="Private Reserved Message"></div></div>
+	  			  <input class="input" type="text"  v-model="prmsg6" placeholder="Additional Data Private"></div></div>
 	        </div>			  
 
 
 
-
-
-
-
-
-
-        <div class="row">
+       <div class="row">
             <div class="col-md-8 col-md-offset-2">
                <div class="panel-block">
     <button v-on:click="analyze" class="button is-link is-outlined">
       click to analyze
     </button>
-  </div> 
-		<div class="panel panel-default">
-		<div class="panel-heading">ISO 8583 Message HEX</div>
-                    <div class="panel-body">
-			    {{ msg8583 }}
-                    </div>
-	  	</div>
+    <button v-on:click="generate" class="button is-danger is-outlined">
+      generate and see last 10 transactions
+    </button>
+	       </div>
+
+	        <div>{{ msg8583 }}</div>	       
+
+<div class="box" v-for="result in results">
+	<div class="content">
+	        <p>
+		<strong>ID</strong> <small>{{ result.id }}</small>
+		<strong>Time</strong> <small>{{ result.created_at }}</small>
+	          <br>
+		  <strong>ISO8385 message</strong><small>  {{ result.message }}</small>
+		  
+		<div v-for="detail in result.data">
+			<div v-if="detail.field_id == 1"><strong>Vector</strong> <small>{{ detail.value }}</small> <span><strong>Score</strong> <small>100</small></span></div><p>
+			<span v-if="detail.field_id == 0"><strong>MTI</strong> <small>{{ detail.value }}</small></span>
+			<span v-if="detail.field_id == 2"><strong>PAN</strong> <small>{{ detail.value }}</small></span>
+			<span v-if="detail.field_id == 4"><strong>Amount</strong> <small>{{ detail.value }}</small></span>
+			<span v-if="detail.field_id == 19"><strong>Country</strong> <small>{{ detail.value }}</small></span>
+			<span v-if="detail.field_id == 48"><strong>Additional Private Data</strong> <small>{{ detail.value }}</small></span>
+			<span v-if="detail.field_id == 49"><strong>Currency</strong> <small>{{ detail.value }}</small></span></p>
+		</div>	
+	        </p>
+      </div>
+
+ </div>	 
+
+
 	    </div>
         </div>
 	</div>
@@ -65,7 +82,11 @@
 			amount : '',
 			aqcountry : '',
 			msgnumber : 0,
-			prmsg6 : ''
+			prmsg6 : '',
+			msgdid : 0,
+			msgtime : '',
+			results : []
+
 		}
 	},	 
 	computed : {
@@ -74,6 +95,22 @@
 		}
 	},
 	methods : {
+		generate(){
+			console.log("to generate ");
+			axios.get('/generate')
+			.then(response => this.results = response.data)
+//			.then(function (response) {
+//			    console.log(response);
+	//		    this.msg8583 = response.data.msg;
+//			    this.msgid = response.data.id;
+	//		    this.msgtime = response.data.time;
+	//		    this.bitmap = response.data.bitmap;
+//	this.results = response.data ;
+//			  })
+			.catch(function (error) {
+			    console.log(error);
+			  });
+		},
 		analyze(){
 			console.log("to analyze "+this.msg8583);
 			axios.get('/analyze?pan='+this.pan+'&currency='+this.currency+'&prmsg6='+this.prmsg6+'&amount='+this.amount+'&aqcountry='+this.aqcountry)

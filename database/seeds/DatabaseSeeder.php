@@ -11,6 +11,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+	// $this->call(UsersTableSeeder::class);
+	    DB::table('fields')->insert([
+		            ['id' => 0 , 'element' => 'MTI'],
+		            ['id' => 1 , 'element' => 'BitMap'],
+		            ['id' => 2 , 'element' => 'Primary account number (PAN)'],
+			    ['id' => 4 ,  'element' => 'Amount, transaction'],
+			    ['id' => 19 , 'element' => 'Acquiring institution country code'],
+			    ['id' => 48 , 'element' => 'Additional data - private'],
+			    ['id' => 49 , 'element' => 'Currency code, transaction']
+
+		    ]);
     }
 }
