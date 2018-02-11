@@ -12,6 +12,8 @@ use App\Data;
 use App\Field;
 use App\Transaction;
 
+use Phpml\Classification\MLPClassifier;
+
 use Kaperys\Financial\Financial;
 use Kaperys\Financial\Cache\CacheManager;
 use Kaperys\Financial\Message\Schema\ISO8583;
@@ -21,54 +23,97 @@ use Kaperys\Financial\Message\Unpacker\MessageUnpacker;
 
 class TransactionsController extends Controller
 {
+	public function mldemo(Request $request)
+	{
+		//$mlp = new MLPClassifier(4, [2], ['name', 'place', 'things']);
+		$mlp = new MLPClassifier(1, [2], ['pass', 'fail']);
+
+		$mlp->train(
+    $samples = [[0.7,0.9,0.6,0.55,0.45], [0.1,0.2,0.4,0.25,0.30,0.33]],
+    $targets = ['pass', 'fail']
+);
+
+//$mlp->setLearningRate(0.1);
+
+return $mlp->predict([0.39]);
+	
+
+	}
+
 	public function analyze(Request $request)
 	{
 		$mti = "1200"; 
 		$dataElement = collect([]);
+
+		$pan =  $request->pan;
+
 		$dataElement->put("pan",$request->pan);
 		$dataElement->put("amnt",$request->amount);
 		$dataElement->put("country",$request->aqcountry);
 		$dataElement->put("currency",$request->currency);
 		$dataElement->put("de48",$request->prmsg6);
-
-		return "done";
+		$dataElement->put("procode",$request->procode);
+		$dataElement->put("posem",$request->posem);
+		$dataElement->put("poscc",$request->poscc);
+		$dataElement->put("chipdata",$request->chipdata);
+		$dataElement->put("addposdata",$request->addposdata);
 			
-		return $this->pack($mti,$dataElement);
+		$isoMessage = $this->pack($mti,$dataElement);
+
+		if (strpos($isoMessage, 'Error') !== false) {
+		    return $isoMessage;
+		}
+		else{
+			return $this->store($mti,$isoMessage,$dataElement);
+		}	
 	}
 	
 	public function generate()
 	{
-		//return "abc";
 		$dataElement = collect([]);
 		$output = collect([]);
-
-//		$panA = mt_rand(100000000000000,999999999999999);
-//		$panB = mt_rand(1,9999);
-		//		$pan = $panA.$panB;
-		//
-
+		
 		$mti = "1200"; 
 		$faker = \Faker\Factory::create('en_US');
 
 		$pan = $faker->creditCardNumber;
-		$amnt = str_pad(rand(100,99999), 12, '0', STR_PAD_LEFT);
-		$country = rand(100,999);
-		$currency = rand(100,999);
+		$amnt = str_pad(rand(100,99999), 12, '0', STR_PAD_LEFT);	
+		$arrayCountry = [601, 715, 807, 950, 785, 963];
+		$country = array_random($arrayCountry);
+		$currency = mt_rand(611,999);
 		$de48 = $faker->word;
+		$arrayProCode = [200004, 315007, 267007, 159008, 244007, 576009];
+		$procode = array_random($arrayProCode);
+		$posem = mt_rand(666,999);
+		$poscc = "99";
+		$chipdata = $faker->word;
+		$addposdata = $faker->word;
 
-
-
-		//dd($faker->creditCardNumber,$faker->numberBetween($min = 100, $max = 9000),$pan,$panA,$panB,$amntrand,$amntcount,str_random(rand(1,999)));
-
+		
 		$dataElement->put("pan",$pan);
 		$dataElement->put("amnt",$amnt);
 		$dataElement->put("country",$country);
 		$dataElement->put("currency",$currency);
 		$dataElement->put("de48",$de48);
+		$dataElement->put("procode",$procode);
+		$dataElement->put("posem",$posem);
+		$dataElement->put("poscc",$poscc);
+		$dataElement->put("chipdata",$chipdata);
+		$dataElement->put("addposdata",$addposdata);
 
 		$isoMessage = $this->pack($mti,$dataElement);
+		
+		if (strpos($isoMessage, 'Error') !== false) {
+			return $isoMessage;
+		}
+		else{
+			return $this->store($mti,$isoMessage,$dataElement);
+		}	
 
-		if(!$isoMessage) return 'false'; 
+	}
+
+	public function store($mti,$isoMessage,$dataElement)
+	{
 
 		$transaction = new Transaction();
 
@@ -82,11 +127,16 @@ class TransactionsController extends Controller
 	    	DB::table('data')->insert([
 		            ['transaction_id' => $transaction->id  , 'field_id' => 0 ,  'value' => $mti],
 		            ['transaction_id' => $transaction->id  , 'field_id' => 1 ,  'value' => $jak->getBitmap()],
-		            ['transaction_id' => $transaction->id  , 'field_id' => 2 ,  'value' => $pan],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 4 ,  'value' => $amnt],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 19 ,  'value' => $country],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 48 ,  'value' => $de48],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 49 ,  'value' => $currency]
+		            ['transaction_id' => $transaction->id  , 'field_id' => 2 ,  'value' => $dataElement->get("pan")],
+		            ['transaction_id' => $transaction->id  , 'field_id' => 3 ,  'value' => $dataElement->get("procode")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 4 ,  'value' => $dataElement->get("amnt")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 19 ,  'value' => $dataElement->get("country")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 22 ,  'value' => $dataElement->get("posem")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 25 ,  'value' => $dataElement->get("poscc")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 48 ,  'value' => $dataElement->get("de48")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 49 ,  'value' => $dataElement->get("currency")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 55 ,  'value' => $dataElement->get("chipdata")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 60 ,  'value' => $dataElement->get("addposdata")]
 		    ]);
 
 
@@ -94,28 +144,13 @@ class TransactionsController extends Controller
 
 		return $transactions;
 
-		$output->put('msg',$isoMessage);
-		$output->put('bitmap',$jak->getBitmap());
-		$output->put('id',$transaction->id);
-		$output->put('time',$transaction->created_at);
 
-
-//get parsing result
-//print 'ISO: '. $isoMessage. "\n";
-//print 'MTI: '. $jak->getMTI(). "\n";
-//print 'Bitmap: '. $jak->getBitmap(). "\n";
-//print 'Data Element: '; print_r($jak->getData());
-//dd($isoMessage,$jak->getMTI(),bin2hex('0200'),str_pad(bin2hex('0200'), 8, 0, STR_PAD_LEFT));
-//dd($isoMessage,$jak,$jak->getMTI(),$jak->getBitmap(),$jak->getData());
-
-		return $output;
 	}
 
 
 	public function pack($mti,$dataElement)
 	{
 
-//		return 'in pack';
 
 try {
 $cacheManager = new CacheManager();
@@ -125,10 +160,15 @@ $cacheManager->generateSchemaCache(new ISO8583());
 $schemaManager = new SchemaManager(new ISO8583(), $cacheManager);
 
 $schemaManager->setPan($dataElement->get('pan'));
+$schemaManager->setProcessingCode($dataElement->get('procode'));
 $schemaManager->setAmountTransaction($dataElement->get('amnt'));
 $schemaManager->setCountryCodeAcquiring($dataElement->get('country'));
-$schemaManager->setCurrencyCodeTransaction($dataElement->get('currency'));
+$schemaManager->setPointOfServiceEntryMode($dataElement->get('posem'));
+$schemaManager->setPointOfServiceCodeCondition($dataElement->get('poscc'));
 $schemaManager->setAdditionalDataPrivate($dataElement->get('de48'));
+$schemaManager->setCurrencyCodeTransaction($dataElement->get('currency'));
+$schemaManager->setIsoReserved1($dataElement->get('chipdata'));
+$schemaManager->setPrivateReserved1($dataElement->get('addposdata'));
 
 
 
@@ -143,8 +183,7 @@ $message->setMti($mti);
 
 } catch (Exception $e) {
 	
-	//	return $e->getmessage();
-	return false ;
+		return 'Error : '.$e->getmessage();
 
 }
 

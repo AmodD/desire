@@ -1,40 +1,19 @@
 <template>
-	<div>	
-		<div class="field is-horizontal">
-		  <div class="field-label is-normal"> <label class="label">Bit 2</label> </div>
-	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="pan"  placeholder="Permanent Account Number"></div></div>
-	        </div>			  
-		<div class="field is-horizontal">
-		  <div class="field-label is-normal"> <label class="label">Bit 4</label> </div>
-	          <div class="field-body"><div class="field">
-		        <input class="input"  v-model="amount" type="text" placeholder="Amount"></div></div>
-	        </div>			  
-		<div class="field is-horizontal">
-		  <div class="field-label is-normal"> <label class="label">Bit 19</label> </div>
-	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="aqcountry"  placeholder="Acquiring Instituition Country Code"></div></div>
-	        </div>			  
-		<div class="field is-horizontal">
-		  <div class="field-label is-normal"> <label class="label">Bit 49</label> </div>
-	          <div class="field-body"><div class="field">
-			<input class="input" type="text"  v-model="currency" placeholder="Currency Code of Transaction"></div></div>
-	        </div>			  
-		<div class="field is-horizontal">
-		  <div class="field-label is-normal"> <label class="label">Bit 48</label> </div>
-	          <div class="field-body"><div class="field">
-	  			  <input class="input" type="text"  v-model="prmsg6" placeholder="Additional Data Private"></div></div>
-	        </div>			  
+<div>
+
+
+
+
 
 
 
        <div class="row">
             <div class="col-md-8 col-md-offset-2">
                <div class="panel-block">
-    <button v-on:click="analyze" class="button is-link is-outlined">
+    <button v-on:click="analyze" class="button is-link is-outlined disabled">
       click to analyze
     </button>
-    <button v-on:click="generate" class="button is-danger is-outlined">
+    <button v-on:click="generate" class="button is-danger is-outlined disabled">
       generate and see last 10 transactions
     </button>
 	       </div>
@@ -63,6 +42,20 @@
 
  </div>	 
 
+ <h2 class="title">Machine Learning Demo</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	    </div>
         </div>
@@ -79,14 +72,19 @@
 			pan : '',
 			currency : '',
 			procode : '',
+			posem : '',
+			poscc : '',
+			chipdata : '',
+			addposdata : '',
 			amount : '',
 			aqcountry : '',
 			msgnumber : 0,
 			prmsg6 : '',
 			msgdid : 0,
 			msgtime : '',
-			results : []
-
+			results : [],
+			pass : [0.07,0.12],
+			fail : [0.98,0.84]
 		}
 	},	 
 	computed : {
@@ -113,7 +111,7 @@
 		},
 		analyze(){
 			console.log("to analyze "+this.msg8583);
-			axios.get('/analyze?pan='+this.pan+'&currency='+this.currency+'&prmsg6='+this.prmsg6+'&amount='+this.amount+'&aqcountry='+this.aqcountry)
+			axios.get('/analyze?pan='+this.pan+'&currency='+this.currency+'&prmsg6='+this.prmsg6+'&amount='+this.amount+'&aqcountry='+this.aqcountry+'&procode='+this.procode+'&posem='+this.posem+'&poscc='+this.poscc+'&chipdata'+this.chipdata+'&addposdata='+this.addposdata)
 //			.then(function (response) {
 //			    console.log(response);
 //			    this.msg8583 = response.data;

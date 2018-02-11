@@ -1700,13 +1700,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -1717,14 +1710,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			pan: '',
 			currency: '',
 			procode: '',
+			posem: '',
+			poscc: '',
+			chipdata: '',
+			addposdata: '',
 			amount: '',
 			aqcountry: '',
 			msgnumber: 0,
 			prmsg6: '',
 			msgdid: 0,
 			msgtime: '',
-			results: []
-
+			results: [],
+			pass: [0.07, 0.12],
+			fail: [0.98, 0.84]
 		};
 	},
 	computed: {
@@ -1756,7 +1754,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var _this2 = this;
 
 			console.log("to analyze " + this.msg8583);
-			axios.get('/analyze?pan=' + this.pan + '&currency=' + this.currency + '&prmsg6=' + this.prmsg6 + '&amount=' + this.amount + '&aqcountry=' + this.aqcountry)
+			axios.get('/analyze?pan=' + this.pan + '&currency=' + this.currency + '&prmsg6=' + this.prmsg6 + '&amount=' + this.amount + '&aqcountry=' + this.aqcountry + '&procode=' + this.procode + '&posem=' + this.posem + '&poscc=' + this.poscc + '&chipdata' + this.chipdata + '&addposdata=' + this.addposdata)
 			//			.then(function (response) {
 			//			    console.log(response);
 			//			    this.msg8583 = response.data;
@@ -1805,6 +1803,284 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		this.txnSpec = isopack.validateMessage();
 		console.log(isopack.validateMessage());
 		this.bitmap = isopack.getBmpsBinary();
+	}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/create.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+
+	data: function data() {
+		return {
+			txnSpec: false,
+			bitmap: '',
+			msg8583: '',
+			pan: '',
+			currency: '',
+			procode: '',
+			posem: '',
+			poscc: '',
+			chipdata: '',
+			addposdata: '',
+			amount: '',
+			aqcountry: '',
+			msgnumber: 0,
+			prmsg6: '',
+			msgdid: 0,
+			msgtime: '',
+			results: [],
+			pass: [0.07, 0.12],
+			fail: [0.98, 0.84],
+			input: ''
+		};
+	},
+	computed: {
+		txnSpecValue: function txnSpecValue() {
+			return 'This is a ' + this.txnSpec + ' transaction message';
+		},
+		output: function output() {
+			if (this.input.includes('Error')) return this.msg8583 = this.input;else {
+				this.results = this.input;
+				return "";
+			}
+		}
+	},
+	mounted: function mounted() {
+		console.log('Create Component mounted.');
+	},
+
+	methods: {
+		analyze: function analyze() {
+			var _this = this;
+
+			//console.log("to analyze "+this.msg8583);
+			axios.get('/analyze?pan=' + this.pan + '&currency=' + this.currency + '&prmsg6=' + this.prmsg6 + '&amount=' + this.amount + '&aqcountry=' + this.aqcountry + '&procode=' + this.procode + '&posem=' + this.posem + '&poscc=' + this.poscc + '&chipdata=' + this.chipdata + '&addposdata=' + this.addposdata)
+			//			.then(function (response) {
+			//			    console.log(response);
+			//
+			//			    if(response.data.includes('Error'))  this.msg8583 = response.data;
+			//			    else this.results = response.data;
+			//			  })
+			.then(function (response) {
+				return _this.input = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		}
+	}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/demo.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('Demo Component mounted.');
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/generate.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			results: []
+		};
+	},
+	mounted: function mounted() {
+		console.log('Generate Component mounted.');
+	},
+
+	methods: {
+		generate: function generate() {
+			var _this = this;
+
+			console.log("to generate ");
+			axios.get('/generate').then(function (response) {
+				return _this.results = response.data;
+			})
+			//			.then(function (response) {
+			//			    console.log(response);
+			//		    this.msg8583 = response.data.msg;
+			//			    this.msgid = response.data.id;
+			//		    this.msgtime = response.data.time;
+			//		    this.bitmap = response.data.bitmap;
+			//	this.results = response.data ;
+			//			  })
+			.catch(function (error) {
+				console.log(error);
+			});
+		}
 	}
 });
 
@@ -24307,6 +24583,206 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-18ab90fa\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/demo.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-18ab90fa", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4627780c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/generate.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+          _c("div", { staticClass: "panel-block" }, [
+            _c(
+              "button",
+              {
+                staticClass: "button is-danger is-outlined ",
+                on: { click: _vm.generate }
+              },
+              [_vm._v("\n      generate and see last 10 transactions\n    ")]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.results, function(result) {
+        return _c("div", { staticClass: "box" }, [
+          _c(
+            "div",
+            { staticClass: "content" },
+            [
+              _c("p", [
+                _c("strong", [_vm._v("ID")]),
+                _vm._v(" "),
+                _c("small", [_vm._v(_vm._s(result.id))]),
+                _vm._v(" "),
+                _c("strong", [_vm._v("Time")]),
+                _vm._v(" "),
+                _c("small", [_vm._v(_vm._s(result.created_at))]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("strong", [_vm._v("ISO8385 message")]),
+                _c("small", [_vm._v("  " + _vm._s(result.message))])
+              ]),
+              _vm._l(result.data, function(detail) {
+                return _c("div", [
+                  detail.field_id == 1
+                    ? _c("div", [
+                        _c("strong", [_vm._v("Vector")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))]),
+                        _vm._v(" "),
+                        _vm._m(0, true, false)
+                      ])
+                    : _vm._e(),
+                  _c("p", [
+                    detail.field_id == 0
+                      ? _c("span", [
+                          _c("strong", [_vm._v("MTI")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 2
+                      ? _c("span", [
+                          _c("strong", [_vm._v("PAN")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 3
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Processing Code")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 4
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Amount")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 19
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Country")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 22
+                      ? _c("span", [
+                          _c("strong", [_vm._v("POS Entry Mode")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 25
+                      ? _c("span", [
+                          _c("strong", [_vm._v("POS Condition Code")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 48
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Additional Private Data")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 49
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Currency")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 55
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Chip Data")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 60
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Additional POS Data")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e()
+                  ])
+                ])
+              })
+            ],
+            2
+          )
+        ])
+      })
+    ],
+    2
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", [
+      _c("strong", [_vm._v("Score")]),
+      _vm._v(" "),
+      _c("small", [_vm._v("100")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4627780c", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7168fb6a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/ExampleComponent.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24315,162 +24791,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "field is-horizontal" }, [
-      _vm._m(0, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.pan,
-                expression: "pan"
-              }
-            ],
-            staticClass: "input",
-            attrs: { type: "text", placeholder: "Permanent Account Number" },
-            domProps: { value: _vm.pan },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.pan = $event.target.value
-              }
-            }
-          })
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field is-horizontal" }, [
-      _vm._m(1, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.amount,
-                expression: "amount"
-              }
-            ],
-            staticClass: "input",
-            attrs: { type: "text", placeholder: "Amount" },
-            domProps: { value: _vm.amount },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.amount = $event.target.value
-              }
-            }
-          })
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field is-horizontal" }, [
-      _vm._m(2, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.aqcountry,
-                expression: "aqcountry"
-              }
-            ],
-            staticClass: "input",
-            attrs: {
-              type: "text",
-              placeholder: "Acquiring Instituition Country Code"
-            },
-            domProps: { value: _vm.aqcountry },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.aqcountry = $event.target.value
-              }
-            }
-          })
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field is-horizontal" }, [
-      _vm._m(3, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.currency,
-                expression: "currency"
-              }
-            ],
-            staticClass: "input",
-            attrs: {
-              type: "text",
-              placeholder: "Currency Code of Transaction"
-            },
-            domProps: { value: _vm.currency },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.currency = $event.target.value
-              }
-            }
-          })
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field is-horizontal" }, [
-      _vm._m(4, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.prmsg6,
-                expression: "prmsg6"
-              }
-            ],
-            staticClass: "input",
-            attrs: { type: "text", placeholder: "Additional Data Private" },
-            domProps: { value: _vm.prmsg6 },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.prmsg6 = $event.target.value
-              }
-            }
-          })
-        ])
-      ])
-    ]),
-    _vm._v(" "),
     _c("div", { staticClass: "row" }, [
       _c(
         "div",
@@ -24480,7 +24800,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "button is-link is-outlined",
+                staticClass: "button is-link is-outlined disabled",
                 on: { click: _vm.analyze }
               },
               [_vm._v("\n      click to analyze\n    ")]
@@ -24489,7 +24809,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "button is-danger is-outlined",
+                staticClass: "button is-danger is-outlined disabled",
                 on: { click: _vm.generate }
               },
               [_vm._v("\n      generate and see last 10 transactions\n    ")]
@@ -24526,7 +24846,7 @@ var render = function() {
                             _vm._v(" "),
                             _c("small", [_vm._v(_vm._s(detail.value))]),
                             _vm._v(" "),
-                            _vm._m(5, true, false)
+                            _vm._m(0, true, false)
                           ])
                         : _vm._e(),
                       _c("p", [
@@ -24586,7 +24906,9 @@ var render = function() {
                 2
               )
             ])
-          })
+          }),
+          _vm._v(" "),
+          _c("h2", { staticClass: "title" }, [_vm._v("Machine Learning Demo")])
         ],
         2
       )
@@ -24598,8 +24920,508 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("span", [
+      _c("strong", [_vm._v("Score")]),
+      _vm._v(" "),
+      _c("small", [_vm._v("100")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7168fb6a", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-fc03085a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/create.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(0, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.pan,
+                  expression: "pan"
+                }
+              ],
+              staticClass: "input",
+              attrs: { type: "text", placeholder: "Permanent Account Number" },
+              domProps: { value: _vm.pan },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.pan = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(1, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.procode,
+                  expression: "procode"
+                }
+              ],
+              staticClass: "input",
+              attrs: { type: "text", placeholder: "Processing Code" },
+              domProps: { value: _vm.procode },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.procode = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(2, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.amount,
+                  expression: "amount"
+                }
+              ],
+              staticClass: "input",
+              attrs: { type: "text", placeholder: "Amount" },
+              domProps: { value: _vm.amount },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.amount = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(3, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.aqcountry,
+                  expression: "aqcountry"
+                }
+              ],
+              staticClass: "input",
+              attrs: {
+                type: "text",
+                placeholder: "Acquiring Instituition Country Code"
+              },
+              domProps: { value: _vm.aqcountry },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.aqcountry = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(4, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.posem,
+                  expression: "posem"
+                }
+              ],
+              staticClass: "input",
+              attrs: {
+                type: "text",
+                placeholder: "Point of Service Entry Mode"
+              },
+              domProps: { value: _vm.posem },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.posem = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(5, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.poscc,
+                  expression: "poscc"
+                }
+              ],
+              staticClass: "input",
+              attrs: {
+                type: "text",
+                placeholder: "Point of Service Condition Code"
+              },
+              domProps: { value: _vm.poscc },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.poscc = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(6, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.prmsg6,
+                  expression: "prmsg6"
+                }
+              ],
+              staticClass: "input",
+              attrs: { type: "text", placeholder: "Additional Data Private" },
+              domProps: { value: _vm.prmsg6 },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.prmsg6 = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(7, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.currency,
+                  expression: "currency"
+                }
+              ],
+              staticClass: "input",
+              attrs: {
+                type: "text",
+                placeholder: "Currency Code of Transaction"
+              },
+              domProps: { value: _vm.currency },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.currency = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(8, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.chipdata,
+                  expression: "chipdata"
+                }
+              ],
+              staticClass: "input",
+              attrs: { type: "text", placeholder: "Chip Data" },
+              domProps: { value: _vm.chipdata },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.chipdata = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(9, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.addposdata,
+                  expression: "addposdata"
+                }
+              ],
+              staticClass: "input",
+              attrs: { type: "text", placeholder: "Additional POS Data" },
+              domProps: { value: _vm.addposdata },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.addposdata = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+          _c("div", { staticClass: "panel-block" }, [
+            _c(
+              "button",
+              {
+                staticClass: "button is-link is-outlined ",
+                on: { click: _vm.analyze }
+              },
+              [_vm._v("click to create & analyze ")]
+            ),
+            _vm._v("\n\t\t      " + _vm._s(_vm.output) + "\n\t       ")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.results, function(result) {
+        return _c("div", { staticClass: "box" }, [
+          _c(
+            "div",
+            { staticClass: "content" },
+            [
+              _c("p", [
+                _c("strong", [_vm._v("ID")]),
+                _vm._v(" "),
+                _c("small", [_vm._v(_vm._s(result.id))]),
+                _vm._v(" "),
+                _c("strong", [_vm._v("Time")]),
+                _vm._v(" "),
+                _c("small", [_vm._v(_vm._s(result.created_at))]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("strong", [_vm._v("ISO8385 message")]),
+                _c("small", [_vm._v("  " + _vm._s(result.message))])
+              ]),
+              _vm._l(result.data, function(detail) {
+                return _c("div", [
+                  detail.field_id == 1
+                    ? _c("div", [
+                        _c("strong", [_vm._v("Vector")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))]),
+                        _vm._v(" "),
+                        _vm._m(10, true, false)
+                      ])
+                    : _vm._e(),
+                  _c("p", [
+                    detail.field_id == 0
+                      ? _c("span", [
+                          _c("strong", [_vm._v("MTI")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 2
+                      ? _c("span", [
+                          _c("strong", [_vm._v("PAN")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 3
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Processing Code")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 4
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Amount")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 19
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Country")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 22
+                      ? _c("span", [
+                          _c("strong", [_vm._v("POS Entry Mode")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 25
+                      ? _c("span", [
+                          _c("strong", [_vm._v("POS Condition Code")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 48
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Additional Private Data")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 49
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Currency")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 55
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Chip Data")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    detail.field_id == 60
+                      ? _c("span", [
+                          _c("strong", [_vm._v("Additional POS Data")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))])
+                        ])
+                      : _vm._e()
+                  ])
+                ])
+              })
+            ],
+            2
+          )
+        ])
+      })
+    ],
+    2
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
       _c("label", { staticClass: "label" }, [_vm._v("Bit 2")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "field-label is-normal" }, [
+      _c("label", { staticClass: "label" }, [_vm._v("Bit 3")])
     ])
   },
   function() {
@@ -24623,7 +25445,15 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 49")])
+      _c("label", { staticClass: "label" }, [_vm._v("Bit 22")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "field-label is-normal" }, [
+      _c("label", { staticClass: "label" }, [_vm._v("Bit 25")])
     ])
   },
   function() {
@@ -24632,6 +25462,30 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
       _c("label", { staticClass: "label" }, [_vm._v("Bit 48")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "field-label is-normal" }, [
+      _c("label", { staticClass: "label" }, [_vm._v("Bit 49")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "field-label is-normal" }, [
+      _c("label", { staticClass: "label" }, [_vm._v("Bit 55")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "field-label is-normal" }, [
+      _c("label", { staticClass: "label" }, [_vm._v("Bit 60")])
     ])
   },
   function() {
@@ -24650,7 +25504,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7168fb6a", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-fc03085a", module.exports)
   }
 }
 
@@ -35434,6 +36288,9 @@ window.Vue = __webpack_require__("./node_modules/vue/dist/vue.common.js");
  */
 
 Vue.component('example-component', __webpack_require__("./resources/assets/js/components/ExampleComponent.vue"));
+Vue.component('create', __webpack_require__("./resources/assets/js/components/create.vue"));
+Vue.component('generate', __webpack_require__("./resources/assets/js/components/generate.vue"));
+Vue.component('demo', __webpack_require__("./resources/assets/js/components/demo.vue"));
 
 var app = new Vue({
   el: '#app'
@@ -35527,6 +36384,153 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-7168fb6a", Component.options)
   } else {
     hotAPI.reload("data-v-7168fb6a", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/create.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/create.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-fc03085a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/create.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/create.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-fc03085a", Component.options)
+  } else {
+    hotAPI.reload("data-v-fc03085a", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/demo.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/demo.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-18ab90fa\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/demo.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/demo.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-18ab90fa", Component.options)
+  } else {
+    hotAPI.reload("data-v-18ab90fa", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/generate.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/generate.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4627780c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/generate.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/generate.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4627780c", Component.options)
+  } else {
+    hotAPI.reload("data-v-4627780c", Component.options)
 ' + '  }
   module.hot.dispose(function (data) {
     disposed = true

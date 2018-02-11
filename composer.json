@@ -9,14 +9,16 @@
         "fideloper/proxy": "~3.3",
         "kaperys/financial": "^0.2.0",
         "laravel/framework": "5.5.*",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "~1.0",
+        "php-ai/php-ml": "^0.5.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~1.0",
         "phpunit/phpunit": "~6.0",
-	"kaperys/financial":"^0.2"
+	"kaperys/financial":"^0.2",
+	"php-ai/php-ml":"^0.5.0"
     },
     "autoload": {
         "classmap": [

@@ -16,10 +16,15 @@ class DatabaseSeeder extends Seeder
 		            ['id' => 0 , 'element' => 'MTI'],
 		            ['id' => 1 , 'element' => 'BitMap'],
 		            ['id' => 2 , 'element' => 'Primary account number (PAN)'],
+		            ['id' => 3 , 'element' => 'Processing Code'],
 			    ['id' => 4 ,  'element' => 'Amount, transaction'],
 			    ['id' => 19 , 'element' => 'Acquiring institution country code'],
+		            ['id' => 22 , 'element' => 'Point of Service Entry Mode'],
+		            ['id' => 25 , 'element' => 'POS Condition Code'],
 			    ['id' => 48 , 'element' => 'Additional data - private'],
-			    ['id' => 49 , 'element' => 'Currency code, transaction']
+			    ['id' => 49 , 'element' => 'Currency code, transaction'],
+		            ['id' => 55 , 'element' => 'Chip Data'],
+		            ['id' => 60 , 'element' => 'Additional POS Data']
 
 		    ]);
     }
