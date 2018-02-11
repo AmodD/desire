@@ -16,6 +16,7 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
 	    $table->mediumText('message');
+	    $table->smallInteger('score');
             $table->timestamps();
         });
     }

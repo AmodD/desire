@@ -1992,6 +1992,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -24590,9 +24607,26 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _vm._m(0, false, false)
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "content" }, [
+      _c("h4", [_vm._v("ML Algo")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("MLP with backpropogation")]),
+      _vm._v(" "),
+      _c("pre", [
+        _vm._v(
+          "\n$mlp = new MLPClassifier(4, [2], ['40', '80', '100', '0']);\n// 4 nodes in input layer, 2 nodes in first hidden layer and 4 possible labels.\n\n$mlp->train(\n$samples = [[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], \n\t   [0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0], \n           [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], \n\t   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],\n$targets = ['40','80','100','0']);\n\nreturn head($mlp->predict(\n\t  [[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0]]));\n\n"
+        )
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -24657,7 +24691,11 @@ var render = function() {
                         _vm._v(" "),
                         _c("small", [_vm._v(_vm._s(detail.value))]),
                         _vm._v(" "),
-                        _vm._m(0, true, false)
+                        _c("span", [
+                          _c("strong", [_vm._v("Score")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(result.score))])
+                        ])
                       ])
                     : _vm._e(),
                   _c("p", [
@@ -24760,18 +24798,7 @@ var render = function() {
     2
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", [
-      _c("strong", [_vm._v("Score")]),
-      _vm._v(" "),
-      _c("small", [_vm._v("100")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -25304,7 +25331,11 @@ var render = function() {
                         _vm._v(" "),
                         _c("small", [_vm._v(_vm._s(detail.value))]),
                         _vm._v(" "),
-                        _vm._m(10, true, false)
+                        _c("span", [
+                          _c("strong", [_vm._v("Score")]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(result.score))])
+                        ])
                       ])
                     : _vm._e(),
                   _c("p", [
@@ -25486,16 +25517,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
       _c("label", { staticClass: "label" }, [_vm._v("Bit 60")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", [
-      _c("strong", [_vm._v("Score")]),
-      _vm._v(" "),
-      _c("small", [_vm._v("100")])
     ])
   }
 ]

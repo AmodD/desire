@@ -17,7 +17,7 @@ class CreateDataTable extends Migration
 		$table->bigIncrements('id');
 		$table->integer('transaction_id');
 		$table->integer('field_id');
-		$table->string('value',250);
+		$table->string('value',250)->nullable();
 
         });
     }

@@ -25,18 +25,46 @@ class TransactionsController extends Controller
 {
 	public function mldemo(Request $request)
 	{
-		//$mlp = new MLPClassifier(4, [2], ['name', 'place', 'things']);
-		$mlp = new MLPClassifier(1, [2], ['pass', 'fail']);
+		//$mlp = new MLPClassifier(1, [2], ['pass', 'fail']);
 
-		$mlp->train(
-    $samples = [[0.7,0.9,0.6,0.55,0.45], [0.1,0.2,0.4,0.25,0.30,0.33]],
-    $targets = ['pass', 'fail']
-);
+//		$mlp->train(
+//    $samples = [[0.7,0.9,0.6,0.55,0.45], [0.1,0.2,0.4,0.25,0.30,0.33]],
+//    $targets = ['pass', 'fail']
+//);
 
 //$mlp->setLearningRate(0.1);
 
-return $mlp->predict([0.39]);
-	
+		//return $mlp->predict([0.39]);
+		//
+		//
+		//
+
+
+		$mlp = new MLPClassifier(4, [2], ['40', '80', '100', '0']);
+
+		$mlp->train(
+$samples = [[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+[0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0], 
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], 
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
+$targets = ['40',
+'80',
+'100',
+'0']
+		);
+
+return head($mlp->predict([[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0]]));
+
+
+
+$mlp = new MLPClassifier(4, [2], ['a', 'b', 'c']);
+
+$mlp->train(
+    $samples = [[1, 0, 0, 0], [0, 1, 1, 0], [1, 1, 1, 1], [0, 0, 0, 0]],
+    $targets = ['a', 'a', 'b', 'c']
+);
+
+return array_last($mlp->predict([[1, 1, 1, 1], [0, 0, 0, 0]]));
 
 	}
 
@@ -114,15 +142,18 @@ return $mlp->predict([0.39]);
 
 	public function store($mti,$isoMessage,$dataElement)
 	{
+		try{
+			$jak = new JAK8583();
+			$jak->addISO($isoMessage);
+
+		} catch (Exception $e) {
+			return 'Error : '.$e->getmessage();
+		}
 
 		$transaction = new Transaction();
-
 		$transaction->message = $isoMessage;
-
+		$transaction->score = head($this->score(($jak->getBitmap()))) ;
 		$transaction->save();
-		
-		$jak = new JAK8583();
-		$jak->addISO($isoMessage);
 
 	    	DB::table('data')->insert([
 		            ['transaction_id' => $transaction->id  , 'field_id' => 0 ,  'value' => $mti],
@@ -147,6 +178,28 @@ return $mlp->predict([0.39]);
 
 	}
 
+	public function score($vector)
+	{
+
+		$mlp = new MLPClassifier(4, [2], ['40', '80', '100', '0']);
+
+		$mlp->train(
+$samples = [[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+[0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0], 
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], 
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
+$targets = ['40',
+'80',
+'100',
+'0']
+		);
+
+		return $mlp->predict([array_map('intval', str_split($vector))]);
+
+//		array_map('intval', str_split($vector))
+
+	}
+
 
 	public function pack($mti,$dataElement)
 	{
@@ -159,18 +212,16 @@ $cacheManager->generateSchemaCache(new ISO8583());
 /** @var ISO8583 $schemaManager */
 $schemaManager = new SchemaManager(new ISO8583(), $cacheManager);
 
-$schemaManager->setPan($dataElement->get('pan'));
-$schemaManager->setProcessingCode($dataElement->get('procode'));
-$schemaManager->setAmountTransaction($dataElement->get('amnt'));
-$schemaManager->setCountryCodeAcquiring($dataElement->get('country'));
-$schemaManager->setPointOfServiceEntryMode($dataElement->get('posem'));
-$schemaManager->setPointOfServiceCodeCondition($dataElement->get('poscc'));
-$schemaManager->setAdditionalDataPrivate($dataElement->get('de48'));
-$schemaManager->setCurrencyCodeTransaction($dataElement->get('currency'));
-$schemaManager->setIsoReserved1($dataElement->get('chipdata'));
-$schemaManager->setPrivateReserved1($dataElement->get('addposdata'));
-
-
+if($dataElement->get('pan')) $schemaManager->setPan($dataElement->get('pan'));
+if($dataElement->get('procode')) $schemaManager->setProcessingCode($dataElement->get('procode'));
+if($dataElement->get('amnt')) $schemaManager->setAmountTransaction($dataElement->get('amnt'));
+if($dataElement->get('country')) $schemaManager->setCountryCodeAcquiring($dataElement->get('country'));
+if($dataElement->get('posem')) $schemaManager->setPointOfServiceEntryMode($dataElement->get('posem'));
+if($dataElement->get('poscc')) $schemaManager->setPointOfServiceCodeCondition($dataElement->get('poscc'));
+if($dataElement->get('de48')) $schemaManager->setAdditionalDataPrivate($dataElement->get('de48'));
+if($dataElement->get('currency')) $schemaManager->setCurrencyCodeTransaction($dataElement->get('currency'));
+if($dataElement->get('chipdata')) $schemaManager->setIsoReserved1($dataElement->get('chipdata'));
+if($dataElement->get('addposdata')) $schemaManager->setPrivateReserved1($dataElement->get('addposdata'));
 
 /** @var MessagePacker $message */
 $message = (new Financial($cacheManager))->pack($schemaManager);

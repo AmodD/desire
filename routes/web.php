@@ -34,8 +34,13 @@ Route::get('/mldemo', 'TransactionsController@mldemo');
 
 Route::get('/test', function() {
 
-	$var = "";
-	echo	$var  ? "Hi" : "Goodbye"  ;
+	$vector = '11000011010010011001000101';
+return 	array_map('intval', str_split($vector));
+//	return str_split($vector);
+	dd(str_split($vector));
+
+//	$var = "";
+//	echo	$var  ? "Hi" : "Goodbye"  ;
 
 	//	return ['shrihan', 'soham', 'baby' , 'vivaan'];
 });
