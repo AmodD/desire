@@ -19,6 +19,8 @@ use Kaperys\Financial\Message\Schema\SchemaManager;
 use App\Repositories\NeuralNetwork;
 use App\Repositories\JAK8583;
 
+use App\Transaction;
+
 Route::get('/', function () {
     return view('home');
 });
@@ -38,6 +40,14 @@ Route::get('/demo', function () {
 Route::get('/mldemo', 'TransactionsController@mldemo');
 
 Route::get('/test', function() {
+
+	$transactions = Transaction::with('data')->take(10)->orderby('id','desc')->get();
+
+	foreach($transactions as $transaction)
+	{
+		dd($transaction->data->get(1)->value);
+	}
+
 
 	$vector = '11000011010010011001000101';
 return 	array_map('intval', str_split($vector));

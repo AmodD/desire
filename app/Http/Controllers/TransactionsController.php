@@ -186,9 +186,11 @@ return array_last($mlp->predict([[1, 1, 1, 1], [0, 0, 0, 0]]));
 	public function score($vector)
 	{
 
-//require_once ("/Users/amodkulkarni/Projects/desireacademy/app/Repositories/NeuralNetwork.php");
+		//require_once ("/Users/amodkulkarni/Projects/desireacademy/app/Repositories/NeuralNetwork.php")
+		
+		$transactions = Transaction::with('data')->take(10)->orderby('id','desc')->get();
 
-$n = new NeuralNetwork(3, 4, 1);
+$n = new NeuralNetwork(64, 14, 1);
 $n->setVerbose(false);
 
 
@@ -202,7 +204,12 @@ $n->addTestData(array (1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
        		array (1));
 
 $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
-       		array (0));
+		array (0));
+
+foreach($transactions as $transaction)
+{
+	$n->addTestData( (array_map('intval', str_split($transaction->data->get(1)->value))),array ($transaction->score));
+}
 
 $max = 3;
 $i = 0;
