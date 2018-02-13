@@ -19,6 +19,7 @@
 		<generate></generate>
 	@elseif(Route::currentRouteName() == 'demo' )
 		<demo></demo>
+
 	@else
 <div class="content">
   <h1>POC 8385 ML</h1>
@@ -37,8 +38,6 @@
     <li></li>	
   </ul>
 </div>
-
-
 
 	@endif
 	</div>

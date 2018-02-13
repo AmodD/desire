@@ -16,6 +16,8 @@ use Kaperys\Financial\Cache\CacheManager;
 use Kaperys\Financial\Message\Schema\ISO8583;
 use Kaperys\Financial\Message\Schema\SchemaManager;
 
+use App\Repositories\NeuralNetwork;
+use App\Repositories\JAK8583;
 
 Route::get('/', function () {
     return view('home');
@@ -27,6 +29,9 @@ Route::get('/auto', function () {
     return view('home');
 })->name('auto');
 Route::get('/demo', function () {
+
+
+
     return view('home');
 })->name('demo');
 

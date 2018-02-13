@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\JAK8583;
+use App\Repositories\NeuralNetwork;
+
 
 use Exception;
 use DB;
@@ -25,6 +27,9 @@ class TransactionsController extends Controller
 {
 	public function mldemo(Request $request)
 	{
+
+
+
 		//$mlp = new MLPClassifier(1, [2], ['pass', 'fail']);
 
 //		$mlp->train(
@@ -181,6 +186,38 @@ return array_last($mlp->predict([[1, 1, 1, 1], [0, 0, 0, 0]]));
 	public function score($vector)
 	{
 
+//require_once ("/Users/amodkulkarni/Projects/desireacademy/app/Repositories/NeuralNetwork.php");
+
+$n = new NeuralNetwork(3, 4, 1);
+$n->setVerbose(false);
+
+
+$n->addTestData(array (0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+       		array (0.4));
+
+$n->addTestData(array (0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0),
+       		array (0.8));
+
+$n->addTestData(array (1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
+       		array (1));
+
+$n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+       		array (0));
+
+$max = 3;
+$i = 0;
+
+while (!($success = $n->train(1000, 0.01)) && ++$i<$max) 
+{
+
+}
+
+return  $n->calculate(array_map('intval', str_split($vector)));
+
+
+
+
+	
 		$mlp = new MLPClassifier(4, [2], ['40', '80', '100', '0']);
 
 		$mlp->train(

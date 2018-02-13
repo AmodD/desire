@@ -4,6 +4,37 @@
   <p>MLP with backpropogation</p>
   <pre>
 
+// Create a new neural network with 3 input neurons,
+// 4 hidden neurons, and 1 output neuron
+$n = new NeuralNetwork(3, 4, 1);
+$n->setVerbose(false);
+
+// Add test-data to the network. 
+// vector and score
+$n->addTestData(array (0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+       		array (0.4));
+
+$n->addTestData(array (0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0),
+       		array (0.8));
+
+$n->addTestData(array (1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
+       		array (1));
+
+$n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+       		array (0));
+
+$max = 3;
+$i = 0;
+// we try training the network for at most $max times
+while (!($success = $n->train(1000, 0.01)) && ++$i<$max) 
+{
+
+}
+
+return  $n->calculate(array_map('intval', str_split($vector)));
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
 $mlp = new MLPClassifier(4, [2], ['40', '80', '100', '0']);
 // 4 nodes in input layer, 2 nodes in first hidden layer and 4 possible labels.
 
