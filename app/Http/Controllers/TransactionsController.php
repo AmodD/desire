@@ -13,6 +13,7 @@ use DB;
 use App\Data;
 use App\Field;
 use App\Transaction;
+use App\Annmodel;
 
 use Phpml\Classification\MLPClassifier;
 
@@ -28,48 +29,32 @@ class TransactionsController extends Controller
 	public function mldemo(Request $request)
 	{
 
+		$n = new NeuralNetwork(3, 6, 1);
+		$n->setVerbose(false);
 
+		$n->addTestData(array (-1,-1,1), array (-1));
+		$n->addTestData(array (-1,1,1), array (1));
+		$n->addTestData(array (1,-1,1), array (1));
+		$n->addTestData(array (1,1,1), array (-1));
 
-		//$mlp = new MLPClassifier(1, [2], ['pass', 'fail']);
+		$max = 3;
+		$i = 0;
 
-//		$mlp->train(
-//    $samples = [[0.7,0.9,0.6,0.55,0.45], [0.1,0.2,0.4,0.25,0.30,0.33]],
-//    $targets = ['pass', 'fail']
-//);
+//		$n->setLearningRate(0.9);
 
-//$mlp->setLearningRate(0.1);
+		while (!($success = $n->train(1000, 0.01)) && ++$i<$max) 
+		{
 
-		//return $mlp->predict([0.39]);
-		//
-		//
-		//
+		}
 
+		$data = collect([]);
 
-		$mlp = new MLPClassifier(4, [2], ['40', '80', '100', '0']);
-
-		$mlp->train(
-$samples = [[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
-[0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0], 
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], 
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
-$targets = ['40',
-'80',
-'100',
-'0']
-		);
-
-return head($mlp->predict([[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0]]));
-
-
-
-$mlp = new MLPClassifier(4, [2], ['a', 'b', 'c']);
-
-$mlp->train(
-    $samples = [[1, 0, 0, 0], [0, 1, 1, 0], [1, 1, 1, 1], [0, 0, 0, 0]],
-    $targets = ['a', 'a', 'b', 'c']
-);
-
-return array_last($mlp->predict([[1, 1, 1, 1], [0, 0, 0, 0]]));
+		$data->put('calculate',$n->calculate(array(1,1,-1)));
+		$data->put('export',$n->export());	
+//		$n->showWeights(true);
+//		dd($n->calculate(array(0,1,0)),$n->export());
+		
+		return  $data;
 
 	}
 
@@ -157,7 +142,7 @@ return array_last($mlp->predict([[1, 1, 1, 1], [0, 0, 0, 0]]));
 
 		$transaction = new Transaction();
 		$transaction->message = $isoMessage;
-		$transaction->score = head($this->score(($jak->getBitmap()))) ;
+		$transaction->score = head($this->trainedScore(($jak->getBitmap()))) ;
 		$transaction->save();
 
 	    	DB::table('data')->insert([
@@ -183,15 +168,70 @@ return array_last($mlp->predict([[1, 1, 1, 1], [0, 0, 0, 0]]));
 
 	}
 
-	public function score($vector)
+	public function saveModel(Request $request)
+	{
+		$n = new NeuralNetwork(64, $request->nodes, 1);
+		$n->setVerbose(false);
+
+
+$n->addTestData(array (1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
+       		array (1));
+
+$n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+		array (0));
+
+		$max = $request->max;
+		$i = 0;
+
+		while (!($success = $n->train($request->epochs, $request->error)) && ++$i<$max) 
+		{
+
+		}
+
+		if($n->save(''.$request->name))
+		{
+			$model = new Annmodel();
+			$model->name = 	$request->name;
+			$model->nodes = $request->nodes;
+			$model->save();
+
+			return 'success' ;
+		}
+		else return 'failure';
+
+	}
+
+	public function loadModelStats($id=0)
+	{
+		$model = new Annmodel();
+		if(!$id) $modelToLoad = $model->get()->last();
+		else $modelToLoad = $model->find($id);
+
+		$n = new NeuralNetwork(64, $modelToLoad->nodes, 1);
+		$n->load($modelToLoad->name);
+
+		$n->showWeights(true);
+//		return $n->export() ;
+
+	}
+
+
+	public function trainedScore($vector)
 	{
 
-		//require_once ("/Users/amodkulkarni/Projects/desireacademy/app/Repositories/NeuralNetwork.php")
+		$n = new NeuralNetwork(64, 8, 1);
+		$n->load('64_8_model_v2');
 		
+		return  $n->calculate(array_map('intval', str_split($vector)));
+
+	}
+
+	public function score($vector)
+	{
 		$transactions = Transaction::with('data')->take(10)->orderby('id','desc')->get();
 
-$n = new NeuralNetwork(64, 14, 1);
-$n->setVerbose(false);
+		$n = new NeuralNetwork(64, 32, 1);
+		$n->setVerbose(false);
 
 
 $n->addTestData(array (0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -206,43 +246,24 @@ $n->addTestData(array (1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 		array (0));
 
-foreach($transactions as $transaction)
-{
-	$n->addTestData( (array_map('intval', str_split($transaction->data->get(1)->value))),array ($transaction->score));
-}
+		foreach($transactions as $transaction)
+		{
+			$n->addTestData( (array_map('intval', str_split($transaction->data->get(1)->value))),array ($transaction->score));
+		}
 
-$max = 3;
-$i = 0;
+		$max = 3;
+		$i = 0;
 
-while (!($success = $n->train(1000, 0.01)) && ++$i<$max) 
-{
+		while (!($success = $n->train(1000, 0.01)) && ++$i<$max) 
+		{
 
-}
+		}
 
-return  $n->calculate(array_map('intval', str_split($vector)));
-
-
-
-
-	
-		$mlp = new MLPClassifier(4, [2], ['40', '80', '100', '0']);
-
-		$mlp->train(
-$samples = [[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
-[0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0], 
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], 
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
-$targets = ['40',
-'80',
-'100',
-'0']
-		);
-
-		return $mlp->predict([array_map('intval', str_split($vector))]);
-
-//		array_map('intval', str_split($vector))
-
+		return  $n->calculate(array_map('intval', str_split($vector)));
 	}
+
+
+
 
 
 	public function pack($mti,$dataElement)

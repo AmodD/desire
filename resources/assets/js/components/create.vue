@@ -57,6 +57,16 @@
             <div class="col-md-8 col-md-offset-2">
                <div class="panel-block">
 		    <button v-on:click="analyze" class="button is-link is-outlined ">click to create & analyze </button>
+<div class="field">
+  <div class="control">
+    <div class="select is-primary">
+      <select>
+        <option>Select a Model</option>
+        <option>With options</option>
+      </select>
+    </div>
+  </div>
+</div>
 		    &nbsp; {{ output }}
 	       </div>
 	    </div>   

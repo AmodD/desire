@@ -8,7 +8,7 @@
 	    <li class="is-active"><a href="/">Home</a></li>
 	    <li><a href="/create">Create a Message</a></li>
 	    <li><a href="/auto">Auto Generate</a></li>
-	    <li><a href="/demo">Machine Learning</a></li>
+	    <li><a href="/nn">Create a Model</a></li>
 	  </ul>
 	</div>
 
@@ -19,7 +19,10 @@
 		<generate></generate>
 	@elseif(Route::currentRouteName() == 'demo' )
 		<demo></demo>
-
+	@elseif(Route::currentRouteName() == 'nn' )
+		<nn></nn>
+	@elseif(Route::currentRouteName() == 'bp' )
+		<bp></bp>
 	@else
 <div class="content">
   <h1>POC 8385 ML</h1>
@@ -29,10 +32,8 @@
     <li>Finalize a few DEs</li>
     <li>Manually create a msg by enetering DE data</li>
     <li>Automatically generate msgs through a click event</li>
-    <li></li>	
-    <li>Zero down on a ML Algo</li>	
-    <li></li>	
-    <li></li>	
+    <li>Create a vector of 1's and 0's on presense </li>	
+    <li>Use a Neuron Network to generate a score for given vector</li>	
     <li>Asign scores to through ML for each txn</li>
     <li></li>	
     <li></li>	

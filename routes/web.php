@@ -31,13 +31,19 @@ Route::get('/auto', function () {
     return view('home');
 })->name('auto');
 Route::get('/demo', function () {
-
-
-
     return view('home');
 })->name('demo');
+Route::get('/nn', function () {
+    return view('home');
+})->name('nn');
+
+Route::get('/bp', 'TransactionsController@demo')->name('bp');
 
 Route::get('/mldemo', 'TransactionsController@mldemo');
+Route::get('/score', 'TransactionsController@score');
+Route::post('/savemodel', 'TransactionsController@saveModel');
+Route::get('/loadmodelstats', 'TransactionsController@loadModelStats');
+Route::get('/models', 'TransactionsController@loadModelStats');
 
 Route::get('/test', function() {
 
