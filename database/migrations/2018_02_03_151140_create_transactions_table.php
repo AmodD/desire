@@ -17,6 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->increments('id');
 	    $table->mediumText('message');
 	    $table->smallInteger('score');
+	    $table->smallInteger('annmodel_id');
             $table->timestamps();
         });
     }

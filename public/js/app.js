@@ -1949,6 +1949,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -1973,7 +1974,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			results: [],
 			pass: [0.07, 0.12],
 			fail: [0.98, 0.84],
-			input: ''
+			input: '',
+			models: [],
+			selectedmodel: ""
 		};
 	},
 	computed: {
@@ -1988,15 +1991,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		}
 	},
 	mounted: function mounted() {
+		var _this = this;
+
 		console.log('Create Component mounted.');
+		axios.get('/getmodels').then(function (response) {
+			return _this.models = response.data;
+		}).catch(function (error) {
+			console.log(error);
+		});
 	},
 
 	methods: {
 		analyze: function analyze() {
-			var _this = this;
+			var _this2 = this;
 
 			//console.log("to analyze "+this.msg8583);
-			axios.get('/analyze?pan=' + this.pan + '&currency=' + this.currency + '&prmsg6=' + this.prmsg6 + '&amount=' + this.amount + '&aqcountry=' + this.aqcountry + '&procode=' + this.procode + '&posem=' + this.posem + '&poscc=' + this.poscc + '&chipdata=' + this.chipdata + '&addposdata=' + this.addposdata)
+			axios.get('/analyze?pan=' + this.pan + '&currency=' + this.currency + '&prmsg6=' + this.prmsg6 + '&amount=' + this.amount + '&aqcountry=' + this.aqcountry + '&procode=' + this.procode + '&posem=' + this.posem + '&poscc=' + this.poscc + '&chipdata=' + this.chipdata + '&addposdata=' + this.addposdata + '&model=' + this.selectedmodel)
 			//			.then(function (response) {
 			//			    console.log(response);
 			//
@@ -2004,7 +2014,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			//			    else this.results = response.data;
 			//			  })
 			.then(function (response) {
-				return _this.input = response.data;
+				return _this2.input = response.data;
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -2124,24 +2134,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
-			results: []
+			results: [],
+			models: [],
+			selectedmodel: ""
 		};
 	},
 	mounted: function mounted() {
+		var _this = this;
+
 		console.log('Generate Component mounted.');
+		axios.get('/getmodels').then(function (response) {
+			return _this.models = response.data;
+		}).catch(function (error) {
+			console.log(error);
+		});
 	},
 
 	methods: {
 		generate: function generate() {
-			var _this = this;
+			var _this2 = this;
 
 			console.log("to generate ");
-			axios.get('/generate').then(function (response) {
-				return _this.results = response.data;
+			axios.get('/generate?model=' + this.selectedmodel).then(function (response) {
+				return _this2.results = response.data;
 			})
 			//			.then(function (response) {
 			//			    console.log(response);
@@ -2257,7 +2287,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 	computed: {
 		modelNameComputed: function modelNameComputed() {
-			return 'model_' + this.inputnodes + '_' + this.hiddennodes + '_' + this.outputnodes + '_' + this.maxtrain + '_' + this.epochs + '_' + this.maxerror + '_' + this.learningrate + '_' + this.momentum;
+			this.modelname = 'model_' + this.inputnodes + '_' + this.hiddennodes + '_' + this.outputnodes + '_' + this.maxtrain + '_' + this.epochs + '_' + this.maxerror + '_' + this.learningrate + '_' + this.momentum;
+
+			return this.modelname;
 		}
 	},
 	methods: {
@@ -2294,6 +2326,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 	mounted: function mounted() {
 		console.log('NN Component mounted.');
+		this.modelname = 'model_' + this.inputnodes + '_' + this.hiddennodes + '_' + this.outputnodes + '_' + this.maxtrain + '_' + this.epochs + '_' + this.maxerror + '_' + this.learningrate + '_' + this.momentum;
 	}
 });
 
@@ -24854,7 +24887,54 @@ var render = function() {
                 on: { click: _vm.generate }
               },
               [_vm._v("\n      generate and see last 10 transactions\n    ")]
-            )
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "control" }, [
+                _c("div", { staticClass: "select is-primary" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.selectedmodel,
+                          expression: "selectedmodel"
+                        }
+                      ],
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.selectedmodel = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { disabled: "", value: "" } }, [
+                        _vm._v("Select a Model")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.models, function(value, key) {
+                        return _c("option", { domProps: { value: value } }, [
+                          _vm._v(_vm._s(key))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ])
+              ])
+            ])
           ])
         ])
       ]),
@@ -24874,6 +24954,14 @@ var render = function() {
                 _vm._v(" "),
                 _c("small", [_vm._v(_vm._s(result.created_at))]),
                 _vm._v(" "),
+                _c("strong", [_vm._v("Model Name")]),
+                _vm._v(" "),
+                _c("small", [_vm._v(_vm._s(result.annmodel.name))]),
+                _vm._v(" "),
+                _c("strong", [_vm._v("Score")]),
+                _vm._v(" "),
+                _c("small", [_vm._v(_vm._s(result.score))]),
+                _vm._v(" "),
                 _c("br"),
                 _vm._v(" "),
                 _c("strong", [_vm._v("ISO8385 message")]),
@@ -24885,104 +24973,97 @@ var render = function() {
                     ? _c("div", [
                         _c("strong", [_vm._v("Vector")]),
                         _vm._v(" "),
-                        _c("small", [_vm._v(_vm._s(detail.value))]),
-                        _vm._v(" "),
-                        _c("span", [
-                          _c("strong", [_vm._v("Score")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(result.score))])
-                        ])
+                        _c("small", [_vm._v(_vm._s(detail.value))])
                       ])
                     : _vm._e(),
-                  _c("p", [
-                    detail.field_id == 0
-                      ? _c("span", [
-                          _c("strong", [_vm._v("MTI")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 2
-                      ? _c("span", [
-                          _c("strong", [_vm._v("PAN")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 3
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Processing Code")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 4
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Amount")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 19
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Country")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 22
-                      ? _c("span", [
-                          _c("strong", [_vm._v("POS Entry Mode")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 25
-                      ? _c("span", [
-                          _c("strong", [_vm._v("POS Condition Code")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 48
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Additional Private Data")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 49
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Currency")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 55
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Chip Data")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 60
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Additional POS Data")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e()
-                  ])
+                  _vm._v(" "),
+                  detail.field_id == 0
+                    ? _c("span", [
+                        _c("strong", [_vm._v("MTI")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 2
+                    ? _c("span", [
+                        _c("strong", [_vm._v("PAN")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 3
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Processing Code")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 4
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Amount")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 19
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Country")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 22
+                    ? _c("span", [
+                        _c("strong", [_vm._v("POS Entry Mode")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 25
+                    ? _c("span", [
+                        _c("strong", [_vm._v("POS Condition Code")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 48
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Additional Private Data")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 49
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Currency")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 55
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Chip Data")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 60
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Additional POS Data")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e()
                 ])
               })
             ],
@@ -25410,19 +25491,19 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.modelNameComputed,
-                expression: "modelNameComputed"
+                value: _vm.modelname,
+                expression: "modelname"
               }
             ],
             staticClass: "input",
-            attrs: { type: "text" },
-            domProps: { value: _vm.modelNameComputed },
+            attrs: { type: "text", placeholder: _vm.modelNameComputed },
+            domProps: { value: _vm.modelname },
             on: {
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.modelNameComputed = $event.target.value
+                _vm.modelname = $event.target.value
               }
             }
           })
@@ -25880,7 +25961,52 @@ var render = function() {
               [_vm._v("click to create & analyze ")]
             ),
             _vm._v(" "),
-            _vm._m(10, false, false),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "control" }, [
+                _c("div", { staticClass: "select is-primary" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.selectedmodel,
+                          expression: "selectedmodel"
+                        }
+                      ],
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.selectedmodel = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { disabled: "", value: "" } }, [
+                        _vm._v("Select a Model")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.models, function(value, key) {
+                        return _c("option", { domProps: { value: value } }, [
+                          _vm._v(_vm._s(key))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ])
+              ])
+            ]),
             _vm._v("\n\t\t      " + _vm._s(_vm.output) + "\n\t       ")
           ])
         ])
@@ -25901,6 +26027,14 @@ var render = function() {
                 _vm._v(" "),
                 _c("small", [_vm._v(_vm._s(result.created_at))]),
                 _vm._v(" "),
+                _c("strong", [_vm._v("Model Name")]),
+                _vm._v(" "),
+                _c("small", [_vm._v(_vm._s(result.annmodel.name))]),
+                _vm._v(" "),
+                _c("strong", [_vm._v("Score")]),
+                _vm._v(" "),
+                _c("small", [_vm._v(_vm._s(result.score))]),
+                _vm._v(" "),
                 _c("br"),
                 _vm._v(" "),
                 _c("strong", [_vm._v("ISO8385 message")]),
@@ -25912,104 +26046,97 @@ var render = function() {
                     ? _c("div", [
                         _c("strong", [_vm._v("Vector")]),
                         _vm._v(" "),
-                        _c("small", [_vm._v(_vm._s(detail.value))]),
-                        _vm._v(" "),
-                        _c("span", [
-                          _c("strong", [_vm._v("Score")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(result.score))])
-                        ])
+                        _c("small", [_vm._v(_vm._s(detail.value))])
                       ])
                     : _vm._e(),
-                  _c("p", [
-                    detail.field_id == 0
-                      ? _c("span", [
-                          _c("strong", [_vm._v("MTI")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 2
-                      ? _c("span", [
-                          _c("strong", [_vm._v("PAN")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 3
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Processing Code")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 4
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Amount")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 19
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Country")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 22
-                      ? _c("span", [
-                          _c("strong", [_vm._v("POS Entry Mode")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 25
-                      ? _c("span", [
-                          _c("strong", [_vm._v("POS Condition Code")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 48
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Additional Private Data")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 49
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Currency")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 55
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Chip Data")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    detail.field_id == 60
-                      ? _c("span", [
-                          _c("strong", [_vm._v("Additional POS Data")]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))])
-                        ])
-                      : _vm._e()
-                  ])
+                  _vm._v(" "),
+                  detail.field_id == 0
+                    ? _c("span", [
+                        _c("strong", [_vm._v("MTI")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 2
+                    ? _c("span", [
+                        _c("strong", [_vm._v("PAN")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 3
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Processing Code")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 4
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Amount")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 19
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Country")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 22
+                    ? _c("span", [
+                        _c("strong", [_vm._v("POS Entry Mode")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 25
+                    ? _c("span", [
+                        _c("strong", [_vm._v("POS Condition Code")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 48
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Additional Private Data")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 49
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Currency")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 55
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Chip Data")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  detail.field_id == 60
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Additional POS Data")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e()
                 ])
               })
             ],
@@ -26100,22 +26227,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
       _c("label", { staticClass: "label" }, [_vm._v("Bit 60")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "field" }, [
-      _c("div", { staticClass: "control" }, [
-        _c("div", { staticClass: "select is-primary" }, [
-          _c("select", [
-            _c("option", [_vm._v("Select dropdown")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("With options")])
-          ])
-        ])
-      ])
     ])
   }
 ]

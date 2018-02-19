@@ -60,9 +60,9 @@
 <div class="field">
   <div class="control">
     <div class="select is-primary">
-      <select>
-        <option>Select a Model</option>
-        <option>With options</option>
+      <select v-model="selectedmodel">
+	<option disabled value="">Select a Model</option>
+	<option v-for="(value, key) in models" :value="value" >{{ key }}</option>
       </select>
     </div>
   </div>
@@ -79,11 +79,13 @@
 	        <p>
 		<strong>ID</strong> <small>{{ result.id }}</small>
 		<strong>Time</strong> <small>{{ result.created_at }}</small>
+		<strong>Model Name</strong> <small>{{ result.annmodel.name }}</small>
+		<strong>Score</strong> <small>{{ result.score }}</small>
 	          <br>
 		  <strong>ISO8385 message</strong><small>  {{ result.message }}</small>
 		  
 		<div v-for="detail in result.data">
-			<div v-if="detail.field_id == 1"><strong>Vector</strong> <small>{{ detail.value }}</small> <span><strong>Score</strong> <small>{{ result.score }}</small></span></div><p>
+			<div v-if="detail.field_id == 1"><strong>Vector</strong> <small>{{ detail.value }}</small> </div>
 			<span v-if="detail.field_id == 0"><strong>MTI</strong> <small>{{ detail.value }}</small></span>
 			<span v-if="detail.field_id == 2"><strong>PAN</strong> <small>{{ detail.value }}</small></span>
 			<span v-if="detail.field_id == 3"><strong>Processing Code</strong> <small>{{ detail.value }}</small></span>
@@ -95,7 +97,6 @@
 			<span v-if="detail.field_id == 49"><strong>Currency</strong> <small>{{ detail.value }}</small></span>
 			<span v-if="detail.field_id == 55"><strong>Chip Data</strong> <small>{{ detail.value }}</small></span>
 			<span v-if="detail.field_id == 60"><strong>Additional POS Data</strong> <small>{{ detail.value }}</small></span>
-			</p>
 		</div>	
       </div>
 
@@ -132,7 +133,9 @@
 			results : [],
 			pass : [0.07,0.12],
 			fail : [0.98,0.84],
-			input : ''
+			input : '',
+			models : [],
+			selectedmodel : ""
 		}
 	},	 
 	computed : {
@@ -149,12 +152,18 @@
 	},
         mounted() {
                 console.log('Create Component mounted.');
+		axios.get('/getmodels')
+			.then(response => this.models = response.data)
+			.catch(function (error) {
+			    console.log(error);
+			  });
+
 
 	},
 	methods : {
 		analyze(){
 			//console.log("to analyze "+this.msg8583);
-			axios.get('/analyze?pan='+this.pan+'&currency='+this.currency+'&prmsg6='+this.prmsg6+'&amount='+this.amount+'&aqcountry='+this.aqcountry+'&procode='+this.procode+'&posem='+this.posem+'&poscc='+this.poscc+'&chipdata='+this.chipdata+'&addposdata='+this.addposdata)
+			axios.get('/analyze?pan='+this.pan+'&currency='+this.currency+'&prmsg6='+this.prmsg6+'&amount='+this.amount+'&aqcountry='+this.aqcountry+'&procode='+this.procode+'&posem='+this.posem+'&poscc='+this.poscc+'&chipdata='+this.chipdata+'&addposdata='+this.addposdata+'&model='+this.selectedmodel)
 //			.then(function (response) {
 //			    console.log(response);
 //

@@ -11,4 +11,9 @@ class Transaction extends Model
 	{
 		return $this->hasMany(Data::class);
 	}
+	
+	public function annmodel()
+	{
+		return $this->belongsTo(Annmodel::class);
+	}
 }

@@ -50,7 +50,7 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 		<div class="field is-horizontal">
 		  <div class="field-label is-normal"> <label class="label">Model Name</label> </div>
 	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="modelNameComputed">
+			<input class="input" type="text" v-model="modelname" :placeholder="modelNameComputed">
 		  </div></div>
 		  <div class="field-body">
 		    <div class="field">
@@ -90,7 +90,9 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	},
 	    computed : {
 		modelNameComputed : function() {
-			return 'model_'+this.inputnodes+'_'+this.hiddennodes+'_'+this.outputnodes+'_'+this.maxtrain+'_'+this.epochs+'_'+this.maxerror+'_'+this.learningrate+'_'+this.momentum;
+			this.modelname = 'model_'+this.inputnodes+'_'+this.hiddennodes+'_'+this.outputnodes+'_'+this.maxtrain+'_'+this.epochs+'_'+this.maxerror+'_'+this.learningrate+'_'+this.momentum;
+
+			return this.modelname ;
 		}
 	    },
 	methods : {
@@ -126,6 +128,7 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	},
         mounted() {
                 console.log('NN Component mounted.');
+		this.modelname = 'model_'+this.inputnodes+'_'+this.hiddennodes+'_'+this.outputnodes+'_'+this.maxtrain+'_'+this.epochs+'_'+this.maxerror+'_'+this.learningrate+'_'+this.momentum ;
 	}
     }
 </script>    

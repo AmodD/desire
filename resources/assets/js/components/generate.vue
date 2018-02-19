@@ -7,6 +7,16 @@
     <button v-on:click="generate" class="button is-danger is-outlined ">
       generate and see last 10 transactions
     </button>
+<div class="field">
+  <div class="control">
+    <div class="select is-primary">
+      <select v-model="selectedmodel">
+	<option disabled value="">Select a Model</option>
+	<option v-for="(value, key) in models" :value="value" >{{ key }}</option>
+      </select>
+    </div>
+  </div>
+</div>
 	       </div>
 	       </div>
 	       </div>
@@ -16,11 +26,13 @@
 	        <p>
 		<strong>ID</strong> <small>{{ result.id }}</small>
 		<strong>Time</strong> <small>{{ result.created_at }}</small>
+		<strong>Model Name</strong> <small>{{ result.annmodel.name }}</small>
+		<strong>Score</strong> <small>{{ result.score }}</small>
 	          <br>
 		  <strong>ISO8385 message</strong><small>  {{ result.message }}</small>
 		<div v-for="detail in result.data">
-			<div v-if="detail.field_id == 1"><strong>Vector</strong> <small>{{ detail.value }}</small> <span><strong>Score</strong> <small>{{ result.score }}</small></span></div><p>
-			<span v-if="detail.field_id == 0"><strong>MTI</strong> <small>{{ detail.value }}</small></span>
+			<div v-if="detail.field_id == 1"><strong>Vector</strong> <small>{{ detail.value }}</small></div>
+			<span v-if="detail.field_id == 0"><strong>MTI</strong> <small>{{ detail.value }}</small> </span>
 			<span v-if="detail.field_id == 2"><strong>PAN</strong> <small>{{ detail.value }}</small></span>
 			<span v-if="detail.field_id == 3"><strong>Processing Code</strong> <small>{{ detail.value }}</small></span>
 			<span v-if="detail.field_id == 4"><strong>Amount</strong> <small>{{ detail.value }}</small></span>
@@ -31,7 +43,6 @@
 			<span v-if="detail.field_id == 49"><strong>Currency</strong> <small>{{ detail.value }}</small></span>
 			<span v-if="detail.field_id == 55"><strong>Chip Data</strong> <small>{{ detail.value }}</small></span>
 			<span v-if="detail.field_id == 60"><strong>Additional POS Data</strong> <small>{{ detail.value }}</small></span>
-			</p>
 		</div>	
       </div>
 
@@ -46,17 +57,24 @@
     export default {
 	data : function() {
 		return {
-			results : []
+			results : [],
+			models : [],
+			selectedmodel : ""
 		}
 	},
         mounted() {
                 console.log('Generate Component mounted.');
+		axios.get('/getmodels')
+			.then(response => this.models = response.data)
+			.catch(function (error) {
+			    console.log(error);
+			  });
 
 	},
 	methods : {
 		generate(){
 			console.log("to generate ");
-			axios.get('/generate')
+			axios.get('/generate?model='+this.selectedmodel)
 			.then(response => this.results = response.data)
 //			.then(function (response) {
 //			    console.log(response);

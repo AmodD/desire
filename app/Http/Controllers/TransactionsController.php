@@ -63,7 +63,7 @@ class TransactionsController extends Controller
 		$mti = "1200"; 
 		$dataElement = collect([]);
 
-		$pan =  $request->pan;
+		$model =  $request->model;
 
 		$dataElement->put("pan",$request->pan);
 		$dataElement->put("amnt",$request->amount);
@@ -82,14 +82,15 @@ class TransactionsController extends Controller
 		    return $isoMessage;
 		}
 		else{
-			return $this->store($mti,$isoMessage,$dataElement);
+			return $this->store($mti,$isoMessage,$dataElement,$model);
 		}	
 	}
 	
-	public function generate()
+	public function generate(Request $request)
 	{
 		$dataElement = collect([]);
 		$output = collect([]);
+		$model =  $request->model;
 		
 		$mti = "1200"; 
 		$faker = \Faker\Factory::create('en_US');
@@ -125,12 +126,12 @@ class TransactionsController extends Controller
 			return $isoMessage;
 		}
 		else{
-			return $this->store($mti,$isoMessage,$dataElement);
+			return $this->store($mti,$isoMessage,$dataElement,$model);
 		}	
 
 	}
 
-	public function store($mti,$isoMessage,$dataElement)
+	public function store($mti,$isoMessage,$dataElement,$model)
 	{
 		try{
 			$jak = new JAK8583();
@@ -142,7 +143,8 @@ class TransactionsController extends Controller
 
 		$transaction = new Transaction();
 		$transaction->message = $isoMessage;
-		$transaction->score = head($this->trainedScore(($jak->getBitmap()))) ;
+		$transaction->annmodel_id = $model;
+		$transaction->score = head($this->trainedScore(($jak->getBitmap()),$model)) ;
 		$transaction->save();
 
 	    	DB::table('data')->insert([
@@ -161,7 +163,7 @@ class TransactionsController extends Controller
 		    ]);
 
 
-		$transactions = Transaction::with('data')->take(10)->orderby('id','desc')->get();
+		$transactions = Transaction::with('data','annmodel')->take(10)->orderby('id','desc')->get();
 
 		return $transactions;
 
@@ -182,6 +184,9 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 		$max = $request->max;
 		$i = 0;
+
+		$n->setLearningRate($request->learningrate);
+ 		$n->setMomentum($request->momentum);
 
 		while (!($success = $n->train($request->epochs, $request->error)) && ++$i<$max) 
 		{
@@ -216,11 +221,25 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	}
 
 
-	public function trainedScore($vector)
+	public function getModels()
+	{
+		$model = new Annmodel();
+		$models = $model->all()->pluck('id','name');
+
+		return $models ;
+
+
+	}
+
+
+	public function trainedScore($vector,$modelId)
 	{
 
-		$n = new NeuralNetwork(64, 8, 1);
-		$n->load('64_8_model_v2');
+		$model = new Annmodel();
+		$m = $model->find($modelId);
+		//		$n = new NeuralNetwork(64, 8, 1);
+		$n = new NeuralNetwork(64,$m->nodes,1);
+		$n->load($m->name);
 		
 		return  $n->calculate(array_map('intval', str_split($vector)));
 

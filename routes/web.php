@@ -43,7 +43,7 @@ Route::get('/mldemo', 'TransactionsController@mldemo');
 Route::get('/score', 'TransactionsController@score');
 Route::post('/savemodel', 'TransactionsController@saveModel');
 Route::get('/loadmodelstats', 'TransactionsController@loadModelStats');
-Route::get('/models', 'TransactionsController@loadModelStats');
+Route::get('/getmodels', 'TransactionsController@getModels');
 
 Route::get('/test', function() {
 
