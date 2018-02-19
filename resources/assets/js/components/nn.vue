@@ -82,7 +82,7 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 			epochs : 1000,
 			maxerror : 0.01,
 			learningrate : 0.1,
-			momentum : 0.8,
+			momentum : 0.1,
 			modelname : '',
 			response : '',
 			weights : ''  
