@@ -42,7 +42,7 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 		  </div></div>
 		  <div class="field-label is-normal"> <label class="label">Momentum</label> </div>
 	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="momentum" style="width:40%;">
+			<input class="input" type="text" v-model="momentum" style="width:40%;" disabled>
 		  </div></div>
 	        </div>
 

@@ -186,7 +186,7 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 		$i = 0;
 
 		$n->setLearningRate($request->learningrate);
- 		$n->setMomentum($request->momentum);
+// 		$n->setMomentum($request->momentum);
 
 		while (!($success = $n->train($request->epochs, $request->error)) && ++$i<$max) 
 		{

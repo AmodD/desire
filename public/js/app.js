@@ -25466,7 +25466,7 @@ var render = function() {
             ],
             staticClass: "input",
             staticStyle: { width: "40%" },
-            attrs: { type: "text" },
+            attrs: { type: "text", disabled: "" },
             domProps: { value: _vm.momentum },
             on: {
               input: function($event) {
