@@ -2279,7 +2279,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			epochs: 1000,
 			maxerror: 0.01,
 			learningrate: 0.1,
-			momentum: 0.8,
+			momentum: 0.1,
 			modelname: '',
 			response: '',
 			weights: ''
