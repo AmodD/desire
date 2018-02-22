@@ -47,6 +47,18 @@ Route::get('/getmodels', 'TransactionsController@getModels');
 
 Route::get('/test', function() {
 
+	$vector = collect([]);
+	$vector->push(1);
+	$vector->push(0);
+	$vector->push(1);
+	$vector->push(1);
+
+	$vectorStr = '110010';
+	
+	dd(array_map('intval', str_split($vectorStr)),$vector->toArray());
+
+
+
 	$transactions = Transaction::with('data')->take(10)->orderby('id','desc')->get();
 
 	foreach($transactions as $transaction)

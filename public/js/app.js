@@ -1950,6 +1950,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -1961,6 +1968,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			pan: '',
 			currency: '',
 			procode: '',
+			mcc: '',
 			posem: '',
 			poscc: '',
 			chipdata: '',
@@ -2006,7 +2014,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var _this2 = this;
 
 			//console.log("to analyze "+this.msg8583);
-			axios.get('/analyze?pan=' + this.pan + '&currency=' + this.currency + '&prmsg6=' + this.prmsg6 + '&amount=' + this.amount + '&aqcountry=' + this.aqcountry + '&procode=' + this.procode + '&posem=' + this.posem + '&poscc=' + this.poscc + '&chipdata=' + this.chipdata + '&addposdata=' + this.addposdata + '&model=' + this.selectedmodel)
+			axios.get('/analyze?pan=' + this.pan + '&currency=' + this.currency + '&prmsg6=' + this.prmsg6 + '&amount=' + this.amount + '&aqcountry=' + this.aqcountry + '&procode=' + this.procode + '&posem=' + this.posem + '&poscc=' + this.poscc + '&chipdata=' + this.chipdata + '&addposdata=' + this.addposdata + '&model=' + this.selectedmodel + '&mcc=' + this.mcc)
 			//			.then(function (response) {
 			//			    console.log(response);
 			//
@@ -2090,6 +2098,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
 //
 //
 //
@@ -2264,16 +2273,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
 	data: function data() {
 		return {
 			results: [],
-			inputnodes: 64,
-			hiddennodes: 8,
+			inputnodes: 8,
+			hiddennodes: 4,
 			outputnodes: 1,
 			maxtrain: 3,
 			epochs: 1000,
@@ -25009,6 +25016,14 @@ var render = function() {
                       ])
                     : _vm._e(),
                   _vm._v(" "),
+                  detail.field_id == 18
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Merchant Category Code")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   detail.field_id == 19
                     ? _c("span", [
                         _c("strong", [_vm._v("Country")]),
@@ -25033,33 +25048,9 @@ var render = function() {
                       ])
                     : _vm._e(),
                   _vm._v(" "),
-                  detail.field_id == 48
-                    ? _c("span", [
-                        _c("strong", [_vm._v("Additional Private Data")]),
-                        _vm._v(" "),
-                        _c("small", [_vm._v(_vm._s(detail.value))])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
                   detail.field_id == 49
                     ? _c("span", [
                         _c("strong", [_vm._v("Currency")]),
-                        _vm._v(" "),
-                        _c("small", [_vm._v(_vm._s(detail.value))])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  detail.field_id == 55
-                    ? _c("span", [
-                        _c("strong", [_vm._v("Chip Data")]),
-                        _vm._v(" "),
-                        _c("small", [_vm._v(_vm._s(detail.value))])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  detail.field_id == 60
-                    ? _c("span", [
-                        _c("strong", [_vm._v("Additional POS Data")]),
                         _vm._v(" "),
                         _c("small", [_vm._v(_vm._s(detail.value))])
                       ])
@@ -25252,7 +25243,7 @@ var render = function() {
   return _c("div", { staticClass: "content" }, [
     _c("pre", [
       _vm._v(
-        "// We are training the ANN with a basic crude set of data as below\n// the first test data has input vector as ...1111111... with target output as 1\n// the second test data has input vector as ...00000... with target output as 0\n$n->addTestData(array (1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),\n       \t\tarray (1));\n$n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),\n\t\tarray (0));\n  "
+        "// We are training the ANN with a basic crude set of data as below\n$n->addTestData(array (1,1,1,1,1,1,1,1),\n       \t\tarray (1));\n$n->addTestData(array (0,0,0,0,0,0,0,0),\n\t\tarray (0));\n  "
       )
     ]),
     _vm._v(" "),
@@ -25737,6 +25728,36 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
+                  value: _vm.mcc,
+                  expression: "mcc"
+                }
+              ],
+              staticClass: "input",
+              attrs: { type: "text", placeholder: "Merchant Category Code" },
+              domProps: { value: _vm.mcc },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.mcc = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-horizontal" }, [
+        _vm._m(4, false, false),
+        _vm._v(" "),
+        _c("div", { staticClass: "field-body" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
                   value: _vm.aqcountry,
                   expression: "aqcountry"
                 }
@@ -25761,7 +25782,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "field is-horizontal" }, [
-        _vm._m(4, false, false),
+        _vm._m(5, false, false),
         _vm._v(" "),
         _c("div", { staticClass: "field-body" }, [
           _c("div", { staticClass: "field" }, [
@@ -25794,7 +25815,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "field is-horizontal" }, [
-        _vm._m(5, false, false),
+        _vm._m(6, false, false),
         _vm._v(" "),
         _c("div", { staticClass: "field-body" }, [
           _c("div", { staticClass: "field" }, [
@@ -25819,36 +25840,6 @@ var render = function() {
                     return
                   }
                   _vm.poscc = $event.target.value
-                }
-              }
-            })
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "field is-horizontal" }, [
-        _vm._m(6, false, false),
-        _vm._v(" "),
-        _c("div", { staticClass: "field-body" }, [
-          _c("div", { staticClass: "field" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.prmsg6,
-                  expression: "prmsg6"
-                }
-              ],
-              staticClass: "input",
-              attrs: { type: "text", placeholder: "Additional Data Private" },
-              domProps: { value: _vm.prmsg6 },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.prmsg6 = $event.target.value
                 }
               }
             })
@@ -25882,66 +25873,6 @@ var render = function() {
                     return
                   }
                   _vm.currency = $event.target.value
-                }
-              }
-            })
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "field is-horizontal" }, [
-        _vm._m(8, false, false),
-        _vm._v(" "),
-        _c("div", { staticClass: "field-body" }, [
-          _c("div", { staticClass: "field" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.chipdata,
-                  expression: "chipdata"
-                }
-              ],
-              staticClass: "input",
-              attrs: { type: "text", placeholder: "Chip Data" },
-              domProps: { value: _vm.chipdata },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.chipdata = $event.target.value
-                }
-              }
-            })
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "field is-horizontal" }, [
-        _vm._m(9, false, false),
-        _vm._v(" "),
-        _c("div", { staticClass: "field-body" }, [
-          _c("div", { staticClass: "field" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.addposdata,
-                  expression: "addposdata"
-                }
-              ],
-              staticClass: "input",
-              attrs: { type: "text", placeholder: "Additional POS Data" },
-              domProps: { value: _vm.addposdata },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.addposdata = $event.target.value
                 }
               }
             })
@@ -26082,6 +26013,14 @@ var render = function() {
                       ])
                     : _vm._e(),
                   _vm._v(" "),
+                  detail.field_id == 18
+                    ? _c("span", [
+                        _c("strong", [_vm._v("Merchant Category Code")]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(detail.value))])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   detail.field_id == 19
                     ? _c("span", [
                         _c("strong", [_vm._v("Country")]),
@@ -26106,33 +26045,9 @@ var render = function() {
                       ])
                     : _vm._e(),
                   _vm._v(" "),
-                  detail.field_id == 48
-                    ? _c("span", [
-                        _c("strong", [_vm._v("Additional Private Data")]),
-                        _vm._v(" "),
-                        _c("small", [_vm._v(_vm._s(detail.value))])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
                   detail.field_id == 49
                     ? _c("span", [
                         _c("strong", [_vm._v("Currency")]),
-                        _vm._v(" "),
-                        _c("small", [_vm._v(_vm._s(detail.value))])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  detail.field_id == 55
-                    ? _c("span", [
-                        _c("strong", [_vm._v("Chip Data")]),
-                        _vm._v(" "),
-                        _c("small", [_vm._v(_vm._s(detail.value))])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  detail.field_id == 60
-                    ? _c("span", [
-                        _c("strong", [_vm._v("Additional POS Data")]),
                         _vm._v(" "),
                         _c("small", [_vm._v(_vm._s(detail.value))])
                       ])
@@ -26154,7 +26069,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 2")])
+      _c("label", { staticClass: "label" }, [_vm._v("DE 2")])
     ])
   },
   function() {
@@ -26162,7 +26077,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 3")])
+      _c("label", { staticClass: "label" }, [_vm._v("DE 3")])
     ])
   },
   function() {
@@ -26170,7 +26085,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 4")])
+      _c("label", { staticClass: "label" }, [_vm._v("DE 4")])
     ])
   },
   function() {
@@ -26178,7 +26093,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 19")])
+      _c("label", { staticClass: "label" }, [_vm._v("DE 18")])
     ])
   },
   function() {
@@ -26186,7 +26101,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 22")])
+      _c("label", { staticClass: "label" }, [_vm._v("DE 19")])
     ])
   },
   function() {
@@ -26194,7 +26109,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 25")])
+      _c("label", { staticClass: "label" }, [_vm._v("DE 22")])
     ])
   },
   function() {
@@ -26202,7 +26117,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 48")])
+      _c("label", { staticClass: "label" }, [_vm._v("DE 25")])
     ])
   },
   function() {
@@ -26210,23 +26125,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 49")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 55")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "field-label is-normal" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Bit 60")])
+      _c("label", { staticClass: "label" }, [_vm._v("DE 49")])
     ])
   }
 ]

@@ -75,6 +75,7 @@ class TransactionsController extends Controller
 		$dataElement->put("poscc",$request->poscc);
 		$dataElement->put("chipdata",$request->chipdata);
 		$dataElement->put("addposdata",$request->addposdata);
+		$dataElement->put("mcc",$request->mcc);
 			
 		$isoMessage = $this->pack($mti,$dataElement);
 
@@ -100,13 +101,14 @@ class TransactionsController extends Controller
 		$arrayCountry = [601, 715, 807, 950, 785, 963];
 		$country = array_random($arrayCountry);
 		$currency = mt_rand(611,999);
-		$de48 = $faker->word;
+		$de48 = "" ; //$faker->word;
 		$arrayProCode = [200004, 315007, 267007, 159008, 244007, 576009];
 		$procode = array_random($arrayProCode);
 		$posem = mt_rand(666,999);
 		$poscc = "99";
-		$chipdata = $faker->word;
-		$addposdata = $faker->word;
+		$chipdata = "" ; //$faker->word;
+		$addposdata = "" ; // $faker->word;
+		$mcc = mt_rand(6000,9999);
 
 		
 		$dataElement->put("pan",$pan);
@@ -119,6 +121,7 @@ class TransactionsController extends Controller
 		$dataElement->put("poscc",$poscc);
 		$dataElement->put("chipdata",$chipdata);
 		$dataElement->put("addposdata",$addposdata);
+		$dataElement->put("mcc",$mcc);
 
 		$isoMessage = $this->pack($mti,$dataElement);
 		
@@ -141,18 +144,24 @@ class TransactionsController extends Controller
 			return 'Error : '.$e->getmessage();
 		}
 
+		$vector = $this->getVector($dataElement);
+
+
+//		dd($vector);
 		$transaction = new Transaction();
 		$transaction->message = $isoMessage;
 		$transaction->annmodel_id = $model;
-		$transaction->score = head($this->trainedScore(($jak->getBitmap()),$model)) ;
+		$transaction->score = head($this->trainedScore($vector,$model)) ;
+		//$transaction->score = head($this->trainedScore(($jak->getBitmap()),$model)) ;
 		$transaction->save();
 
 	    	DB::table('data')->insert([
 		            ['transaction_id' => $transaction->id  , 'field_id' => 0 ,  'value' => $mti],
-		            ['transaction_id' => $transaction->id  , 'field_id' => 1 ,  'value' => $jak->getBitmap()],
+		            ['transaction_id' => $transaction->id  , 'field_id' => 1 ,  'value' => implode("",$vector)],
 		            ['transaction_id' => $transaction->id  , 'field_id' => 2 ,  'value' => $dataElement->get("pan")],
 		            ['transaction_id' => $transaction->id  , 'field_id' => 3 ,  'value' => $dataElement->get("procode")],
 			    ['transaction_id' => $transaction->id  , 'field_id' => 4 ,  'value' => $dataElement->get("amnt")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 18 ,  'value' => $dataElement->get("mcc")],
 			    ['transaction_id' => $transaction->id  , 'field_id' => 19 ,  'value' => $dataElement->get("country")],
 			    ['transaction_id' => $transaction->id  , 'field_id' => 22 ,  'value' => $dataElement->get("posem")],
 			    ['transaction_id' => $transaction->id  , 'field_id' => 25 ,  'value' => $dataElement->get("poscc")],
@@ -170,17 +179,38 @@ class TransactionsController extends Controller
 
 	}
 
+	public function getVector($dataElement)
+	{
+		
+	$vector = collect([]);
+
+	if($dataElement->get('pan')) $vector->push(1); else  $vector->push(0);
+	if($dataElement->get('procode')) $vector->push(1); else  $vector->push(0);
+	if($dataElement->get('amnt')) $vector->push(1); else  $vector->push(0);
+	if($dataElement->get('mcc'))  $vector->push(1); else  $vector->push(0);
+	if($dataElement->get('country'))  $vector->push(1); else  $vector->push(0);
+	if($dataElement->get('posem'))  $vector->push(1); else  $vector->push(0);
+	if($dataElement->get('poscc'))  $vector->push(1); else  $vector->push(0);
+//if($dataElement->get('de48'))
+	if($dataElement->get('currency'))  $vector->push(1); else  $vector->push(0);
+//if($dataElement->get('chipdata'))
+	//if($dataElement->get('addposdata'))
+	//
+	return $vector->toArray();
+
+	}
+
 	public function saveModel(Request $request)
 	{
-		$n = new NeuralNetwork(64, $request->nodes, 1);
+		$n = new NeuralNetwork(8, $request->nodes, 1);
 		$n->setVerbose(false);
 
 
-$n->addTestData(array (1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
-       		array (1));
+		$n->addTestData(array (1,1,1,1,1,1,1,1),
+       				array (1));
 
-$n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
-		array (0));
+		$n->addTestData(array (0,0,0,0,0,0,0,0),
+				array (0));
 
 		$max = $request->max;
 		$i = 0;
@@ -238,10 +268,11 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 		$model = new Annmodel();
 		$m = $model->find($modelId);
 		//		$n = new NeuralNetwork(64, 8, 1);
-		$n = new NeuralNetwork(64,$m->nodes,1);
+		$n = new NeuralNetwork(8,$m->nodes,1);
 		$n->load($m->name);
-		
-		return  $n->calculate(array_map('intval', str_split($vector)));
+
+		return $n->calculate($vector);	
+	//	return  $n->calculate(array_map('intval', str_split($vector)));
 
 	}
 
@@ -306,6 +337,7 @@ if($dataElement->get('de48')) $schemaManager->setAdditionalDataPrivate($dataElem
 if($dataElement->get('currency')) $schemaManager->setCurrencyCodeTransaction($dataElement->get('currency'));
 if($dataElement->get('chipdata')) $schemaManager->setIsoReserved1($dataElement->get('chipdata'));
 if($dataElement->get('addposdata')) $schemaManager->setPrivateReserved1($dataElement->get('addposdata'));
+if($dataElement->get('mcc')) $schemaManager->setMerchantType($dataElement->get('mcc'));
 
 /** @var MessagePacker $message */
 $message = (new Financial($cacheManager))->pack($schemaManager);

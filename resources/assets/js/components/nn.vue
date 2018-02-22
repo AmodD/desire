@@ -4,11 +4,9 @@
 
   <pre>
 // We are training the ANN with a basic crude set of data as below
-// the first test data has input vector as ...1111111... with target output as 1
-// the second test data has input vector as ...00000... with target output as 0
-$n->addTestData(array (1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
+$n->addTestData(array (1,1,1,1,1,1,1,1),
        		array (1));
-$n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+$n->addTestData(array (0,0,0,0,0,0,0,0),
 		array (0));
   </pre>
 		<div class="field is-horizontal">
@@ -75,8 +73,8 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	data : function() {
 		return {
 			results : [],
-			inputnodes : 64,
-			hiddennodes : 8,
+			inputnodes : 8,
+			hiddennodes : 4,
 			outputnodes : 1,
 			maxtrain : 3,
 			epochs : 1000,

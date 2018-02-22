@@ -5,4 +5,4 @@
 <title>Amit ISO 8385 POC</title>
 
 <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->

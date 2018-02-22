@@ -13,11 +13,12 @@ class DatabaseSeeder extends Seeder
     {
 	// $this->call(UsersTableSeeder::class);
 	    DB::table('fields')->insert([
-		            ['id' => 0 , 'element' => 'MTI'],
-		            ['id' => 1 , 'element' => 'BitMap'],
-		            ['id' => 2 , 'element' => 'Primary account number (PAN)'],
-		            ['id' => 3 , 'element' => 'Processing Code'],
+		            ['id' => 0 ,  'element' => 'MTI'],
+		            ['id' => 1 ,  'element' => 'BitMap'],
+		            ['id' => 2 ,  'element' => 'Primary account number (PAN)'],
+		            ['id' => 3 ,  'element' => 'Processing Code'],
 			    ['id' => 4 ,  'element' => 'Amount, transaction'],
+			    ['id' => 18 , 'element' => 'Merchant Category Code'],
 			    ['id' => 19 , 'element' => 'Acquiring institution country code'],
 		            ['id' => 22 , 'element' => 'Point of Service Entry Mode'],
 		            ['id' => 25 , 'element' => 'POS Condition Code'],
