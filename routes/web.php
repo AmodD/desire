@@ -19,6 +19,7 @@ use Kaperys\Financial\Message\Schema\SchemaManager;
 use App\Repositories\NeuralNetwork;
 use App\Repositories\JAK8583;
 
+use App\Annmodel;
 use App\Transaction;
 
 Route::get('/', function () {
@@ -45,8 +46,23 @@ Route::post('/savemodel', 'TransactionsController@saveModel');
 Route::get('/loadmodelstats', 'TransactionsController@loadModelStats');
 Route::get('/getmodels', 'TransactionsController@getModels');
 
+Route::get('/testdata', 'TransactionsController@testdata');
+
 Route::get('/test', function() {
 
+		$model = new Annmodel();
+		$models = $model->where('id','>',1)->pluck('id','name');
+
+		dd($models);
+
+	$transactions = Transaction::with('data')->where('annmodel_id',0)->take(10)->orderby('id','desc')->get();
+
+	foreach($transactions as $txn)
+	{
+		dd($txn->data,$txn->data->where('field_id',3),$txn->data->get(3)->value);
+	}
+
+	
 	$vector = collect([]);
 	$vector->push(1);
 	$vector->push(0);

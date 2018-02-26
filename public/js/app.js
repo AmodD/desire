@@ -1954,9 +1954,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -2154,13 +2151,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
 			results: [],
 			models: [],
-			selectedmodel: ""
+			selectedmodel: "",
+			notxns: 1
 		};
 	},
 	mounted: function mounted() {
@@ -2179,7 +2188,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var _this2 = this;
 
 			console.log("to generate ");
-			axios.get('/generate?model=' + this.selectedmodel).then(function (response) {
+			axios.get('/generate?model=' + this.selectedmodel + '&notxns=' + this.notxns).then(function (response) {
 				return _this2.results = response.data;
 			})
 			//			.then(function (response) {
@@ -2204,6 +2213,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -24884,66 +24902,133 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-          _c("div", { staticClass: "panel-block" }, [
+      _c("div", { staticClass: "field is-grouped" }, [
+        _c("div", { staticClass: "control" }, [
+          _c(
+            "button",
+            {
+              staticClass: "button is-danger is-outlined ",
+              on: { click: _vm.generate }
+            },
+            [_vm._v("\n      click to generate\n    ")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control" }, [
+          _c("div", { staticClass: "select is-primary" }, [
             _c(
-              "button",
+              "select",
               {
-                staticClass: "button is-danger is-outlined ",
-                on: { click: _vm.generate }
-              },
-              [_vm._v("\n      generate and see last 10 transactions\n    ")]
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "field" }, [
-              _c("div", { staticClass: "control" }, [
-                _c("div", { staticClass: "select is-primary" }, [
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.selectedmodel,
-                          expression: "selectedmodel"
-                        }
-                      ],
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.selectedmodel = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        }
-                      }
-                    },
-                    [
-                      _c("option", { attrs: { disabled: "", value: "" } }, [
-                        _vm._v("Select a Model")
-                      ]),
-                      _vm._v(" "),
-                      _vm._l(_vm.models, function(value, key) {
-                        return _c("option", { domProps: { value: value } }, [
-                          _vm._v(_vm._s(key))
-                        ])
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.selectedmodel,
+                    expression: "selectedmodel"
+                  }
+                ],
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
                       })
-                    ],
-                    2
-                  )
-                ])
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.selectedmodel = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { disabled: "", value: "" } }, [
+                  _vm._v("Select a Model")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "1" } }, [_vm._v("Test Data")]),
+                _vm._v(" "),
+                _vm._l(_vm.models, function(value, key) {
+                  return _c("option", { domProps: { value: value } }, [
+                    _vm._v(_vm._s(key))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _vm.selectedmodel == 1
+          ? _c("div", { staticClass: "control" }, [
+              _c("p", [_vm._v("Select Number of Transactions to generate")]),
+              _vm._v(" "),
+              _c("label", { staticClass: "radio" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.notxns,
+                      expression: "notxns"
+                    }
+                  ],
+                  attrs: { type: "radio", id: "notxns20" },
+                  domProps: { value: 20, checked: _vm._q(_vm.notxns, 20) },
+                  on: {
+                    change: function($event) {
+                      _vm.notxns = 20
+                    }
+                  }
+                }),
+                _vm._v(" 20\n  ")
+              ]),
+              _vm._v(" "),
+              _c("label", { staticClass: "radio" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.notxns,
+                      expression: "notxns"
+                    }
+                  ],
+                  attrs: { type: "radio", id: "notxns100" },
+                  domProps: { value: 100, checked: _vm._q(_vm.notxns, 100) },
+                  on: {
+                    change: function($event) {
+                      _vm.notxns = 100
+                    }
+                  }
+                }),
+                _vm._v(" 100\n  ")
+              ]),
+              _vm._v(" "),
+              _c("label", { staticClass: "radio" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.notxns,
+                      expression: "notxns"
+                    }
+                  ],
+                  attrs: { type: "radio", id: "notxns500" },
+                  domProps: { value: 500, checked: _vm._q(_vm.notxns, 500) },
+                  on: {
+                    change: function($event) {
+                      _vm.notxns = 500
+                    }
+                  }
+                }),
+                _vm._v(" 500\n  ")
               ])
             ])
-          ])
-        ])
+          : _vm._e()
       ]),
       _vm._v(" "),
       _vm._l(_vm.results, function(result) {
@@ -25243,7 +25328,7 @@ var render = function() {
   return _c("div", { staticClass: "content" }, [
     _c("pre", [
       _vm._v(
-        "// We are training the ANN with a basic crude set of data as below\n$n->addTestData(array (1,1,1,1,1,1,1,1),\n       \t\tarray (1));\n$n->addTestData(array (0,0,0,0,0,0,0,0),\n\t\tarray (0));\n  "
+        '// valid set of values\nDE2 DE3 DE4 DE18 DE19 DE49 --------- RANDOM VALUES\nPOSEM = ["010","020","050","900","950","011","021","051","901","951","012","022","052","902","952","016","026","056","906","956"];\nPOSCC = ["00","01","02","03","05","07","08","52","59"];\n\n// valid TEST DATA    ( ---------- INPUT VECTOR -----------  ) ( OUTPUT )\n$n->addTestData(array (DE2,DE3,DE4,DE18,DE19,POSEM,POSCC,DE49),array (1));\n\n// invalid set of values\nPOSEM = ["100","200","300","400","500","600","700","800"];\nPOSCC = ["10","20","30","40","50","60","70","80"];\n\n// invalid TEST DATA  ( --- INPUT VECTOR ---  ), ( OUTPUT )    \n$n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));\n  '
       )
     ]),
     _vm._v(" "),

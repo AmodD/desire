@@ -1,25 +1,36 @@
 <template>
 <div>
-
-       <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-               <div class="panel-block">
+<div class="field is-grouped">
+  <div class="control">
     <button v-on:click="generate" class="button is-danger is-outlined ">
-      generate and see last 10 transactions
+      click to generate
     </button>
-<div class="field">
+  </div>  
+
   <div class="control">
     <div class="select is-primary">
       <select v-model="selectedmodel">
 	<option disabled value="">Select a Model</option>
+	<option value="1">Test Data</option>
 	<option v-for="(value, key) in models" :value="value" >{{ key }}</option>
       </select>
     </div>
   </div>
+
+  <div class="control" v-if="selectedmodel == 1">
+	  <p>Select Number of Transactions to generate</p>  	  
+  <label class="radio">
+    <input type="radio" id="notxns20" v-model="notxns" :value=20> 20
+  </label>
+  <label class="radio">
+    <input type="radio" id="notxns100" v-model="notxns" :value=100> 100
+  </label>
+  <label class="radio">
+    <input type="radio" id="notxns500" v-model="notxns" :value=500> 500
+  </label>
+  </div>
+
 </div>
-	       </div>
-	       </div>
-	       </div>
 
 <div class="box" v-for="result in results">
 	<div class="content">
@@ -60,7 +71,8 @@
 		return {
 			results : [],
 			models : [],
-			selectedmodel : ""
+			selectedmodel : "",
+			notxns : 1
 		}
 	},
         mounted() {
@@ -75,7 +87,7 @@
 	methods : {
 		generate(){
 			console.log("to generate ");
-			axios.get('/generate?model='+this.selectedmodel)
+			axios.get('/generate?model='+this.selectedmodel+'&notxns='+this.notxns)
 			.then(response => this.results = response.data)
 //			.then(function (response) {
 //			    console.log(response);

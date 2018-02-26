@@ -83,20 +83,25 @@ class TransactionsController extends Controller
 		    return $isoMessage;
 		}
 		else{
-			return $this->store($mti,$isoMessage,$dataElement,$model);
+		    $this->store($mti,$isoMessage,$dataElement,$model);
+			
+		    $transactions = Transaction::with('data','annmodel')->take(10)->orderby('id','desc')->get();
+		    return $transactions;
 		}	
 	}
 	
 	public function generate(Request $request)
 	{
 		$dataElement = collect([]);
-		$output = collect([]);
 		$model =  $request->model;
 		
 		$mti = "1200"; 
 		$faker = \Faker\Factory::create('en_US');
 
+		for ($i = 0; $i < $request->notxns; ++$i)
+	       	{
 		$pan = $faker->creditCardNumber;
+		$pan = str_pad($pan, 16, '0', STR_PAD_LEFT);	
 		$amnt = str_pad(rand(100,99999), 12, '0', STR_PAD_LEFT);	
 		$arrayCountry = [601, 715, 807, 950, 785, 963];
 		$country = array_random($arrayCountry);
@@ -104,13 +109,14 @@ class TransactionsController extends Controller
 		$de48 = "" ; //$faker->word;
 		$arrayProCode = [200004, 315007, 267007, 159008, 244007, 576009];
 		$procode = array_random($arrayProCode);
-		$posem = mt_rand(666,999);
-		$poscc = "99";
+		$arrayposem = ["010","020","050","900","950","011","021","051","901","951","012","022","052","902","952","016","026","056","906","956"];
+		$posem = array_random($arrayposem);
+		$arrayposcc = ["00","01","02","03","05","07","08","52","59"];
+		$poscc = array_random($arrayposcc);
 		$chipdata = "" ; //$faker->word;
 		$addposdata = "" ; // $faker->word;
 		$mcc = mt_rand(6000,9999);
 
-		
 		$dataElement->put("pan",$pan);
 		$dataElement->put("amnt",$amnt);
 		$dataElement->put("country",$country);
@@ -126,11 +132,24 @@ class TransactionsController extends Controller
 		$isoMessage = $this->pack($mti,$dataElement);
 		
 		if (strpos($isoMessage, 'Error') !== false) {
-			return $isoMessage;
+			//	return $isoMessage;
+			continue;
 		}
 		else{
-			return $this->store($mti,$isoMessage,$dataElement,$model);
+			 $this->store($mti,$isoMessage,$dataElement,$model);
 		}	
+
+		} // for loop ends
+
+		$transactions = Transaction::with('data','annmodel')->take(10)->orderby('id','desc')->get();
+
+		return $transactions;
+
+	} // method ends
+
+	public function testdata()
+	{
+
 
 	}
 
@@ -146,12 +165,12 @@ class TransactionsController extends Controller
 
 		$vector = $this->getVector($dataElement);
 
-
-//		dd($vector);
+	//	dd($vector);
 		$transaction = new Transaction();
 		$transaction->message = $isoMessage;
 		$transaction->annmodel_id = $model;
-		$transaction->score = head($this->trainedScore($vector,$model)) ;
+		if($model == 1) $transaction->score = 1;
+		else $transaction->score = head($this->trainedScore($vector,$model))  ; 
 		//$transaction->score = head($this->trainedScore(($jak->getBitmap()),$model)) ;
 		$transaction->save();
 
@@ -172,17 +191,24 @@ class TransactionsController extends Controller
 		    ]);
 
 
-		$transactions = Transaction::with('data','annmodel')->take(10)->orderby('id','desc')->get();
-
-		return $transactions;
-
 
 	}
 
 	public function getVector($dataElement)
 	{
 		
-	$vector = collect([]);
+		$vector = collect([]);
+
+	if($dataElement->get('pan')) $vector->push($dataElement->get('pan')); else  $vector->push(0);
+	if($dataElement->get('procode')) $vector->push($dataElement->get('procode')); else  $vector->push(0);
+	if($dataElement->get('amnt')) $vector->push($dataElement->get('amnt')); else  $vector->push(0);
+	if($dataElement->get('mcc'))  $vector->push($dataElement->get('mcc')); else  $vector->push(0);
+	if($dataElement->get('country'))  $vector->push($dataElement->get('country')); else  $vector->push(0);
+	if($dataElement->get('posem'))  $vector->push($dataElement->get('posem')); else  $vector->push(0);
+	if($dataElement->get('poscc'))  $vector->push($dataElement->get('poscc')); else  $vector->push(0);
+	if($dataElement->get('currency'))  $vector->push($dataElement->get('currency')); else  $vector->push(0);
+
+	return $vector->toArray();
 
 	if($dataElement->get('pan')) $vector->push(1); else  $vector->push(0);
 	if($dataElement->get('procode')) $vector->push(1); else  $vector->push(0);
@@ -191,11 +217,8 @@ class TransactionsController extends Controller
 	if($dataElement->get('country'))  $vector->push(1); else  $vector->push(0);
 	if($dataElement->get('posem'))  $vector->push(1); else  $vector->push(0);
 	if($dataElement->get('poscc'))  $vector->push(1); else  $vector->push(0);
-//if($dataElement->get('de48'))
 	if($dataElement->get('currency'))  $vector->push(1); else  $vector->push(0);
-//if($dataElement->get('chipdata'))
-	//if($dataElement->get('addposdata'))
-	//
+	
 	return $vector->toArray();
 
 	}
@@ -205,12 +228,31 @@ class TransactionsController extends Controller
 		$n = new NeuralNetwork(8, $request->nodes, 1);
 		$n->setVerbose(false);
 
+		$transactions = Transaction::with('data')->where('annmodel_id',1)->orderby('id','desc')->get();
+		
+		$arrayposem = ["100","200","300","400","500","600","700","800"];
+		$arrayposcc = ["10","20","30","40","50","60","70","80"];
 
-		$n->addTestData(array (1,1,1,1,1,1,1,1),
-       				array (1));
+		foreach($transactions as $txn)
+		{
+			$n->addTestData( array(
+					$txn->data->get(2)->value,
+					$txn->data->get(3)->value,
+					$txn->data->get(4)->value,
+					$txn->data->get(5)->value,
+					$txn->data->get(6)->value,
+					$txn->data->get(7)->value,
+					$txn->data->get(8)->value,
+					$txn->data->get(10)->value
+					),
+					array ($txn->score));
 
-		$n->addTestData(array (0,0,0,0,0,0,0,0),
+		$posem = array_random($arrayposem);
+		$poscc = array_random($arrayposcc);
+
+		$n->addTestData(array (0,0,0,0,0,$posem,$poscc,0),
 				array (0));
+		}
 
 		$max = $request->max;
 		$i = 0;
@@ -242,7 +284,7 @@ class TransactionsController extends Controller
 		if(!$id) $modelToLoad = $model->get()->last();
 		else $modelToLoad = $model->find($id);
 
-		$n = new NeuralNetwork(64, $modelToLoad->nodes, 1);
+		$n = new NeuralNetwork(8, $modelToLoad->nodes, 1);
 		$n->load($modelToLoad->name);
 
 		$n->showWeights(true);
@@ -254,10 +296,9 @@ class TransactionsController extends Controller
 	public function getModels()
 	{
 		$model = new Annmodel();
-		$models = $model->all()->pluck('id','name');
+		$models = $model->where('id','>',1)->pluck('id','name');
 
 		return $models ;
-
 
 	}
 

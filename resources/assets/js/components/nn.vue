@@ -3,11 +3,20 @@
 <div class="content">
 
   <pre>
-// We are training the ANN with a basic crude set of data as below
-$n->addTestData(array (1,1,1,1,1,1,1,1),
-       		array (1));
-$n->addTestData(array (0,0,0,0,0,0,0,0),
-		array (0));
+// valid set of values
+DE2 DE3 DE4 DE18 DE19 DE49 --------- RANDOM VALUES
+POSEM = ["010","020","050","900","950","011","021","051","901","951","012","022","052","902","952","016","026","056","906","956"];
+POSCC = ["00","01","02","03","05","07","08","52","59"];
+
+// valid TEST DATA    ( ---------- INPUT VECTOR -----------  ) ( OUTPUT )
+$n->addTestData(array (DE2,DE3,DE4,DE18,DE19,POSEM,POSCC,DE49),array (1));
+
+// invalid set of values
+POSEM = ["100","200","300","400","500","600","700","800"];
+POSCC = ["10","20","30","40","50","60","70","80"];
+
+// invalid TEST DATA  ( --- INPUT VECTOR ---  ), ( OUTPUT )    
+$n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
   </pre>
 		<div class="field is-horizontal">
 		  <div class="field-label is-normal"> <label class="label">ANN nodes</label> </div>
@@ -83,7 +92,7 @@ $n->addTestData(array (0,0,0,0,0,0,0,0),
 			momentum : 0.1,
 			modelname : '',
 			response : '',
-			weights : ''  
+			weights : ''
 		}
 	},
 	    computed : {

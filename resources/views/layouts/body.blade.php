@@ -35,6 +35,7 @@
 			    <li>Asign scores to through ML for each txn</li>
 			    <li>Create a Model with weights from variable input params</li>	
 			    <li>Store it in the database and use it to assign scores</li>	
+			    <li>Generate Test Data</li>	
 			</ul>
 		</div>
 	@endif

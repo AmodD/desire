@@ -12,6 +12,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 	// $this->call(UsersTableSeeder::class);
+	    DB::table('annmodels')->insert([
+		    ['id' => 1 ,  'name' => 'Test Data', 'nodes' => 0]
+	    ]);
+
+
+
 	    DB::table('fields')->insert([
 		            ['id' => 0 ,  'element' => 'MTI'],
 		            ['id' => 1 ,  'element' => 'BitMap'],
