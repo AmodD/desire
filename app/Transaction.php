@@ -16,4 +16,9 @@ class Transaction extends Model
 	{
 		return $this->belongsTo(Annmodel::class);
 	}
+	
+	public function relationships()
+	{
+		return $this->belongsToMany(Relationship::class)->withPivot('label_id');
+	}
 }

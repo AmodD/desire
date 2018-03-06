@@ -18,38 +18,43 @@ POSCC = ["10","20","30","40","50","60","70","80"];
 // invalid TEST DATA  ( --- INPUT VECTOR ---  ), ( OUTPUT )    
 $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
   </pre>
+        
+<!--<form method="POST" action="/savemodel">
+		<slot name="csrf-field"></slot>
+		<slot name="method-field"></slot>
+-->
 		<div class="field is-horizontal">
 		  <div class="field-label is-normal"> <label class="label">ANN nodes</label> </div>
 	          <div class="field-body"><div class="field">
 			input
-			<input class="input" type="text" v-model="inputnodes" disabled style="width:20%;">
+			<input class="input" name="inputnodes"  type="text" v-model="inputnodes" disabled style="width:20%;">
 			hidden
-			<input class="input" type="text" v-model="hiddennodes" style="width:20%;">
+			<input class="input" name="nodes"  type="text" v-model="hiddennodes" style="width:20%;">
 			output
-			<input class="input" type="text" v-model="outputnodes" disabled style="width:20%;">
+			<input class="input" name="outputnodes" type="text" v-model="outputnodes" disabled style="width:20%;">
 		  </div></div>
 	        </div>
 
 		<div class="field is-horizontal">
 		  <div class="field-label is-normal"> <label class="label">Iterations</label> </div>
 	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="maxtrain" style="width:40%;">
+			<input class="input" name="max" type="text" v-model="maxtrain" style="width:40%;">
 		  </div></div>
 		  <div class="field-label is-normal"> <label class="label">Epochs</label> </div>
 	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="epochs" style="width:40%;">
+			<input class="input" name="epochs" type="text" v-model="epochs" style="width:40%;">
 		  </div></div>
 		  <div class="field-label is-normal"> <label class="label">Error</label> </div>
 	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="maxerror" style="width:40%;">
+			<input class="input" name="error" type="text" v-model="maxerror" style="width:40%;">
 		  </div></div>
 		  <div class="field-label is-normal"> <label class="label">Learning</label> </div>
 	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="learningrate" style="width:40%;" disabled>
+			<input class="input" name="learning" type="text" v-model="learningrate" style="width:40%;" disabled>
 		  </div></div>
 		  <div class="field-label is-normal"> <label class="label">Momentum</label> </div>
 	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="momentum" style="width:40%;" disabled>
+			<input class="input" name="momentum" type="text" v-model="momentum" style="width:40%;" disabled>
 		  </div></div>
 	        </div>
 
@@ -57,7 +62,7 @@ $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
 		<div class="field is-horizontal">
 		  <div class="field-label is-normal"> <label class="label">Model Name</label> </div>
 	          <div class="field-body"><div class="field">
-			<input class="input" type="text" v-model="modelname" :placeholder="modelNameComputed">
+			<input class="input" name="name" type="text" v-model="modelname" :placeholder="modelNameComputed">
 		  </div></div>
 		  <div class="field-body">
 		    <div class="field">
@@ -65,12 +70,14 @@ $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
 		        <button v-on:click="create" class="button is-primary">
 		          Create Model
 		        </button>
-		    &nbsp; {{ response }}
 		      </div>
 		    </div>
 		  </div>
 		</div>  	 
+		<span v-html="response"></span>
 		<span v-html="weights"></span></p>
+
+		<!--  </form>		-->
 
 </div>
 </template>
@@ -82,7 +89,7 @@ $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
 	data : function() {
 		return {
 			results : [],
-			inputnodes : 8,
+			inputnodes : 5,
 			hiddennodes : 4,
 			outputnodes : 1,
 			maxtrain : 3,

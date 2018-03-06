@@ -37,6 +37,12 @@ Route::get('/demo', function () {
 Route::get('/nn', function () {
     return view('home');
 })->name('nn');
+Route::get('/relationship', function () {
+    return view('home');
+})->name('relationship');
+Route::get('/traindata', function () {
+    return view('home');
+})->name('traindata');
 
 Route::get('/bp', 'TransactionsController@demo')->name('bp');
 
@@ -50,6 +56,23 @@ Route::get('/testdata', 'TransactionsController@testdata');
 
 Route::get('/test', function() {
 
+	dd(decbin("759"),decbin(99),decbin(9));
+
+		$validposcc = ["00","01","02","03","05","07","08","52","59"];
+
+dd(in_array(4,$validposcc));
+
+dd(decbin(100),decbin(100000));
+
+$byte_array = unpack('C*', 'The quick fox jumped over the lazy brown dog');
+//var_dump($byte_array); 
+dd($byte_array);
+	Transaction::with('data')->where('annmodel_id',1)->chunk(200, function ($flights) {
+		dd($flights);
+    foreach ($flights as $flight) {
+        //
+    }
+});
 		$model = new Annmodel();
 		$models = $model->where('id','>',1)->pluck('id','name');
 
@@ -99,3 +122,14 @@ return 	array_map('intval', str_split($vector));
 
 Route::get('/analyze', 'TransactionsController@analyze');
 Route::get('/generate', 'TransactionsController@generate');
+Route::get('/lasttxns', 'TransactionsController@lasttxns');
+
+Route::post('/relationships', 'RelationshipsController@store');
+Route::get('/relationships', 'RelationshipsController@index');
+
+
+Route::post('/labels', 'LabelsController@store');
+Route::get('/labels', 'LabelsController@getlabels');
+
+Route::get('/getfields', 'FieldsController@getfields');
+Route::get('/allfields', 'FieldsController@getall');

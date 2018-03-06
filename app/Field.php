@@ -11,4 +11,9 @@ class Field extends Model
 	{
 		return $this->hasMany(Data::class);
 	}
+	
+	public function relationships()
+	{
+		return $this->belongsToMany(Relationship::class);
+	}
 }

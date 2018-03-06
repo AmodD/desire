@@ -1,27 +1,25 @@
 
 <section class="section">
     <div class="container">
-	<div class="tabs">
-	  <ul>
-	    <li class="is-active"><a href="/">Home</a></li>
-	    <li><a href="/create">Create a Message</a></li>
-	    <li><a href="/auto">Auto Generate</a></li>
-	    <li><a href="/nn">Create a Model</a></li>
-	  </ul>
-	</div>
 
 	<div id="app">
 	@if(Route::currentRouteName() == 'create' )
+		<demo selected="message"></demo> 
 		<create></create>
 	@elseif(Route::currentRouteName() == 'auto' )
+		<demo selected="auto"></demo> 
 		<generate></generate>
-	@elseif(Route::currentRouteName() == 'demo' )
-		<demo></demo>
 	@elseif(Route::currentRouteName() == 'nn' )
+		<demo selected="model"></demo> 
 		<nn></nn>
-	@elseif(Route::currentRouteName() == 'bp' )
-		<bp></bp>
+	@elseif(Route::currentRouteName() == 'traindata' )
+		<demo selected="traindata"></demo> 
+		<traindata></traindata>
+	@elseif(Route::currentRouteName() == 'relationship' )
+		<demo selected="relationship"></demo> 
+		<relationship></relationship>
 	@else
+		<demo selected="home"></demo> 
 		<div class="content">
 			<h1>POC 8385 ML</h1>
 			<h2>Goals</h2>

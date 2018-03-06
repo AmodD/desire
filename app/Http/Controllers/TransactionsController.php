@@ -14,8 +14,18 @@ use App\Data;
 use App\Field;
 use App\Transaction;
 use App\Annmodel;
+use App\Relationship;
 
 use Phpml\Classification\MLPClassifier;
+use Phpml\Preprocessing\Normalizer;
+use Phpml\Math\Set;
+use Phpml\FeatureExtraction\TfIdfTransformer;
+use Phpml\Classification\SVC;
+use Phpml\Classification\NaiveBayes ;
+use Phpml\Pipeline;
+use Phpml\Preprocessing\Imputer;
+use Phpml\Preprocessing\Imputer\Strategy\MostFrequentStrategy;
+use Phpml\ModelManager;
 
 use Kaperys\Financial\Financial;
 use Kaperys\Financial\Cache\CacheManager;
@@ -29,32 +39,196 @@ class TransactionsController extends Controller
 	public function mldemo(Request $request)
 	{
 
-		$n = new NeuralNetwork(3, 6, 1);
+		$validposem = ["010","020","050","900","950","011","021","051","901","951","012","022","052","902","952","016","026","056","906","956"];
+		$validposcc = ["00","01","02","03","05","07","08","52","59"];
+		$validmaxem = 956;
+		$validminem = 10; 
+	        $validmaxcc = 59;
+		$validmincc = 0;	
+
+		$invalidposem = ["121","245","383","437","582","628","772","802"];
+		$invalidposcc = ["10","23","35","43","50","66","74","89"];
+		$invalidmaxem = 802;
+		$invalidminem = 121; 
+	        $invalidmaxcc = 89;
+		$invalidmincc = 10;	
+
+		$dataSet = array();		
+		$targetSet = array();		
+
+		foreach($validposem as $vposem)
+		{
+			//$normalizedEM = ($validmaxem - intval($vposem))/($validmaxem - $validminem) ;
+			//$decEM = str_pad(decbin($vposem), 10, '0', STR_PAD_LEFT);	
+			$posem = str_pad($vposem, 3, '0', STR_PAD_LEFT);	
+
+			foreach($validposcc as $vposcc)
+			{
+				$poscc = str_pad($vposcc, 2, '0', STR_PAD_LEFT);	
+				$dataSet[] = array_map('intval', str_split($posem.$poscc));
+				
+				//$normalizedCC = ($validmaxcc - intval($vposcc))/($validmaxcc - $validmincc) ;
+				//$decCC = str_pad(decbin($vposcc), 7, '0', STR_PAD_LEFT);	
+				//$dataSet[] = array(intval($decEM) , intval($decCC));
+				//$dataSet[] = array(intval($vposem) , intval($vposcc));
+				//$dataSet[] = array($normalizedEM , $normalizedCC);
+				$targetSet[] = "correct";
+			}
+		}
+
+		foreach($invalidposem as $invposem)
+		{
+			//$normalizedEM = ($invalidmaxem - intval($invposem))/($invalidmaxem - $invalidminem) ;
+			//$decEM = str_pad(decbin($invposem), 10, '0', STR_PAD_LEFT);	
+			$posem = str_pad($invposem, 3, '0', STR_PAD_LEFT);	
+			foreach($invalidposcc as $invposcc)
+			{
+				$poscc = str_pad($invposcc, 2, '0', STR_PAD_LEFT);	
+				$dataSet[] = array_map('intval', str_split($posem.$poscc))	;
+				
+				//$normalizedCC = ($invalidmaxcc - intval($invposcc))/($invalidmaxcc - $invalidmincc) ;
+				//$decCC = str_pad(decbin($invposcc), 7, '0', STR_PAD_LEFT);	
+				//$dataSet[] = array(intval($decEM) , intval($decCC));
+				//$dataSet[] = array(intval($invposem) , intval($invposcc));
+				//$dataSet[] = array($normalizedEM , $normalizedCC);
+				$targetSet[] = "fraud";
+			}
+		}
+
+
+$mlp = new MLPClassifier(5, [4], ['correct','fraud']);		
+$mlp->train($dataSet, $targetSet);
+$filepath = 'model123';
+$modelManager = new ModelManager();
+$modelManager->saveToFile($mlp, $filepath);
+dd($mlp->predict([[0,1,6,0,5], [2,4,5,4,3]]));
+
+$decEM1 = intval(str_pad(decbin(952), 10, '0', STR_PAD_LEFT));	
+$decCC1 = intval(str_pad(decbin(59), 7, '0', STR_PAD_LEFT));	
+$decEM2 = intval(str_pad(decbin(437), 10, '0', STR_PAD_LEFT));	
+$decCC2 = intval(str_pad(decbin(89), 7, '0', STR_PAD_LEFT));	
+$predicted = $mlp->predict([[$decEM1,$decCC1],[$decEM2,$decCC2]]);
+dd($predicted);
+
+$transformers = [new Normalizer()];
+$estimator = new MLPClassifier(2, [4], ["correct", "fraud"]);
+//$estimator = new NaiveBayes();
+$pipeline = new Pipeline($transformers, $estimator);
+$pipeline->train($dataSet, $targetSet);
+
+$decEM1 = str_pad(decbin(952), 10, '0', STR_PAD_LEFT);	
+$decCC1 = str_pad(decbin(59), 7, '0', STR_PAD_LEFT);	
+$decEM2 = str_pad(decbin(437), 10, '0', STR_PAD_LEFT);	
+$decCC2 = str_pad(decbin(89), 7, '0', STR_PAD_LEFT);	
+$predicted = $pipeline->predict([[$decEM1,$decCC1],[$decEM2,$decCC2]]);
+
+
+dd($predicted);
+		
+//		dd($dataSet,$targetSet);
+		$mlp->train($dataSet,$targetSet);
+		dd($mlp->predict([[0,5,1], [1,0,0], [3,3,3]]));
+
+
+
+
+		//foreach($invalidposem as $invposem)
+		for($i=0 ; $i < 999 ; $i++)
+		{
+			//foreach($invalidposcc as $invposcc)
+			for($j=0 ; $j < 99 ; $j++)
+			{
+				if((in_array($i,$validposem)) && (in_array($j,$validposcc))) continue;
+	//			if(in_array($i,$validposem)) continue;
+				else {
+
+					//$posem = str_pad($i, 3, '0', STR_PAD_LEFT);	
+					//$poscc = str_pad($j, 2, '0', STR_PAD_LEFT);	
+				//	$n->addTestData(array_map('intval', str_split($posem)),
+					$n->addTestData(array ($i/999,$j/99),
+					array (0));
+				}
+			}
+		}
+
+		$mlp->train(
+		    $samples = [[1, 0, 0, 0], [0, 1, 1, 0], [1, 1, 1, 1], [0, 0, 0, 0]],
+		    $targets = ['a', 'a', 'b', 'c']
+		);
+		
+		
+		$mlp->predict([[1, 1, 1, 1], [0, 0, 0, 0]]);		
+		
+		
+		
+		
+	
+		$n = new NeuralNetwork(2, 4 , 1);
 		$n->setVerbose(false);
 
-		$n->addTestData(array (-1,-1,1), array (-1));
-		$n->addTestData(array (-1,1,1), array (1));
-		$n->addTestData(array (1,-1,1), array (1));
-		$n->addTestData(array (1,1,1), array (-1));
+		$validposem = ["010","020","050","900","950","011","021","051","901","951","012","022","052","902","952","016","026","056","906","956"];
+		$validposcc = ["00","01","02","03","05","07","08","52","59"];
 
+		$invalidposem = ["100","200","300","400","500","600","700","800"];
+		$invalidposcc = ["10","20","30","40","50","60","70","80"];
+
+
+		foreach($validposem as $vposem)
+		{
+			foreach($validposcc as $vposcc)
+			{
+
+			//	$n->addTestData(array_map('intval', str_split($vposem)),
+				$n->addTestData(array ($vposem/999,$vposcc/99),
+				array (1));
+			}
+		}
+		
+		//foreach($invalidposem as $invposem)
+		for($i=0 ; $i < 999 ; $i++)
+		{
+			//foreach($invalidposcc as $invposcc)
+			for($j=0 ; $j < 99 ; $j++)
+			{
+				if((in_array($i,$validposem)) && (in_array($j,$validposcc))) continue;
+	//			if(in_array($i,$validposem)) continue;
+				else {
+
+					//$posem = str_pad($i, 3, '0', STR_PAD_LEFT);	
+					//$poscc = str_pad($j, 2, '0', STR_PAD_LEFT);	
+				//	$n->addTestData(array_map('intval', str_split($posem)),
+					$n->addTestData(array ($i/999,$j/99),
+					array (0));
+				}
+			}
+		}
+
+//		for($i=0 ; $i < 100 ; $i++)	
+	//	{
+	//	$Vposem = array_random($validposem);
+	//	$Vposcc = array_random($validposcc);
+			
+	//	$n->addTestData(array_map('intval', str_split($Vposem.$Vposcc)),
+	//			array (1));
+
+	//	$Iposem = array_random($invalidposem);
+	//	$Iposcc = array_random($invalidposcc);
+
+	//	$n->addTestData(array_map('intval', str_split($Iposem.$Iposcc)),
+	//			array (-1));
+	//	}
 		$max = 3;
 		$i = 0;
 
 //		$n->setLearningRate(0.9);
 
-		while (!($success = $n->train(1000, 0.01)) && ++$i<$max) 
+		while (!($success = $n->train(500, 0.03)) && ++$i<$max) 
 		{
 
 		}
 
-		$data = collect([]);
-
-		$data->put('calculate',$n->calculate(array(1,1,-1)));
-		$data->put('export',$n->export());	
-//		$n->showWeights(true);
-//		dd($n->calculate(array(0,1,0)),$n->export());
+		dd($n->calculate(array(950/999,52/99)),$n->calculate(array(100/999,10/99)),$n->calculate(array(888/999,88/99)));
 		
-		return  $data;
 
 	}
 
@@ -63,7 +237,11 @@ class TransactionsController extends Controller
 		$mti = "1200"; 
 		$dataElement = collect([]);
 
-		$model =  $request->model;
+		$model = $request->model;
+		$score = 0;
+		$label = $request->label;
+		$relationship = $request->relationship;
+
 
 		$dataElement->put("pan",$request->pan);
 		$dataElement->put("amnt",$request->amount);
@@ -83,17 +261,39 @@ class TransactionsController extends Controller
 		    return $isoMessage;
 		}
 		else{
-		    $this->store($mti,$isoMessage,$dataElement,$model);
+		    $this->store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship);
 			
-		    $transactions = Transaction::with('data','annmodel')->take(10)->orderby('id','desc')->get();
-		    return $transactions;
+		    return $this->lasttxns($relationship);
 		}	
+	}
+
+	public function lasttxns($relid=0)
+	{
+		$request = request();
+		$rel = $request->relationship;
+
+
+//		dd($relationship->transactions,Transaction::with('data','annmodel','relationships')->take(10)->orderby('id','desc')->get());
+		if($rel || $relid) {
+			$relationship = Relationship::find($rel);
+			return $relationship->transactions;
+		}
+		else return Transaction::with('data','annmodel')->take(10)->orderby('id','desc')->get();
+		
+	//	$label = request('label'):
+	//	$relationship = request('relationship');
+
+	//	if($label && $relationship) return Transaction::with('data','relationship')->orderby('id','desc')->get();
+	//	else return Transaction::with('data','annmodel')->take(10)->orderby('id','desc')->get();
 	}
 	
 	public function generate(Request $request)
 	{
 		$dataElement = collect([]);
 		$model =  $request->model;
+		$score = 1;//$request->label;
+		$label = $request->label;
+		$relationship = $request->relationship;
 		
 		$mti = "1200"; 
 		$faker = \Faker\Factory::create('en_US');
@@ -136,14 +336,12 @@ class TransactionsController extends Controller
 			continue;
 		}
 		else{
-			 $this->store($mti,$isoMessage,$dataElement,$model);
+			 $this->store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship);
 		}	
 
 		} // for loop ends
 
-		$transactions = Transaction::with('data','annmodel')->take(10)->orderby('id','desc')->get();
-
-		return $transactions;
+		return $this->lasttxns($relationship);
 
 	} // method ends
 
@@ -153,7 +351,7 @@ class TransactionsController extends Controller
 
 	}
 
-	public function store($mti,$isoMessage,$dataElement,$model)
+	public function store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship)
 	{
 		try{
 			$jak = new JAK8583();
@@ -169,7 +367,7 @@ class TransactionsController extends Controller
 		$transaction = new Transaction();
 		$transaction->message = $isoMessage;
 		$transaction->annmodel_id = $model;
-		if($model == 1) $transaction->score = 1;
+		if($model == 1) $transaction->score = $score;
 		else $transaction->score = head($this->trainedScore($vector,$model))  ; 
 		//$transaction->score = head($this->trainedScore(($jak->getBitmap()),$model)) ;
 		$transaction->save();
@@ -190,7 +388,12 @@ class TransactionsController extends Controller
 			    ['transaction_id' => $transaction->id  , 'field_id' => 60 ,  'value' => $dataElement->get("addposdata")]
 		    ]);
 
-
+		if($relationship)
+		{
+			DB::table('relationship_transaction')->insert([
+				['transaction_id' => $transaction->id  , 'relationship_id' => $relationship ,  'label_id' => $label]
+			]);
+		}
 
 	}
 
@@ -198,17 +401,22 @@ class TransactionsController extends Controller
 	{
 		
 		$vector = collect([]);
+		$vectorString = '';
 
-	if($dataElement->get('pan')) $vector->push($dataElement->get('pan')); else  $vector->push(0);
-	if($dataElement->get('procode')) $vector->push($dataElement->get('procode')); else  $vector->push(0);
-	if($dataElement->get('amnt')) $vector->push($dataElement->get('amnt')); else  $vector->push(0);
-	if($dataElement->get('mcc'))  $vector->push($dataElement->get('mcc')); else  $vector->push(0);
-	if($dataElement->get('country'))  $vector->push($dataElement->get('country')); else  $vector->push(0);
-	if($dataElement->get('posem'))  $vector->push($dataElement->get('posem')); else  $vector->push(0);
-	if($dataElement->get('poscc'))  $vector->push($dataElement->get('poscc')); else  $vector->push(0);
-	if($dataElement->get('currency'))  $vector->push($dataElement->get('currency')); else  $vector->push(0);
+//	if($dataElement->get('pan')) $vector->push($dataElement->get('pan')); else  $vector->push(0);
+//	if($dataElement->get('procode')) $vector->push($dataElement->get('procode')); else  $vector->push(0);
+//	if($dataElement->get('amnt')) $vector->push($dataElement->get('amnt')); else  $vector->push(0);
+//	if($dataElement->get('mcc'))  $vector->push($dataElement->get('mcc')); else  $vector->push(0);
+//	if($dataElement->get('country'))  $vector->push($dataElement->get('country')); else  $vector->push(0);
+//	if($dataElement->get('posem'))  $vector->push(($dataElement->get('posem'))); else  $vector->push(0);
+//	if($dataElement->get('poscc'))  $vector->push(($dataElement->get('poscc'))); else  $vector->push(0);
+//	if($dataElement->get('currency'))  $vector->push($dataElement->get('currency')); else  $vector->push(0);
+		
+	if($dataElement->get('posem')) $vectorString = $vectorString.$dataElement->get('posem'); else  $vectorString = $vectorString.'000';
+	if($dataElement->get('poscc'))  $vectorString = $vectorString.$dataElement->get('poscc'); else  $vectorString = $vectorString.'00';
 
-	return $vector->toArray();
+	return	array_map('intval', str_split($vectorString));
+//	return $vector->toArray();
 
 	if($dataElement->get('pan')) $vector->push(1); else  $vector->push(0);
 	if($dataElement->get('procode')) $vector->push(1); else  $vector->push(0);
@@ -225,32 +433,41 @@ class TransactionsController extends Controller
 
 	public function saveModel(Request $request)
 	{
-		$n = new NeuralNetwork(8, $request->nodes, 1);
+
+		$n = new NeuralNetwork(5, $request->nodes, 1);
 		$n->setVerbose(false);
 
-		$transactions = Transaction::with('data')->where('annmodel_id',1)->orderby('id','desc')->get();
+//		$transactions = Transaction::with('data')->where('annmodel_id',1)->orderby('id','desc')->take(200)->get();
+		$validposem = ["010","020","050","900","950","011","021","051","901","951","012","022","052","902","952","016","026","056","906","956"];
+		$validposcc = ["00","01","02","03","05","07","08","52","59"];
 		
-		$arrayposem = ["100","200","300","400","500","600","700","800"];
-		$arrayposcc = ["10","20","30","40","50","60","70","80"];
+		$invalidposem = ["100","200","300","400","500","600","700","800"];
+		$invalidposcc = ["10","20","30","40","50","60","70","80"];
 
-		foreach($transactions as $txn)
+		//	foreach($transactions as $txn)
+		for($i=0 ; $i < 100 ; $i++)	
 		{
-			$n->addTestData( array(
-					$txn->data->get(2)->value,
-					$txn->data->get(3)->value,
-					$txn->data->get(4)->value,
-					$txn->data->get(5)->value,
-					$txn->data->get(6)->value,
-					$txn->data->get(7)->value,
-					$txn->data->get(8)->value,
-					$txn->data->get(10)->value
-					),
-					array ($txn->score));
+//			$n->addTestData( array(
+				//	$txn->data->get(2)->value,
+				//	$txn->data->get(3)->value,
+				//	$txn->data->get(4)->value,
+				//	$txn->data->get(5)->value,
+				//	$txn->data->get(6)->value,
+//					$txn->data->get(7)->value,
+//					$txn->data->get(8)->value
+				//	$txn->data->get(10)->value
+//					),
+//					array ($txn->score));
+		$Vposem = array_random($validposem);
+		$Vposcc = array_random($validposcc);
+			
+		$n->addTestData(array_map('intval', str_split($Vposem.$Vposcc)),
+				array (1));
 
-		$posem = array_random($arrayposem);
-		$poscc = array_random($arrayposcc);
+		$Iposem = array_random($invalidposem);
+		$Iposcc = array_random($invalidposcc);
 
-		$n->addTestData(array (0,0,0,0,0,$posem,$poscc,0),
+		$n->addTestData(array_map('intval', str_split ($Iposem.$Iposcc)),
 				array (0));
 		}
 
@@ -272,7 +489,7 @@ class TransactionsController extends Controller
 			$model->nodes = $request->nodes;
 			$model->save();
 
-			return 'success' ;
+			return $n->trainInputs ;
 		}
 		else return 'failure';
 
@@ -284,7 +501,7 @@ class TransactionsController extends Controller
 		if(!$id) $modelToLoad = $model->get()->last();
 		else $modelToLoad = $model->find($id);
 
-		$n = new NeuralNetwork(8, $modelToLoad->nodes, 1);
+		$n = new NeuralNetwork(5, $modelToLoad->nodes, 1);
 		$n->load($modelToLoad->name);
 
 		$n->showWeights(true);
@@ -309,9 +526,8 @@ class TransactionsController extends Controller
 		$model = new Annmodel();
 		$m = $model->find($modelId);
 		//		$n = new NeuralNetwork(64, 8, 1);
-		$n = new NeuralNetwork(8,$m->nodes,1);
+		$n = new NeuralNetwork(5,$m->nodes,1);
 		$n->load($m->name);
-
 		return $n->calculate($vector);	
 	//	return  $n->calculate(array_map('intval', str_split($vector)));
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTransactionsTable extends Migration
+class CreateLabelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
-            $table->increments('id');
-	    $table->mediumText('message');
-	    $table->integer('score');
-	    $table->smallInteger('annmodel_id');
+        Schema::create('labels', function (Blueprint $table) {
+		$table->increments('id');
+		$table->smallInteger('relationship_id');
+		$table->string('value');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('labels');
     }
 }

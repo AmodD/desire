@@ -20,7 +20,8 @@ Vue.component('create', require('./components/create.vue'));
 Vue.component('generate', require('./components/generate.vue'));
 Vue.component('demo', require('./components/demo.vue'));
 Vue.component('nn', require('./components/nn.vue'));
-Vue.component('bp', require('./components/bp.vue'));
+Vue.component('relationship', require('./components/relationship.vue'));
+Vue.component('traindata', require('./components/data.vue'));
 
 const app = new Vue({
     el: '#app'
