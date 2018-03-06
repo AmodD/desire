@@ -2066,6 +2066,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -2114,6 +2120,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			}
 
 			return scorevalue;
+		},
+		deletedata: function deletedata(txnid) {
+			var self = this;
+			axios.delete('/transactions/' + txnid).then(function (response) {
+				self.getLastTxns(self.selectedrelationship);
+			}).catch(function (error) {
+				console.log(error);
+			});
 		},
 		adddata: function adddata() {
 			var _this = this;
@@ -25754,7 +25768,10 @@ var render = function() {
             _vm._l(_vm.fields, function(field) {
               return _c("th", [_vm._v("DE" + _vm._s(field.id))])
             }),
-            _c("th", [_vm._v("Label")])
+            _vm._v(" "),
+            _c("th", [_vm._v("Label")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Action")])
           ],
           2
         )
@@ -25976,22 +25993,19 @@ var render = function() {
                         }
                       ],
                       on: {
-                        change: [
-                          function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
-                              })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.selectedlabel = $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          },
-                          _vm.adddata
-                        ]
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.selectedlabel = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
                       }
                     },
                     [
@@ -26008,6 +26022,17 @@ var render = function() {
                     2
                   )
                 ])
+              ]),
+              _vm._v(" "),
+              _c("th", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "button is-success",
+                    on: { click: _vm.adddata }
+                  },
+                  [_vm._v("Add")]
+                )
               ])
             ],
             2
@@ -26029,6 +26054,21 @@ var render = function() {
                       _c("td", [
                         _vm._v(
                           " " + _vm._s(_vm.scorelabels(txn.pivot.label_id))
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "button is-danger is-small",
+                            on: {
+                              click: function($event) {
+                                _vm.deletedata(txn.id)
+                              }
+                            }
+                          },
+                          [_vm._v("Delete")]
                         )
                       ])
                     ],

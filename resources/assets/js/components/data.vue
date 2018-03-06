@@ -12,7 +12,11 @@
 
 	<table class="tablei is-bordered">
 	  <thead>
-		  <tr><th v-for="field in fields">DE{{ field.id  }}</th><th>Label</th></tr>
+		  <tr>
+		      <th v-for="field in fields">DE{{ field.id  }}</th>
+		      <th>Label</th>
+		      <th>Action</th>
+		  </tr>
           </thead>
 	  <tbody>
 		<tr>
@@ -28,17 +32,19 @@
 			</th>
 			<th>
   			<div class="select">
-			<select v-model="selectedlabel" v-on:change="adddata">
+			<select v-model="selectedlabel">
 			  <option disabled value="">Select a label</option>
 			  <option v-for="label in labels" :value="label.id" > {{ label.value }}</option>
 			</select>
 			</div>	
 			</th>	
+		        <th><a class="button is-success" v-on:click="adddata">Add</a></th>
 		</tr>
 		<tr v-if="output">{{ txns }}</tr>
 		<tr v-else-if="selectedrelationship" v-for="txn in txns">
 			<td v-for="field in txn.data" v-if="defields.includes(field.field_id)">{{ field.value  }}</td>
 			<td> {{ scorelabels(txn.pivot.label_id) }}</td>
+		        <td><a class="button is-danger is-small" v-on:click="deletedata(txn.id)">Delete</a></td>
 		</tr>	
 	    <tr><th></th></tr>		  
 	  </tbody>
@@ -108,6 +114,16 @@
 
 			return scorevalue ;
 
+		},
+		deletedata(txnid){
+			let self = this;
+			axios.delete('/transactions/'+txnid)
+			     .then(function (response) {
+				self.getLastTxns(self.selectedrelationship);
+			  })
+			     .catch(function (error) {
+			     console.log(error);
+			  });
 		},
 		adddata(){
 			axios.get('/analyze?pan='+this.pan+'&currency='+this.currency+'&amount='+this.amount+'&aqcountry='+this.aqcountry+'&procode='+this.procode+'&posem='+this.posem+'&poscc='+this.poscc+'&model='+this.selectedmodel+'&mcc='+this.mcc+'&label='+this.selectedlabel+'&relationship='+this.selectedrelationship)

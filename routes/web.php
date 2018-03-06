@@ -127,6 +127,7 @@ Route::get('/lasttxns', 'TransactionsController@lasttxns');
 Route::post('/relationships', 'RelationshipsController@store');
 Route::get('/relationships', 'RelationshipsController@index');
 
+Route::delete('/transactions/{transaction}','TransactionsController@destroy');
 
 Route::post('/labels', 'LabelsController@store');
 Route::get('/labels', 'LabelsController@getlabels');

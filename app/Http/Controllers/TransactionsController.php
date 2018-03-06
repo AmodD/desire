@@ -231,6 +231,11 @@ dd($predicted);
 		
 
 	}
+	
+	public function destroy(Transaction $transaction)
+        {
+	    $transaction->delete();
+        }
 
 	public function analyze(Request $request)
 	{
