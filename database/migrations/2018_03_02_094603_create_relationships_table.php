@@ -44,5 +44,6 @@ class CreateRelationshipsTable extends Migration
     {
         Schema::dropIfExists('relationships');
         Schema::dropIfExists('field_relationship');
+        Schema::dropIfExists('relationship_transaction');
     }
 }
