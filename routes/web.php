@@ -21,6 +21,7 @@ use App\Repositories\JAK8583;
 
 use App\Annmodel;
 use App\Transaction;
+use App\RelationshipTransaction;
 
 Route::get('/', function () {
     return view('home');
@@ -49,12 +50,27 @@ Route::get('/bp', 'TransactionsController@demo')->name('bp');
 Route::get('/mldemo', 'TransactionsController@mldemo');
 Route::get('/score', 'TransactionsController@score');
 Route::post('/savemodel', 'TransactionsController@saveModel');
+Route::post('/createmodel', 'TransactionsController@createModel');
+Route::get('/testcreatemodel', 'TransactionsController@createModel');
 Route::get('/loadmodelstats', 'TransactionsController@loadModelStats');
 Route::get('/getmodels', 'TransactionsController@getModels');
 
 Route::get('/testdata', 'TransactionsController@testdata');
 
 Route::get('/test', function() {
+
+	$reltxn =  RelationshipTransaction::all();
+	dd($reltxn);
+
+	$dataElement = collect([]);
+
+	$dataElement->put("a",1);
+	$dataElement->put("b",2);
+	$dataElement->put("c",3);
+	$dataElement->put("d",4);
+	$dataElement->put("e",5);
+
+	dd($dataElement);
 
 	dd(decbin("759"),decbin(99),decbin(9));
 
@@ -126,6 +142,8 @@ Route::get('/lasttxns', 'TransactionsController@lasttxns');
 
 Route::post('/relationships', 'RelationshipsController@store');
 Route::get('/relationships', 'RelationshipsController@index');
+
+Route::get('/algorithms', 'AlgorithmsController@index');
 
 Route::delete('/transactions/{transaction}','TransactionsController@destroy');
 

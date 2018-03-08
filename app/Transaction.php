@@ -12,13 +12,13 @@ class Transaction extends Model
 		return $this->hasMany(Data::class);
 	}
 	
-	public function annmodel()
+	public function mlmodel()
 	{
-		return $this->belongsTo(Annmodel::class);
+		return $this->belongsTo(Mlmodel::class);
 	}
 	
 	public function relationships()
 	{
-		return $this->belongsToMany(Relationship::class)->withPivot('label_id');
+		return $this->belongsToMany(Relationship::class)->withPivot('label_id')->using(RelationshipTransaction::class);
 	}
 }

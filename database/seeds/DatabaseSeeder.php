@@ -12,11 +12,21 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 	// $this->call(UsersTableSeeder::class);
-	    DB::table('annmodels')->insert([
-		    ['id' => 1 ,  'name' => 'Test Data', 'nodes' => 0]
+	    DB::table('mlmodels')->insert([
+		    ['id' => 1 ,  'name' => 'Test Data', 'relationship_id' => 0 , 'algorithm_id' => 0]
 	    ]);
 
-
+	    DB::table('algorithms')->insert([
+		            ['id' => 1 ,  'name' => 'Apriori' , 'type' => 'Association'],
+			    ['id' => 2 ,  'name' => 'SVC' , 'type' => 'Classification'],
+			    ['id' => 3 ,  'name' => 'K-Nearest Neighbours' , 'type' => 'Classification'],
+			    ['id' => 4 ,  'name' => 'Naive Bayes' , 'type' => 'Classification'],
+			    ['id' => 5 ,  'name' => 'Least Squares' , 'type' => 'Regression'],
+			    ['id' => 6 ,  'name' => 'SVR' , 'type' => 'Regression'],
+			    ['id' => 7 ,  'name' => 'K-Means' , 'type' => 'Clustering'],
+			    ['id' => 8 ,  'name' => 'DBSCAN' , 'type' => 'Clustering'],
+			    ['id' => 9 ,  'name' => 'MLP Classifier Backpropagation' , 'type' => 'ANN']
+	    ]);
 
 	    DB::table('fields')->insert([
 		            ['id' => 0 ,  'element' => 'MTI'],

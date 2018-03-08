@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAnnmodelsTable extends Migration
+class CreateAlgorithmsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateAnnmodelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('annmodels', function (Blueprint $table) {
+        Schema::create('algorithms', function (Blueprint $table) {
 		$table->increments('id');
 		$table->string('name');
-		$table->integer('nodes');
-            $table->timestamps();
+		$table->string('type');
         });
     }
 
@@ -28,6 +27,6 @@ class CreateAnnmodelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('annmodels');
+        Schema::dropIfExists('algorithms');
     }
 }

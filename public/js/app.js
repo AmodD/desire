@@ -2455,12 +2455,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
 	data: function data() {
 		return {
 			results: [],
+			algorithms: [],
+			selectedalgorithm: 0,
+			relationships: [],
+			selectedrelationship: 0,
+			labels: [],
 			inputnodes: 5,
 			hiddennodes: 4,
 			outputnodes: 1,
@@ -2469,7 +2483,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			maxerror: 0.01,
 			learningrate: 0.1,
 			momentum: 0.1,
-			modelname: '',
+			modelname: 'Name of the model',
 			response: '',
 			weights: ''
 		};
@@ -2478,11 +2492,60 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		modelNameComputed: function modelNameComputed() {
 			this.modelname = 'model_' + this.inputnodes + '_' + this.hiddennodes + '_' + this.outputnodes + '_' + this.maxtrain + '_' + this.epochs + '_' + this.maxerror + '_' + this.learningrate + '_' + this.momentum;
 
+			//		this.modelname = 'model_'+this.relationships[this.selectedrelationship].name+'_'+this.algorithms[this.selectedalgorithm].name;
 			return this.modelname;
 		}
 	},
 	methods: {
+		getlabels: function getlabels() {
+			var _this = this;
+
+			axios.get('/labels?relid=' + this.selectedrelationship).then(function (response) {
+				return _this.labels = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+			name = 'model';
+			if (this.selectedrelationship) name = name + '_' + this.relationships[this.selectedrelationship - 1].name;
+			if (this.selectedalgorithm) name = name + '_' + this.algorithms[this.selectedalgorithm - 1].name;
+
+			this.modelname = name.split(' ').join('_');;
+
+			return this.modelname;
+		},
+		getAlgorithms: function getAlgorithms() {
+			var _this2 = this;
+
+			axios.get('/algorithms').then(function (response) {
+				return _this2.algorithms = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		getRelationships: function getRelationships() {
+			var _this3 = this;
+
+			axios.get('/relationships').then(function (response) {
+				return _this3.relationships = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
 		create: function create() {
+			var _this4 = this;
+
+			var self = this;
+			axios.post('/createmodel', {
+				relationship: this.selectedrelationship,
+				algorithm: this.selectedalgorithm,
+				name: this.modelname
+			}).then(function (response) {
+				return _this4.response = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		save: function save() {
 			var self = this;
 			axios.post('/savemodel', {
 				nodes: this.hiddennodes,
@@ -2503,11 +2566,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		load: function load() {
-			var _this = this;
+			var _this5 = this;
 
 			console.log("in load");
 			axios.get('/loadmodelstats').then(function (response) {
-				return _this.weights = response.data;
+				return _this5.weights = response.data;
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -2515,7 +2578,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 	mounted: function mounted() {
 		console.log('NN Component mounted.');
-		this.modelname = 'model_' + this.inputnodes + '_' + this.hiddennodes + '_' + this.outputnodes + '_' + this.maxtrain + '_' + this.epochs + '_' + this.maxerror + '_' + this.learningrate + '_' + this.momentum;
+		this.getRelationships();
+		this.getAlgorithms();
+		//this.modelname = 'model_'+this.inputnodes+'_'+this.hiddennodes+'_'+this.outputnodes+'_'+this.maxtrain+'_'+this.epochs+'_'+this.maxerror+'_'+this.learningrate+'_'+this.momentum ;
 	}
 });
 
@@ -25156,45 +25221,37 @@ var render = function() {
       _vm.selected === "relationship"
         ? _c("li", { staticClass: "is-active" }, [
             _c("a", { attrs: { href: "/relationship" } }, [
-              _vm._v("Define Relationships")
+              _vm._v("Relationships")
             ])
           ])
         : _c("li", [
             _c("a", { attrs: { href: "/relationship" } }, [
-              _vm._v("Define Relationships")
+              _vm._v("Relationships")
             ])
           ]),
       _vm._v(" "),
       _vm.selected === "traindata"
         ? _c("li", { staticClass: "is-active" }, [
-            _c("a", { attrs: { href: "/traindata" } }, [
-              _vm._v("Add Training Data")
-            ])
+            _c("a", { attrs: { href: "/traindata" } }, [_vm._v("Data")])
           ])
         : _c("li", [
-            _c("a", { attrs: { href: "/traindata" } }, [
-              _vm._v("Add Training Data")
-            ])
+            _c("a", { attrs: { href: "/traindata" } }, [_vm._v("Data")])
           ]),
       _vm._v(" "),
       _vm.selected === "model"
         ? _c("li", { staticClass: "is-active" }, [
-            _c("a", { attrs: { href: "/nn" } }, [_vm._v("Create a Model")])
+            _c("a", { attrs: { href: "/nn" } }, [_vm._v("Modelling")])
           ])
         : _c("li", [
-            _c("a", { attrs: { href: "/nn" } }, [_vm._v("Create a Model")])
+            _c("a", { attrs: { href: "/nn" } }, [_vm._v("Modelling")])
           ]),
       _vm._v(" "),
       _vm.selected === "message"
         ? _c("li", { staticClass: "is-active" }, [
-            _c("a", { attrs: { href: "/create" } }, [
-              _vm._v("Prepare a Message")
-            ])
+            _c("a", { attrs: { href: "/create" } }, [_vm._v("Testing")])
           ])
         : _c("li", [
-            _c("a", { attrs: { href: "/create" } }, [
-              _vm._v("Prepare a Message")
-            ])
+            _c("a", { attrs: { href: "/create" } }, [_vm._v("Testing")])
           ]),
       _vm._v(" "),
       _vm.selected === "auto"
@@ -25710,7 +25767,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "content" }, [
-    _c("h1", [_vm._v("Train Data")]),
+    _c("h1", [_vm._v("Manage Data")]),
     _vm._v(" "),
     _c("div", { staticClass: "select" }, [
       _c("p", [
@@ -26265,288 +26322,425 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "content" }, [
-    _c("pre", [
-      _vm._v(
-        '// valid set of values\nDE2 DE3 DE4 DE18 DE19 DE49 --------- RANDOM VALUES\nPOSEM = ["010","020","050","900","950","011","021","051","901","951","012","022","052","902","952","016","026","056","906","956"];\nPOSCC = ["00","01","02","03","05","07","08","52","59"];\n\n// valid TEST DATA    ( ---------- INPUT VECTOR -----------  ) ( OUTPUT )\n$n->addTestData(array (DE2,DE3,DE4,DE18,DE19,POSEM,POSCC,DE49),array (1));\n\n// invalid set of values\nPOSEM = ["100","200","300","400","500","600","700","800"];\nPOSCC = ["10","20","30","40","50","60","70","80"];\n\n// invalid TEST DATA  ( --- INPUT VECTOR ---  ), ( OUTPUT )    \n$n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));\n  '
-      )
+  return _c("div", { staticClass: "content columns" }, [
+    _c("div", { staticClass: "column" }, [
+      _c("p"),
+      _c("div", { staticClass: "select" }, [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.selectedrelationship,
+                expression: "selectedrelationship"
+              }
+            ],
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.selectedrelationship = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                _vm.getlabels
+              ]
+            }
+          },
+          [
+            _c("option", { attrs: { disabled: "", value: "0" } }, [
+              _vm._v("Select a relationship")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.relationships, function(relationship) {
+              return _c("option", { domProps: { value: relationship.id } }, [
+                _vm._v(" " + _vm._s(relationship.name))
+              ])
+            })
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c("p"),
+      _vm._v(" "),
+      _c("p"),
+      _c("div", { staticClass: "select" }, [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.selectedalgorithm,
+                expression: "selectedalgorithm"
+              }
+            ],
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.selectedalgorithm = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                _vm.getlabels
+              ]
+            }
+          },
+          [
+            _c("option", { attrs: { disabled: "", value: "0" } }, [
+              _vm._v("Select a algorithm")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.algorithms, function(algorithm) {
+              return _c("option", { domProps: { value: algorithm.id } }, [
+                _vm._v(" " + _vm._s(algorithm.name))
+              ])
+            })
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c("p"),
+      _vm._v(" "),
+      _c("p", [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.modelname,
+              expression: "modelname"
+            }
+          ],
+          staticClass: "input",
+          attrs: { name: "name", type: "text", placeholder: _vm.modelname },
+          domProps: { value: _vm.modelname },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.modelname = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("p", [
+        _c(
+          "button",
+          { staticClass: "button is-warning", on: { click: _vm.create } },
+          [_vm._v("Create & Train a  Model")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("p"),
+      _c("h5", [_vm._v(_vm._s(_vm.response))]),
+      _c("p")
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "field is-horizontal" }, [
-      _vm._m(0, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _vm._v("\n\t\t\tinput\n\t\t\t"),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.inputnodes,
-                expression: "inputnodes"
-              }
-            ],
-            staticClass: "input",
-            staticStyle: { width: "20%" },
-            attrs: { name: "inputnodes", type: "text", disabled: "" },
-            domProps: { value: _vm.inputnodes },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.inputnodes = $event.target.value
-              }
-            }
-          }),
-          _vm._v("\n\t\t\thidden\n\t\t\t"),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.hiddennodes,
-                expression: "hiddennodes"
-              }
-            ],
-            staticClass: "input",
-            staticStyle: { width: "20%" },
-            attrs: { name: "nodes", type: "text" },
-            domProps: { value: _vm.hiddennodes },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.hiddennodes = $event.target.value
-              }
-            }
-          }),
-          _vm._v("\n\t\t\toutput\n\t\t\t"),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.outputnodes,
-                expression: "outputnodes"
-              }
-            ],
-            staticClass: "input",
-            staticStyle: { width: "20%" },
-            attrs: { name: "outputnodes", type: "text", disabled: "" },
-            domProps: { value: _vm.outputnodes },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.outputnodes = $event.target.value
-              }
-            }
-          })
+    false
+      ? _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "field is-horizontal" }, [
+            _vm._m(0, false, false),
+            _vm._v(" "),
+            _c("div", { staticClass: "field-body" }, [
+              _c("div", { staticClass: "field" }, [
+                _vm._v("\n\t\t\tinput\n\t\t\t"),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inputnodes,
+                      expression: "inputnodes"
+                    }
+                  ],
+                  staticClass: "input",
+                  staticStyle: { width: "20%" },
+                  attrs: { name: "inputnodes", type: "text", disabled: "" },
+                  domProps: { value: _vm.inputnodes },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.inputnodes = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v("\n\t\t\thidden\n\t\t\t"),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.hiddennodes,
+                      expression: "hiddennodes"
+                    }
+                  ],
+                  staticClass: "input",
+                  staticStyle: { width: "20%" },
+                  attrs: { name: "nodes", type: "text" },
+                  domProps: { value: _vm.hiddennodes },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.hiddennodes = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v("\n\t\t\toutput\n\t\t\t"),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.outputnodes,
+                      expression: "outputnodes"
+                    }
+                  ],
+                  staticClass: "input",
+                  staticStyle: { width: "20%" },
+                  attrs: { name: "outputnodes", type: "text", disabled: "" },
+                  domProps: { value: _vm.outputnodes },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.outputnodes = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "field is-horizontal" }, [
+            _vm._m(1, false, false),
+            _vm._v(" "),
+            _c("div", { staticClass: "field-body" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.maxtrain,
+                      expression: "maxtrain"
+                    }
+                  ],
+                  staticClass: "input",
+                  staticStyle: { width: "40%" },
+                  attrs: { name: "max", type: "text" },
+                  domProps: { value: _vm.maxtrain },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.maxtrain = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(2, false, false),
+            _vm._v(" "),
+            _c("div", { staticClass: "field-body" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.epochs,
+                      expression: "epochs"
+                    }
+                  ],
+                  staticClass: "input",
+                  staticStyle: { width: "40%" },
+                  attrs: { name: "epochs", type: "text" },
+                  domProps: { value: _vm.epochs },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.epochs = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(3, false, false),
+            _vm._v(" "),
+            _c("div", { staticClass: "field-body" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.maxerror,
+                      expression: "maxerror"
+                    }
+                  ],
+                  staticClass: "input",
+                  staticStyle: { width: "40%" },
+                  attrs: { name: "error", type: "text" },
+                  domProps: { value: _vm.maxerror },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.maxerror = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(4, false, false),
+            _vm._v(" "),
+            _c("div", { staticClass: "field-body" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.learningrate,
+                      expression: "learningrate"
+                    }
+                  ],
+                  staticClass: "input",
+                  staticStyle: { width: "40%" },
+                  attrs: { name: "learning", type: "text", disabled: "" },
+                  domProps: { value: _vm.learningrate },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.learningrate = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(5, false, false),
+            _vm._v(" "),
+            _c("div", { staticClass: "field-body" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.momentum,
+                      expression: "momentum"
+                    }
+                  ],
+                  staticClass: "input",
+                  staticStyle: { width: "40%" },
+                  attrs: { name: "momentum", type: "text", disabled: "" },
+                  domProps: { value: _vm.momentum },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.momentum = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "field is-horizontal" }, [
+            _vm._m(6, false, false),
+            _vm._v(" "),
+            _c("div", { staticClass: "field-body" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.modelname,
+                      expression: "modelname"
+                    }
+                  ],
+                  staticClass: "input",
+                  attrs: {
+                    name: "name",
+                    type: "text",
+                    placeholder: _vm.modelNameComputed
+                  },
+                  domProps: { value: _vm.modelname },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.modelname = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "field-body" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("div", { staticClass: "control" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "button is-primary",
+                      on: { click: _vm.save }
+                    },
+                    [_vm._v("\n\t\t          Save Model\n\t\t        ")]
+                  )
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("span", { domProps: { innerHTML: _vm._s(_vm.response) } }),
+          _vm._v(" "),
+          _c("span", { domProps: { innerHTML: _vm._s(_vm.weights) } }),
+          _c("p")
         ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field is-horizontal" }, [
-      _vm._m(1, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.maxtrain,
-                expression: "maxtrain"
-              }
-            ],
-            staticClass: "input",
-            staticStyle: { width: "40%" },
-            attrs: { name: "max", type: "text" },
-            domProps: { value: _vm.maxtrain },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.maxtrain = $event.target.value
-              }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _vm._m(2, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.epochs,
-                expression: "epochs"
-              }
-            ],
-            staticClass: "input",
-            staticStyle: { width: "40%" },
-            attrs: { name: "epochs", type: "text" },
-            domProps: { value: _vm.epochs },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.epochs = $event.target.value
-              }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _vm._m(3, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.maxerror,
-                expression: "maxerror"
-              }
-            ],
-            staticClass: "input",
-            staticStyle: { width: "40%" },
-            attrs: { name: "error", type: "text" },
-            domProps: { value: _vm.maxerror },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.maxerror = $event.target.value
-              }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _vm._m(4, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.learningrate,
-                expression: "learningrate"
-              }
-            ],
-            staticClass: "input",
-            staticStyle: { width: "40%" },
-            attrs: { name: "learning", type: "text", disabled: "" },
-            domProps: { value: _vm.learningrate },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.learningrate = $event.target.value
-              }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _vm._m(5, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.momentum,
-                expression: "momentum"
-              }
-            ],
-            staticClass: "input",
-            staticStyle: { width: "40%" },
-            attrs: { name: "momentum", type: "text", disabled: "" },
-            domProps: { value: _vm.momentum },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.momentum = $event.target.value
-              }
-            }
-          })
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field is-horizontal" }, [
-      _vm._m(6, false, false),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.modelname,
-                expression: "modelname"
-              }
-            ],
-            staticClass: "input",
-            attrs: {
-              name: "name",
-              type: "text",
-              placeholder: _vm.modelNameComputed
-            },
-            domProps: { value: _vm.modelname },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.modelname = $event.target.value
-              }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "field-body" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("div", { staticClass: "control" }, [
-            _c(
-              "button",
-              { staticClass: "button is-primary", on: { click: _vm.create } },
-              [_vm._v("\n\t\t          Create Model\n\t\t        ")]
-            )
-          ])
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("span", { domProps: { innerHTML: _vm._s(_vm.response) } }),
-    _vm._v(" "),
-    _c("span", { domProps: { innerHTML: _vm._s(_vm.weights) } }),
-    _c("p")
+      : _vm._e()
   ])
 }
 var staticRenderFns = [
@@ -26889,7 +27083,7 @@ var render = function() {
                 staticClass: "button is-link is-outlined ",
                 on: { click: _vm.analyze }
               },
-              [_vm._v("click to create & analyze ")]
+              [_vm._v("Test ")]
             ),
             _vm._v(" "),
             _c("div", { staticClass: "field" }, [
@@ -26960,7 +27154,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("strong", [_vm._v("Model Name")]),
                 _vm._v(" "),
-                _c("small", [_vm._v(_vm._s(result.annmodel.name))]),
+                _c("small", [_vm._v(_vm._s(result.mlmodel.name))]),
                 _vm._v(" "),
                 _c("strong", [_vm._v("Score")]),
                 _vm._v(" "),

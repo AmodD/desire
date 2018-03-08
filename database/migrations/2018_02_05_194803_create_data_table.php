@@ -18,6 +18,7 @@ class CreateDataTable extends Migration
 		$table->integer('transaction_id');
 		$table->integer('field_id');
 		$table->string('value',250)->nullable();
+            $table->timestamps();
 
         });
     }

@@ -21,11 +21,13 @@ class CreateRelationshipsTable extends Migration
 
 
 	Schema::create('field_relationship', function (Blueprint $table) {
+		$table->increments('id');
 		$table->integer('field_id');
 		$table->integer('relationship_id');
 	});
 
 	Schema::create('relationship_transaction', function (Blueprint $table) {
+		$table->increments('id');
 		$table->integer('relationship_id');
 		$table->integer('transaction_id');
 		$table->integer('label_id');

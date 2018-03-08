@@ -62,7 +62,7 @@
        <div class="row">
             <div class="col-md-8 col-md-offset-2">
                <div class="panel-block">
-		    <button v-on:click="analyze" class="button is-link is-outlined ">click to create & analyze </button>
+		    <button v-on:click="analyze" class="button is-link is-outlined ">Test </button>
 <div class="field">
   <div class="control">
     <div class="select is-primary">
@@ -85,7 +85,7 @@
 	        <p>
 		<strong>ID</strong> <small>{{ result.id }}</small>
 		<strong>Time</strong> <small>{{ result.created_at }}</small>
-		<strong>Model Name</strong> <small>{{ result.annmodel.name }}</small>
+		<strong>Model Name</strong> <small>{{ result.mlmodel.name }}</small>
 		<strong>Score</strong> <small>{{ result.score }}</small>
 	          <br>
 		  <strong>ISO8385 message</strong><small>  {{ result.message }}</small>

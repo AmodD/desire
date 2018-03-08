@@ -1,28 +1,37 @@
 
 <template>
-<div class="content">
-
-  <pre>
-// valid set of values
-DE2 DE3 DE4 DE18 DE19 DE49 --------- RANDOM VALUES
-POSEM = ["010","020","050","900","950","011","021","051","901","951","012","022","052","902","952","016","026","056","906","956"];
-POSCC = ["00","01","02","03","05","07","08","52","59"];
-
-// valid TEST DATA    ( ---------- INPUT VECTOR -----------  ) ( OUTPUT )
-$n->addTestData(array (DE2,DE3,DE4,DE18,DE19,POSEM,POSCC,DE49),array (1));
-
-// invalid set of values
-POSEM = ["100","200","300","400","500","600","700","800"];
-POSCC = ["10","20","30","40","50","60","70","80"];
-
-// invalid TEST DATA  ( --- INPUT VECTOR ---  ), ( OUTPUT )    
-$n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
-  </pre>
-        
+<div class="content columns">
 <!--<form method="POST" action="/savemodel">
 		<slot name="csrf-field"></slot>
 		<slot name="method-field"></slot>
 -->
+<div class="column">
+  <p>	
+  <div class="select">
+	<select v-model="selectedrelationship" v-on:change="getlabels">
+		  <option disabled value=0>Select a relationship</option>
+		  <option v-for="relationship in relationships" :value="relationship.id" > {{ relationship.name }}</option>
+	</select>
+  </div>
+  </p>
+  <p>  
+  <div class="select">
+	<select v-model="selectedalgorithm" v-on:change="getlabels">
+		  <option disabled value=0>Select a algorithm</option>
+		  <option v-for="algorithm in algorithms" :value="algorithm.id" > {{ algorithm.name }}</option>
+	</select>
+  </div>
+  </p>
+
+   <p><input class="input" name="name" type="text" v-model="modelname" :placeholder="modelname"></p>
+
+   <p><button v-on:click="create" class="button is-warning">Create & Train a  Model</button></p>
+
+   <p><h5>{{ response }}</h5></p>
+
+</div>
+
+<div v-if="false" class="column">
 		<div class="field is-horizontal">
 		  <div class="field-label is-normal"> <label class="label">ANN nodes</label> </div>
 	          <div class="field-body"><div class="field">
@@ -67,8 +76,8 @@ $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
 		  <div class="field-body">
 		    <div class="field">
 		      <div class="control">
-		        <button v-on:click="create" class="button is-primary">
-		          Create Model
+		        <button v-on:click="save" class="button is-primary">
+		          Save Model
 		        </button>
 		      </div>
 		    </div>
@@ -78,7 +87,7 @@ $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
 		<span v-html="weights"></span></p>
 
 		<!--  </form>		-->
-
+  </div>
 </div>
 </template>
 
@@ -89,6 +98,11 @@ $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
 	data : function() {
 		return {
 			results : [],
+			algorithms : [],
+			selectedalgorithm : 0,
+			relationships : [],
+			selectedrelationship : 0,
+			labels : [],
 			inputnodes : 5,
 			hiddennodes : 4,
 			outputnodes : 1,
@@ -97,7 +111,7 @@ $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
 			maxerror : 0.01,
 			learningrate : 0.1,
 			momentum : 0.1,
-			modelname : '',
+			modelname : 'Name of the model',
 			response : '',
 			weights : ''
 		}
@@ -106,11 +120,54 @@ $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
 		modelNameComputed : function() {
 			this.modelname = 'model_'+this.inputnodes+'_'+this.hiddennodes+'_'+this.outputnodes+'_'+this.maxtrain+'_'+this.epochs+'_'+this.maxerror+'_'+this.learningrate+'_'+this.momentum;
 
+
+//		this.modelname = 'model_'+this.relationships[this.selectedrelationship].name+'_'+this.algorithms[this.selectedalgorithm].name;
 			return this.modelname ;
 		}
 	    },
 	methods : {
+		getlabels(){
+			axios.get('/labels?relid='+this.selectedrelationship)
+			     .then(response => this.labels = response.data)
+			     .catch(function (error) {
+			     console.log(error);
+			  });
+		name = 'model';
+		if(this.selectedrelationship) name = name + '_' + this.relationships[this.selectedrelationship - 1].name ;
+		if(this.selectedalgorithm) name = name + '_' + this.algorithms[this.selectedalgorithm - 1].name;
+
+		this.modelname = name.split(' ').join('_');;
+
+		return this.modelname;
+
+		},
+		getAlgorithms(){
+		axios.get('/algorithms')
+		     .then(response => this.algorithms = response.data)
+		     .catch(function (error) {
+		     console.log(error);
+		 });
+		},
+		getRelationships(){
+		axios.get('/relationships')
+		     .then(response => this.relationships = response.data)
+		     .catch(function (error) {
+		     console.log(error);
+		 });
+		},
 		create(){
+		let self = this;	
+		axios.post('/createmodel',{ 
+			relationship: this.selectedrelationship,
+			algorithm: this.selectedalgorithm,
+			name : this.modelname
+		})
+		.then(response => this.response = response.data)
+		.catch(function (error) {
+			   console.log(error);
+		 });
+		},
+		save(){
 		let self = this;	
 		axios.post('/savemodel',{ 
 			nodes: this.hiddennodes,
@@ -142,7 +199,10 @@ $n->addTestData(array (0,0,0,0,0,POSEM,POSCC,0),array (0));
 	},
         mounted() {
                 console.log('NN Component mounted.');
-		this.modelname = 'model_'+this.inputnodes+'_'+this.hiddennodes+'_'+this.outputnodes+'_'+this.maxtrain+'_'+this.epochs+'_'+this.maxerror+'_'+this.learningrate+'_'+this.momentum ;
+		 this.getRelationships();
+		 this.getAlgorithms();
+		//this.modelname = 'model_'+this.inputnodes+'_'+this.hiddennodes+'_'+this.outputnodes+'_'+this.maxtrain+'_'+this.epochs+'_'+this.maxerror+'_'+this.learningrate+'_'+this.momentum ;
+
 	}
     }
 </script>    

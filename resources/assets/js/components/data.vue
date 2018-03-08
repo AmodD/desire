@@ -1,7 +1,7 @@
 <template>
 
 <div class="content">	
-	<h1>Train Data</h1>
+	<h1>Manage Data</h1>
   	<div class="select">
 	<p><select v-model="selectedrelationship" v-on:change="getinfo">
 		  <option disabled value="">Select a relationship</option>

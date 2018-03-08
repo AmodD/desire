@@ -13,14 +13,17 @@ use DB;
 use App\Data;
 use App\Field;
 use App\Transaction;
-use App\Annmodel;
+use App\Mlmodel;
 use App\Relationship;
+use App\Label;
+use App\RelationshipTransaction;
 
 use Phpml\Classification\MLPClassifier;
 use Phpml\Preprocessing\Normalizer;
 use Phpml\Math\Set;
 use Phpml\FeatureExtraction\TfIdfTransformer;
 use Phpml\Classification\SVC;
+use Phpml\SupportVectorMachine\Kernel;
 use Phpml\Classification\NaiveBayes ;
 use Phpml\Pipeline;
 use Phpml\Preprocessing\Imputer;
@@ -248,18 +251,18 @@ dd($predicted);
 		$relationship = $request->relationship;
 
 
-		$dataElement->put("pan",$request->pan);
-		$dataElement->put("amnt",$request->amount);
-		$dataElement->put("country",$request->aqcountry);
-		$dataElement->put("currency",$request->currency);
-		$dataElement->put("de48",$request->prmsg6);
-		$dataElement->put("procode",$request->procode);
-		$dataElement->put("posem",$request->posem);
-		$dataElement->put("poscc",$request->poscc);
-		$dataElement->put("chipdata",$request->chipdata);
-		$dataElement->put("addposdata",$request->addposdata);
-		$dataElement->put("mcc",$request->mcc);
-			
+		$dataElement->put("2",$request->pan);
+		$dataElement->put("3",$request->procode);
+		$dataElement->put("4",$request->amount);
+		$dataElement->put("18",$request->mcc);
+		$dataElement->put("19",$request->aqcountry);
+		$dataElement->put("22",$request->posem);
+		$dataElement->put("25",$request->poscc);
+		$dataElement->put("48",$request->prmsg6);
+		$dataElement->put("49",$request->currency);
+		$dataElement->put("55",$request->chipdata);
+		$dataElement->put("60",$request->addposdata);
+
 		$isoMessage = $this->pack($mti,$dataElement);
 
 		if (strpos($isoMessage, 'Error') !== false) {
@@ -283,7 +286,7 @@ dd($predicted);
 			$relationship = Relationship::find($rel);
 			return $relationship->transactions;
 		}
-		else return Transaction::with('data','annmodel')->take(10)->orderby('id','desc')->get();
+		else return Transaction::with('data','mlmodel')->take(10)->orderby('id','desc')->get();
 		
 	//	$label = request('label'):
 	//	$relationship = request('relationship');
@@ -322,17 +325,29 @@ dd($predicted);
 		$addposdata = "" ; // $faker->word;
 		$mcc = mt_rand(6000,9999);
 
-		$dataElement->put("pan",$pan);
-		$dataElement->put("amnt",$amnt);
-		$dataElement->put("country",$country);
-		$dataElement->put("currency",$currency);
-		$dataElement->put("de48",$de48);
-		$dataElement->put("procode",$procode);
-		$dataElement->put("posem",$posem);
-		$dataElement->put("poscc",$poscc);
-		$dataElement->put("chipdata",$chipdata);
-		$dataElement->put("addposdata",$addposdata);
-		$dataElement->put("mcc",$mcc);
+		//$dataElement->put("pan",$pan);
+	//	$dataElement->put("amnt",$amnt);
+	//	$dataElement->put("country",$country);
+	//	$dataElement->put("currency",$currency);
+	//	$dataElement->put("de48",$de48);
+	//	$dataElement->put("procode",$procode);
+	//	$dataElement->put("posem",$posem);
+	//	$dataElement->put("poscc",$poscc);
+	//	$dataElement->put("chipdata",$chipdata);
+	//	$dataElement->put("addposdata",$addposdata);
+	//	$dataElement->put("mcc",$mcc);
+
+		$dataElement->put("2",$pan);
+		$dataElement->put("3",$procode);
+		$dataElement->put("4",$amnt);
+		$dataElement->put("18",$mcc);
+		$dataElement->put("19",$country);
+		$dataElement->put("22",$posem);
+		$dataElement->put("25",$poscc);
+		$dataElement->put("48",$de48);
+		$dataElement->put("49",$currency);
+		$dataElement->put("55",$chipdata);
+		$dataElement->put("60",$addposdata);
 
 		$isoMessage = $this->pack($mti,$dataElement);
 		
@@ -367,31 +382,54 @@ dd($predicted);
 		}
 
 		$vector = $this->getVector($dataElement);
+		$dataSet = array();
+		
+		foreach($dataElement as $number => $value)
+		{
+			if($value){
+				$dataSet[] = intval($value);
+			}
+		}
 
-	//	dd($vector);
+
+//		dd($dataSet);
 		$transaction = new Transaction();
 		$transaction->message = $isoMessage;
-		$transaction->annmodel_id = $model;
+		$transaction->mlmodel_id = $model;
 		if($model == 1) $transaction->score = $score;
-		else $transaction->score = head($this->trainedScore($vector,$model))  ; 
+		else $transaction->score = $this->trainedScore($dataSet,$model) ; 
+		//else $transaction->score = head($this->trainedScore($vector,$model))  ; 
 		//$transaction->score = head($this->trainedScore(($jak->getBitmap()),$model)) ;
 		$transaction->save();
 
+
 	    	DB::table('data')->insert([
 		            ['transaction_id' => $transaction->id  , 'field_id' => 0 ,  'value' => $mti],
-		            ['transaction_id' => $transaction->id  , 'field_id' => 1 ,  'value' => implode("",$vector)],
-		            ['transaction_id' => $transaction->id  , 'field_id' => 2 ,  'value' => $dataElement->get("pan")],
-		            ['transaction_id' => $transaction->id  , 'field_id' => 3 ,  'value' => $dataElement->get("procode")],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 4 ,  'value' => $dataElement->get("amnt")],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 18 ,  'value' => $dataElement->get("mcc")],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 19 ,  'value' => $dataElement->get("country")],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 22 ,  'value' => $dataElement->get("posem")],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 25 ,  'value' => $dataElement->get("poscc")],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 48 ,  'value' => $dataElement->get("de48")],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 49 ,  'value' => $dataElement->get("currency")],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 55 ,  'value' => $dataElement->get("chipdata")],
-			    ['transaction_id' => $transaction->id  , 'field_id' => 60 ,  'value' => $dataElement->get("addposdata")]
+		            ['transaction_id' => $transaction->id  , 'field_id' => 1 ,  'value' => implode("",$vector)]
+//		            ['transaction_id' => $transaction->id  , 'field_id' => 2 ,  'value' => $dataElement->get("pan")],
+//		            ['transaction_id' => $transaction->id  , 'field_id' => 3 ,  'value' => $dataElement->get("procode")],
+//			    ['transaction_id' => $transaction->id  , 'field_id' => 4 ,  'value' => $dataElement->get("amnt")],
+//			    ['transaction_id' => $transaction->id  , 'field_id' => 18 ,  'value' => $dataElement->get("mcc")],
+//			    ['transaction_id' => $transaction->id  , 'field_id' => 19 ,  'value' => $dataElement->get("country")],
+//			    ['transaction_id' => $transaction->id  , 'field_id' => 22 ,  'value' => $dataElement->get("posem")],
+//			    ['transaction_id' => $transaction->id  , 'field_id' => 25 ,  'value' => $dataElement->get("poscc")],
+//			    ['transaction_id' => $transaction->id  , 'field_id' => 48 ,  'value' => $dataElement->get("de48")],
+//			    ['transaction_id' => $transaction->id  , 'field_id' => 49 ,  'value' => $dataElement->get("currency")],
+//			    ['transaction_id' => $transaction->id  , 'field_id' => 55 ,  'value' => $dataElement->get("chipdata")],
+//			    ['transaction_id' => $transaction->id  , 'field_id' => 60 ,  'value' => $dataElement->get("addposdata")]
 		    ]);
+
+		foreach($dataElement as $number => $value)
+		{
+			if($value){
+				$data = new Data();
+				$data->transaction_id = $transaction->id;
+				$data->field_id = $number;
+				$data->value = $value;
+				$data->save();
+			}
+		}
+
 
 		if($relationship)
 		{
@@ -435,6 +473,112 @@ dd($predicted);
 	return $vector->toArray();
 
 	}
+
+
+	public function getSets($relationship_id)
+	{
+		$sets = collect([]);
+		$dataSet = array();
+		$targetSet = array();
+
+		$relationship = Relationship::find($relationship_id);
+
+		$reltxns = RelationshipTransaction::where('relationship_id',$relationship_id)->get();
+
+		$data = $relationship->data;
+		//dd($reltxns,$data);
+		//dd($data);
+		$label = new Label();
+
+		foreach($reltxns as $reltxn)
+		{
+//			dd($data->where('transaction_id',$reltxn->transaction_id)->pluck('value')->implode(''));
+			//$dataSet[] = array_map('intval',str_split($data->where('transaction_id',$reltxn->transaction_id)->pluck('value')->implode('')));
+			$dataSet[] = array_map('intval',$data->where('transaction_id',$reltxn->transaction_id)->pluck('value')->toArray());
+			$targetSet[] = $label->find($reltxn->label_id)->value;	
+		}
+		//$dataSet[] = array(intval($vposem) , intval($vposcc));
+//	dd($dataSet,$targetSet);
+
+		$sets->put('dataset',$dataSet);
+		$sets->put('targetset',$targetSet);
+		
+		return $sets;
+
+	}
+
+
+	public function createModel(Request $request)
+	{
+		$relationship = $request->relationship;
+		$algorithm = $request->algorithm;
+		$modelname = $request->name;
+
+		$sets = $this->getSets($relationship);
+		$dataSet = $sets->get('dataset');
+		$targetSet = $sets->get('targetset');
+
+		$labels = Label::where('relationship_id',$relationship)->pluck('value')->toArray();
+//		dd($dataSet,$targetSet,$labels);
+
+		if($algorithm == 1)
+		{
+
+		}
+		else if($algorithm == 2)
+		{
+			$algo =  new SVC(Kernel::LINEAR, $cost = 1000);
+		}
+		else if($algorithm == 3)
+		{
+
+		}
+		else if($algorithm == 4)
+		{
+			$algo = new NaiveBayes();
+		}
+		else if($algorithm == 5)
+		{
+
+		}
+		else if($algorithm == 6)
+		{
+
+		}
+		else if($algorithm == 7)
+		{
+
+		}
+		else if($algorithm == 8)
+		{
+
+		}
+		else if($algorithm == 9)
+		{
+
+			$fields = Relationship::find($relationship)->fields;
+			$inputs = $fields->count();
+//			dd($inputs,$inputs*2);
+			$algo = new MLPClassifier($inputs, [$inputs*2], $labels);		
+		}
+
+
+		$algo->train($dataSet, $targetSet);
+		$filepath = $modelname;
+		$modelManager = new ModelManager();
+		$modelManager->saveToFile($algo, $filepath);
+
+		$model = new Mlmodel();
+		$model->name = $modelname ;
+		$model->relationship_id = $relationship ;
+		$model->algorithm_id = $algorithm;
+		$model->save();
+
+		return "model successfully created";
+
+	}
+
+
 
 	public function saveModel(Request $request)
 	{
@@ -489,7 +633,7 @@ dd($predicted);
 
 		if($n->save(''.$request->name))
 		{
-			$model = new Annmodel();
+			$model = new Mlmodel();
 			$model->name = 	$request->name;
 			$model->nodes = $request->nodes;
 			$model->save();
@@ -502,7 +646,7 @@ dd($predicted);
 
 	public function loadModelStats($id=0)
 	{
-		$model = new Annmodel();
+		$model = new Mlmodel();
 		if(!$id) $modelToLoad = $model->get()->last();
 		else $modelToLoad = $model->find($id);
 
@@ -517,7 +661,7 @@ dd($predicted);
 
 	public function getModels()
 	{
-		$model = new Annmodel();
+		$model = new Mlmodel();
 		$models = $model->where('id','>',1)->pluck('id','name');
 
 		return $models ;
@@ -525,10 +669,19 @@ dd($predicted);
 	}
 
 
-	public function trainedScore($vector,$modelId)
+	public function trainedScore($dataSet,$modelId)
 	{
 
-		$model = new Annmodel();
+		$model = Mlmodel::find($modelId);
+
+		$modelManager = new ModelManager();
+
+		$algo = $modelManager->restoreFromFile($model->name);
+		return $algo->predict($dataSet);
+
+ 
+	
+		$model = new Mlmodel();
 		$m = $model->find($modelId);
 		//		$n = new NeuralNetwork(64, 8, 1);
 		$n = new NeuralNetwork(5,$m->nodes,1);
@@ -589,17 +742,17 @@ $cacheManager->generateSchemaCache(new ISO8583());
 /** @var ISO8583 $schemaManager */
 $schemaManager = new SchemaManager(new ISO8583(), $cacheManager);
 
-if($dataElement->get('pan')) $schemaManager->setPan($dataElement->get('pan'));
-if($dataElement->get('procode')) $schemaManager->setProcessingCode($dataElement->get('procode'));
-if($dataElement->get('amnt')) $schemaManager->setAmountTransaction($dataElement->get('amnt'));
-if($dataElement->get('country')) $schemaManager->setCountryCodeAcquiring($dataElement->get('country'));
-if($dataElement->get('posem')) $schemaManager->setPointOfServiceEntryMode($dataElement->get('posem'));
-if($dataElement->get('poscc')) $schemaManager->setPointOfServiceCodeCondition($dataElement->get('poscc'));
-if($dataElement->get('de48')) $schemaManager->setAdditionalDataPrivate($dataElement->get('de48'));
-if($dataElement->get('currency')) $schemaManager->setCurrencyCodeTransaction($dataElement->get('currency'));
-if($dataElement->get('chipdata')) $schemaManager->setIsoReserved1($dataElement->get('chipdata'));
-if($dataElement->get('addposdata')) $schemaManager->setPrivateReserved1($dataElement->get('addposdata'));
-if($dataElement->get('mcc')) $schemaManager->setMerchantType($dataElement->get('mcc'));
+if($dataElement->get('2')) $schemaManager->setPan($dataElement->get('2'));
+if($dataElement->get('3')) $schemaManager->setProcessingCode($dataElement->get('3'));
+if($dataElement->get('4')) $schemaManager->setAmountTransaction($dataElement->get('4'));
+if($dataElement->get('19')) $schemaManager->setCountryCodeAcquiring($dataElement->get('19'));
+if($dataElement->get('22')) $schemaManager->setPointOfServiceEntryMode($dataElement->get('22'));
+if($dataElement->get('25')) $schemaManager->setPointOfServiceCodeCondition($dataElement->get('25'));
+if($dataElement->get('48')) $schemaManager->setAdditionalDataPrivate($dataElement->get('48'));
+if($dataElement->get('49')) $schemaManager->setCurrencyCodeTransaction($dataElement->get('49'));
+if($dataElement->get('55')) $schemaManager->setIsoReserved1($dataElement->get('55'));
+if($dataElement->get('60')) $schemaManager->setPrivateReserved1($dataElement->get('60'));
+if($dataElement->get('18')) $schemaManager->setMerchantType($dataElement->get('18'));
 
 /** @var MessagePacker $message */
 $message = (new Financial($cacheManager))->pack($schemaManager);
