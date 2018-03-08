@@ -25,6 +25,7 @@ use Phpml\FeatureExtraction\TfIdfTransformer;
 use Phpml\Classification\SVC;
 use Phpml\SupportVectorMachine\Kernel;
 use Phpml\Classification\NaiveBayes ;
+use Phpml\Classification\KNearestNeighbors;
 use Phpml\Pipeline;
 use Phpml\Preprocessing\Imputer;
 use Phpml\Preprocessing\Imputer\Strategy\MostFrequentStrategy;
@@ -523,7 +524,7 @@ dd($predicted);
 
 		if($algorithm == 1)
 		{
-
+			return "Sorry , not yet set up for modelling";
 		}
 		else if($algorithm == 2)
 		{
@@ -531,7 +532,7 @@ dd($predicted);
 		}
 		else if($algorithm == 3)
 		{
-
+			$algo = new KNearestNeighbors();
 		}
 		else if($algorithm == 4)
 		{
@@ -539,19 +540,19 @@ dd($predicted);
 		}
 		else if($algorithm == 5)
 		{
-
+			return "Sorry , not yet set up for modelling";
 		}
 		else if($algorithm == 6)
 		{
-
+			return "Sorry , not yet set up for modelling";
 		}
 		else if($algorithm == 7)
 		{
-
+			return "Sorry , not yet set up for modelling";
 		}
 		else if($algorithm == 8)
 		{
-
+			return "Sorry , not yet set up for modelling";
 		}
 		else if($algorithm == 9)
 		{
@@ -574,7 +575,8 @@ dd($predicted);
 		$model->algorithm_id = $algorithm;
 		$model->save();
 
-		return "model successfully created";
+		return $modelname." successfully created";
+
 
 	}
 
