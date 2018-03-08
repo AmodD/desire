@@ -524,7 +524,7 @@ dd($predicted);
 
 		if($algorithm == 1)
 		{
-			return "Sorry , not yet set up for modelling";
+			return "Sorry , algorithm not yet set up for modelling";
 		}
 		else if($algorithm == 2)
 		{
@@ -540,19 +540,19 @@ dd($predicted);
 		}
 		else if($algorithm == 5)
 		{
-			return "Sorry , not yet set up for modelling";
+			return "Sorry , algorithm not yet set up for modelling";
 		}
 		else if($algorithm == 6)
 		{
-			return "Sorry , not yet set up for modelling";
+			return "Sorry , algorithm not yet set up for modelling";
 		}
 		else if($algorithm == 7)
 		{
-			return "Sorry , not yet set up for modelling";
+			return "Sorry , algorithm not yet set up for modelling";
 		}
 		else if($algorithm == 8)
 		{
-			return "Sorry , not yet set up for modelling";
+			return "Sorry , algorithm not yet set up for modelling";
 		}
 		else if($algorithm == 9)
 		{
