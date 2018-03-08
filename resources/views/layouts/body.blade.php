@@ -23,7 +23,18 @@
 		<div class="content">
 			<h1>POC 8385 ML</h1>
 			<h2>Goals</h2>
-			<p>Will try and achieve following </p>
+			<h5><u>Stage 2</u> <span class="tag is-warning">In Progress</span></h5>
+			<p>Modelling Data & finalizing Algorithms for Relationships</p>
+			<ul>
+			    <li>Create a relationship</li>
+			    <li>Define Labels</li>
+			    <li>Add Data</li>
+			    <li>Select Algorithms</li>
+			    <li>Make Models</li>
+			    <li>Test Data</li>
+			</ul>
+			<h5><u>Stage 1</u> <span class="tag is-success">Complete</span></h5>
+			<p>Play around ISO8385 Message & Create a Neural Network Model</p>
 			<ul>
 			    <li>Finalize a few DEs</li>
 			    <li>Manually create a msg by enetering DE data</li>
