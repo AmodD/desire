@@ -58,6 +58,10 @@ Route::get('/getmodels', 'TransactionsController@getModels');
 Route::get('/testdata', 'TransactionsController@testdata');
 
 Route::get('/test', function() {
+	dd(str_pad(base_convert('01200121', 2, 16),8,'0', STR_PAD_LEFT));
+dd(unpack("H*" , '76'));
+dd(hex2bin('76'));
+
 
 	$reltxn =  RelationshipTransaction::all();
 	dd($reltxn);
@@ -133,8 +137,8 @@ return 	array_map('intval', str_split($vector));
 	//	return ['shrihan', 'soham', 'baby' , 'vivaan'];
 });
 
-//Route::get('/pack', 'TransactionsController@pack');
-//Route::get('/unpack', 'TransactionsController@unpack');
+Route::get('/pack', 'TransactionsController@pack');
+Route::get('/unpack', 'TransactionsController@unpack');
 
 Route::get('/analyze', 'TransactionsController@analyze');
 Route::get('/generate', 'TransactionsController@generate');

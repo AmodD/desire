@@ -11,6 +11,7 @@
 	          <div class="field-body"><div class="field">
 			<input class="input" type="text" v-model="procode"  placeholder="Processing Code"></div></div>
 	        </div>			  
+
 		<div class="field is-horizontal">
 		  <div class="field-label is-normal"> <label class="label">DE 4</label> </div>
 	          <div class="field-body"><div class="field">
