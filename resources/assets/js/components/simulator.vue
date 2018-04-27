@@ -2,9 +2,10 @@
 <template>
 	<div class="content">
 	<form>
-		<h4><button v-on:click="createsituation" class="button is-success is-outlined ">Click to Create a Situation</button></h4>
+		<h4 class="has-text-centered"><button v-on:click="createsituation" class="button is-success is-outlined ">Click to Create a Situation</button></h4>
 		<progress class="progress is-primary" :value="progress" max="100"> </progress>
 
+	  <div class="has-text-centered">	
 	  <div class="select">
 		<select v-model="whereQ" @change.once="progress = progress +  20" required>
 		  <option value="" disabled> Where ?</option>
@@ -41,31 +42,50 @@
 		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 6" :value="scenario.id">{{ scenario.name }}</option>
 		</select>
 	  </div>
+	  </div>
 	  </form> 
 	  
-	  <hr>	
-	  <h2>Generate Transactions For</h2>
+	  <h2 class="has-text-centered">Generate Transactions</h2>
+	  <form>
+	  <div class="field has-addons has-addons-centered">
+		  <div class="control">
+			<div class="select">  
+			<select v-model="notxns" required>
+		  		<option value="" disabled>Number of Txns</option>
+				<option :value="1">1</option>
+				<option :value="20">20</option>
+				<option :value="500">500</option>
+				<option :value="1000">1000</option>
+			</select>
+			</div>
+		  </div>
+		  <div class="control">
+	  		<button v-on:click="generate()" class="button is-danger is-outlined ">Let's Simulate</button>
+		  </div>
+		  <div class="control">
+			<div class="select">  
+			<select v-model="label" required>
+		  		<option value="" disabled>Select a Label</option>
+				<option :value="1">Valid</option>
+				<option :value="2">Invalid</option>
+			</select>
+			</div>
+		  </div>
+	   </div>	  
+	   </form>	
+
+
 	<table class="table">
 	    <thead>
 	      <tr>
+		<th></th>      
 	        <th>Simulation Scenario</th>
-	        <th>Valid Data ?</th>
-		<th>Number of Txns</th>
-		<th>Action</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 		<tr v-for="situation in situations">
+			<td><label class="radio"><input type="radio" id="situationid" v-model="situationid" :value="situation.id"></label></td>
 			<td><span class="is-small">{{ situation.name }}</span></td>
-			<td><label class="checkbox"><input v-model="valid"  type="checkbox"></label></td>
-			<td>
-	  			<label class="radio"><input type="radio" id="notxns20" v-model="notxns" :value=20> 20</label>
-				<label class="radio"><input type="radio" id="notxns100" v-model="notxns" :value=100> 100</label>
-				<label class="radio"><input type="radio" id="notxns500" v-model="notxns" :value=500> 500</label>
-			</td>
-			<td>		
-				<button v-on:click="generate(situation.id)" class="button is-danger is-outlined is-small ">Generate Transactions</button>
-	    		</td>
 		</tr>
 	    </tbody>
 	  </table>
@@ -85,16 +105,13 @@
 			whyQ : '',
 			pinQ : '',
 			scenarios : '',
-			notxns : 1,
-			valid : true,
-			situations : []
+			notxns : "",
+			label : '',
+			situations : [],
+			situationid: 1
 		}
 	},
 	computed : {
-		label : function() {
-			if(this.valid) return 1;
-			else return 2;
-		},
 		simulatorname : function () {
 			
 			let whereQname = '';	
@@ -140,9 +157,9 @@
 				.catch(function (error) {console.log(error);});
 //				.catch(error => this.errors.record(error.response.data.errors));
 		},
-		generate(id){
+		generate(){
 			console.log("to generate ");
-			axios.get('/generate?model=1&notxns='+this.notxns+'&label='+this.label+'&relationship=1&situation='+id)
+			axios.get('/generate?model=1&notxns='+this.notxns+'&label='+this.label+'&relationship=1&situation='+this.situationid)
 			.then(response => this.results = response.data)
 			.catch(function (error) {
 			    console.log(error);
