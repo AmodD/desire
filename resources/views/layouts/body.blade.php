@@ -18,12 +18,25 @@
 	@elseif(Route::currentRouteName() == 'relationship' )
 		<demo selected="relationship"></demo> 
 		<relationship></relationship>
+	@elseif(Route::currentRouteName() == 'simulator' )
+		<demo selected="simulator"></demo> 
+		<simulator></simulator>
+	@elseif(Route::currentRouteName() == 'transactions' )
+		<demo selected="transactions"></demo> 
+		<transactions></transactions>
 	@else
 		<demo selected="home"></demo> 
 		<div class="content">
 			<h1>POC 8385 ML</h1>
 			<h2>Goals</h2>
-			<h5><u>Stage 2</u> <span class="tag is-warning">In Progress</span></h5>
+			<h5><u>Stage 3</u> <span class="tag is-warning">In Progress</span></h5>
+			<p>Simulator & Expansion of Fields Coverage</p>
+			<ul>
+			    <li>Add Fields with more DEs</li>
+			    <li>Create a Simulator</li>
+			    <li>Generate Data</li>
+			</ul>
+			<h5><u>Stage 2</u> <span class="tag is-success">Complete</span></h5>
 			<p>Modelling Data & finalizing Algorithms for Relationships</p>
 			<ul>
 			    <li>Create a relationship</li>

@@ -33,6 +33,6 @@ class Relationship extends Model
 					     RelationshipTransaction::class,
 				     	     'relationship_id',
 					     'transaction_id',
-					     'id','transaction_id')->whereNotIn('data.field_id',[0,1]);
+					     'id','transaction_id')->whereNotIn('data.field_id',[1]);
 	}
 }

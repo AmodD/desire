@@ -16,4 +16,10 @@ class Field extends Model
 	{
 		return $this->belongsToMany(Relationship::class);
 	}
+	
+	public function scenarios()
+	{
+		return $this->belongsToMany(Scenario::class);
+	}
+	
 }

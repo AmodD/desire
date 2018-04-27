@@ -1928,6 +1928,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -2206,6 +2207,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2701,6 +2708,252 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		});
 
 		this.getRelationships();
+	}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/simulator.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			progress: 0,
+			whereQ: '',
+			whatQ: '',
+			howQ: '',
+			whoQ: '',
+			whyQ: '',
+			pinQ: '',
+			scenarios: '',
+			notxns: 1,
+			valid: true,
+			situations: []
+		};
+	},
+	computed: {
+		label: function label() {
+			if (this.valid) return 1;else return 2;
+		},
+		simulatorname: function simulatorname() {
+
+			var whereQname = '';
+			var whatQname = '';
+			var howQname = '';
+			var whoQname = '';
+			var whyQname = '';
+
+			if (this.scenarios[this.whereQ - 1]) whereQname = this.scenarios[this.whereQ - 1].name;
+			if (this.scenarios[this.whatQ - 1]) whatQname = this.scenarios[this.whatQ - 1].name;
+			if (this.scenarios[this.howQ - 1]) howQname = this.scenarios[this.howQ - 1].name;
+			if (this.scenarios[this.whoQ - 1]) whoQname = this.scenarios[this.whoQ - 1].name;
+			if (this.scenarios[this.whyQ - 1]) whyQname = this.scenarios[this.whyQ - 1].name;
+
+			return whereQname + '-' + whatQname + '-' + howQname + '-' + whoQname + '-' + whyQname;
+		}
+	},
+	methods: {
+		createsituation: function createsituation() {
+			console.log("in creating situation");
+
+			var self = this;
+
+			if (!this.whereQ || !this.whatQ || !this.howQ || !this.whoQ || !this.whyQ) return;
+			if (this.howQ == 38 && !this.pinQ) return;
+
+			console.log("about to creating situation");
+
+			axios({
+				method: 'post',
+				url: '/situations',
+				data: {
+					whereQ: self.whereQ,
+					whatQ: self.whatQ,
+					howQ: self.howQ,
+					whoQ: self.whoQ,
+					whyQ: self.whyQ,
+					pinQ: self.pinQ,
+					name: self.simulatorname
+				}
+			}).then(function (response) {
+				location.reload();
+			}).catch(function (error) {
+				console.log(error);
+			});
+			//				.catch(error => this.errors.record(error.response.data.errors));
+		},
+		generate: function generate(id) {
+			var _this = this;
+
+			console.log("to generate ");
+			axios.get('/generate?model=1&notxns=' + this.notxns + '&label=' + this.label + '&relationship=1&situation=' + id).then(function (response) {
+				return _this.results = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		getquestions: function getquestions() {
+			var _this2 = this;
+
+			axios.get('/getquestions').then(function (response) {
+				return _this2.scenarios = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		getsituations: function getsituations() {
+			var _this3 = this;
+
+			axios.get('/situations').then(function (response) {
+				return _this3.situations = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		}
+	},
+	mounted: function mounted() {
+		console.log('Simulator Component mounted.');
+		this.getquestions();
+		this.getsituations();
+	}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/transactions.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			results: []
+		};
+	},
+	mounted: function mounted() {
+		var _this = this;
+
+		console.log('Generate Component mounted.');
+		axios.get('/lasttxns').then(function (response) {
+			return _this.results = response.data;
+		}).catch(function (error) {
+			console.log(error);
+		});
 	}
 });
 
@@ -25203,6 +25456,499 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-167831fd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/simulator.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "content" }, [
+    _c("form", [
+      _c("h4", [
+        _c(
+          "button",
+          {
+            staticClass: "button is-success is-outlined ",
+            on: { click: _vm.createsituation }
+          },
+          [_vm._v("Click to Create a Situation")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("progress", {
+        staticClass: "progress is-primary",
+        attrs: { max: "100" },
+        domProps: { value: _vm.progress }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "select" }, [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.whereQ,
+                expression: "whereQ"
+              }
+            ],
+            attrs: { required: "" },
+            on: {
+              "~change": function($event) {
+                _vm.progress = _vm.progress + 20
+              },
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.whereQ = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "", disabled: "" } }, [
+              _vm._v(" Where ?")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.scenarios, function(scenario) {
+              return scenario.question_id == 1
+                ? _c("option", { domProps: { value: scenario.id } }, [
+                    _vm._v(_vm._s(scenario.name))
+                  ])
+                : _vm._e()
+            })
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "select" }, [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.whatQ,
+                expression: "whatQ"
+              }
+            ],
+            attrs: { required: "" },
+            on: {
+              "~change": function($event) {
+                _vm.progress = _vm.progress + 20
+              },
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.whatQ = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "", disabled: "" } }, [
+              _vm._v(" What ?")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.scenarios, function(scenario) {
+              return scenario.question_id == 2
+                ? _c("option", { domProps: { value: scenario.id } }, [
+                    _vm._v(_vm._s(scenario.name))
+                  ])
+                : _vm._e()
+            })
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "select" }, [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.howQ,
+                expression: "howQ"
+              }
+            ],
+            attrs: { required: "" },
+            on: {
+              "~change": function($event) {
+                _vm.progress = _vm.progress + 20
+              },
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.howQ = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "", disabled: "" } }, [
+              _vm._v(" How ?")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.scenarios, function(scenario) {
+              return scenario.question_id == 3
+                ? _c("option", { domProps: { value: scenario.id } }, [
+                    _vm._v(_vm._s(scenario.name))
+                  ])
+                : _vm._e()
+            })
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "select" }, [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.whoQ,
+                expression: "whoQ"
+              }
+            ],
+            attrs: { required: "" },
+            on: {
+              "~change": function($event) {
+                _vm.progress = _vm.progress + 20
+              },
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.whoQ = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "", disabled: "" } }, [
+              _vm._v(" Who ?")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.scenarios, function(scenario) {
+              return scenario.question_id == 4
+                ? _c("option", { domProps: { value: scenario.id } }, [
+                    _vm._v(_vm._s(scenario.name))
+                  ])
+                : _vm._e()
+            })
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "select" }, [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.whyQ,
+                expression: "whyQ"
+              }
+            ],
+            attrs: { required: "" },
+            on: {
+              "~change": function($event) {
+                _vm.progress = _vm.progress + 20
+              },
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.whyQ = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "", disabled: "" } }, [
+              _vm._v(" Why ?")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.scenarios, function(scenario) {
+              return scenario.question_id == 5
+                ? _c("option", { domProps: { value: scenario.id } }, [
+                    _vm._v(_vm._s(scenario.name))
+                  ])
+                : _vm._e()
+            })
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _vm.howQ == 38
+        ? _c("div", { staticClass: "select" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.pinQ,
+                    expression: "pinQ"
+                  }
+                ],
+                attrs: { required: "" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.pinQ = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { value: "", disabled: "" } }, [
+                  _vm._v(" Pin Entry Capability ?")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.scenarios, function(scenario) {
+                  return scenario.question_id == 6
+                    ? _c("option", { domProps: { value: scenario.id } }, [
+                        _vm._v(_vm._s(scenario.name))
+                      ])
+                    : _vm._e()
+                })
+              ],
+              2
+            )
+          ])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("hr"),
+    _vm._v(" "),
+    _c("h2", [_vm._v("Generate Transactions For")]),
+    _vm._v(" "),
+    _c("table", { staticClass: "table" }, [
+      _vm._m(0, false, false),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.situations, function(situation) {
+          return _c("tr", [
+            _c("td", [
+              _c("span", { staticClass: "is-small" }, [
+                _vm._v(_vm._s(situation.name))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _c("label", { staticClass: "checkbox" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.valid,
+                      expression: "valid"
+                    }
+                  ],
+                  attrs: { type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(_vm.valid)
+                      ? _vm._i(_vm.valid, null) > -1
+                      : _vm.valid
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.valid,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 && (_vm.valid = $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            (_vm.valid = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)))
+                        }
+                      } else {
+                        _vm.valid = $$c
+                      }
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _c("label", { staticClass: "radio" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.notxns,
+                      expression: "notxns"
+                    }
+                  ],
+                  attrs: { type: "radio", id: "notxns20" },
+                  domProps: { value: 20, checked: _vm._q(_vm.notxns, 20) },
+                  on: {
+                    change: function($event) {
+                      _vm.notxns = 20
+                    }
+                  }
+                }),
+                _vm._v(" 20")
+              ]),
+              _vm._v(" "),
+              _c("label", { staticClass: "radio" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.notxns,
+                      expression: "notxns"
+                    }
+                  ],
+                  attrs: { type: "radio", id: "notxns100" },
+                  domProps: { value: 100, checked: _vm._q(_vm.notxns, 100) },
+                  on: {
+                    change: function($event) {
+                      _vm.notxns = 100
+                    }
+                  }
+                }),
+                _vm._v(" 100")
+              ]),
+              _vm._v(" "),
+              _c("label", { staticClass: "radio" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.notxns,
+                      expression: "notxns"
+                    }
+                  ],
+                  attrs: { type: "radio", id: "notxns500" },
+                  domProps: { value: 500, checked: _vm._q(_vm.notxns, 500) },
+                  on: {
+                    change: function($event) {
+                      _vm.notxns = 500
+                    }
+                  }
+                }),
+                _vm._v(" 500")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _c(
+                "button",
+                {
+                  staticClass: "button is-danger is-outlined is-small ",
+                  on: {
+                    click: function($event) {
+                      _vm.generate(situation.id)
+                    }
+                  }
+                },
+                [_vm._v("Generate Transactions")]
+              )
+            ])
+          ])
+        })
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Simulation Scenario")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Valid Data ?")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Number of Txns")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Action")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-167831fd", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-18ab90fa\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/demo.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25217,6 +25963,14 @@ var render = function() {
             _c("a", { attrs: { href: "/" } }, [_vm._v("Home")])
           ])
         : _c("li", [_c("a", { attrs: { href: "/" } }, [_vm._v("Home")])]),
+      _vm._v(" "),
+      _vm.selected === "simulator"
+        ? _c("li", { staticClass: "is-active" }, [
+            _c("a", { attrs: { href: "/simulator" } }, [_vm._v("Simulator")])
+          ])
+        : _c("li", [
+            _c("a", { attrs: { href: "/simulator" } }, [_vm._v("Simulator")])
+          ]),
       _vm._v(" "),
       _vm.selected === "relationship"
         ? _c("li", { staticClass: "is-active" }, [
@@ -25254,15 +26008,15 @@ var render = function() {
             _c("a", { attrs: { href: "/create" } }, [_vm._v("Testing")])
           ]),
       _vm._v(" "),
-      _vm.selected === "auto"
+      _vm.selected === "transactions"
         ? _c("li", { staticClass: "is-active" }, [
-            _c("a", { attrs: { href: "/auto" } }, [
-              _vm._v("Auto Generate Messages")
+            _c("a", { attrs: { href: "/transactions" } }, [
+              _vm._v("Transactions")
             ])
           ])
         : _c("li", [
-            _c("a", { attrs: { href: "/auto" } }, [
-              _vm._v("Auto Generate Messages")
+            _c("a", { attrs: { href: "/transactions" } }, [
+              _vm._v("Transactions")
             ])
           ])
     ])
@@ -26155,6 +26909,145 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-503f4741", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-5790a46c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/transactions.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    _vm._l(_vm.results, function(result) {
+      return _c("div", { staticClass: "box" }, [
+        _c(
+          "div",
+          { staticClass: "content" },
+          [
+            _c("p", [
+              _c("strong", [_vm._v("ID")]),
+              _vm._v(" "),
+              _c("small", [_vm._v(_vm._s(result.id))]),
+              _vm._v(" "),
+              _c("strong", [_vm._v("Time")]),
+              _vm._v(" "),
+              _c("small", [_vm._v(_vm._s(result.created_at))]),
+              _vm._v(" "),
+              _c("strong", [_vm._v("Model Name")]),
+              _vm._v(" "),
+              _c("small", [_vm._v(_vm._s(result.mlmodel.name))]),
+              _vm._v(" "),
+              _c("strong", [_vm._v("Score")]),
+              _vm._v(" "),
+              _c("small", [_vm._v(_vm._s(result.score))]),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c("strong", [_vm._v("ISO8385 message")]),
+              _c("small", [_vm._v("  " + _vm._s(result.message))])
+            ]),
+            _vm._l(result.data, function(detail) {
+              return _c("div", [
+                detail.field_id == 1
+                  ? _c("div", [
+                      _c("strong", [_vm._v("Vector")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                detail.field_id == 0
+                  ? _c("span", [
+                      _c("strong", [_vm._v("MTI")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                detail.field_id == 2
+                  ? _c("span", [
+                      _c("strong", [_vm._v("PAN")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                detail.field_id == 3
+                  ? _c("span", [
+                      _c("strong", [_vm._v("Processing Code")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                detail.field_id == 4
+                  ? _c("span", [
+                      _c("strong", [_vm._v("Amount")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                detail.field_id == 18
+                  ? _c("span", [
+                      _c("strong", [_vm._v("Merchant Category Code")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                detail.field_id == 19
+                  ? _c("span", [
+                      _c("strong", [_vm._v("Country")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                detail.field_id == 22
+                  ? _c("span", [
+                      _c("strong", [_vm._v("POS Entry Mode")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                detail.field_id == 25
+                  ? _c("span", [
+                      _c("strong", [_vm._v("POS Condition Code")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                detail.field_id == 49
+                  ? _c("span", [
+                      _c("strong", [_vm._v("Currency")]),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(detail.value))])
+                    ])
+                  : _vm._e()
+              ])
+            })
+          ],
+          2
+        )
+      ])
+    })
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5790a46c", module.exports)
   }
 }
 
@@ -38118,6 +39011,8 @@ Vue.component('demo', __webpack_require__("./resources/assets/js/components/demo
 Vue.component('nn', __webpack_require__("./resources/assets/js/components/nn.vue"));
 Vue.component('relationship', __webpack_require__("./resources/assets/js/components/relationship.vue"));
 Vue.component('traindata', __webpack_require__("./resources/assets/js/components/data.vue"));
+Vue.component('simulator', __webpack_require__("./resources/assets/js/components/simulator.vue"));
+Vue.component('transactions', __webpack_require__("./resources/assets/js/components/transactions.vue"));
 
 var app = new Vue({
   el: '#app'
@@ -38505,6 +39400,104 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-4eb73062", Component.options)
   } else {
     hotAPI.reload("data-v-4eb73062", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/simulator.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/simulator.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-167831fd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/simulator.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/simulator.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-167831fd", Component.options)
+  } else {
+    hotAPI.reload("data-v-167831fd", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/transactions.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/transactions.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-5790a46c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/transactions.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/transactions.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5790a46c", Component.options)
+  } else {
+    hotAPI.reload("data-v-5790a46c", Component.options)
 ' + '  }
   module.hot.dispose(function (data) {
     disposed = true

@@ -17,6 +17,8 @@ use App\Mlmodel;
 use App\Relationship;
 use App\Label;
 use App\RelationshipTransaction;
+use App\Scenario;
+use App\Situation;
 
 use Phpml\Classification\MLPClassifier;
 use Phpml\Preprocessing\Normalizer;
@@ -304,26 +306,98 @@ dd($predicted);
 		$label = $request->label;
 		$relationship = $request->relationship;
 		
-		$mti = "1200"; 
 		$faker = \Faker\Factory::create('en_US');
+		$situation = \App\Situation::find($request->situation);
+
+		$mti = '';
+		$procode = '';
+		$poscapture = '';
+		$posem = '';
+		
+		foreach( $situation->scenarios  as $scenario)
+		{
+			foreach($scenario->fields as $field)
+			{
+				// DE 0
+				if($field->pivot->field_id == '0')
+				{
+					$mti =  $field->pivot->value ;
+				}
+
+				// DE 3
+				if($field->pivot->field_id == '3')
+				{
+					$procode =  $field->pivot->value ;
+				}
+
+				// DE 26
+				if($field->pivot->field_id == '26')
+				{
+					$poscapture = $field->pivot->value ;			
+				}
+				// DE 22
+				if($field->pivot->field_id == '22')
+				{
+					if($scenario->question_id == '3') $posem = $field->pivot->value ;			
+
+					
+					if($field->pivot->scenario_id == '38') $posem = $posem.'0';
+					else if(($poscapture == '8') && ($scenario->question_id == '3')) $posem = $posem.'1';
+					else if(($poscapture == '4') && ($scenario->question_id == '6')) $posem = $posem.$field->pivot->value;
+				}
+			}
+		}	
+
+		// DE 19	
+		$country = 356;
+		// DE 41
+		$cardAceptorTerminal = "";
+		// DE 42
+		$cardAceptorIdentification = "";
+		// DE 48
+		$de48 = "" ; //$faker->word;	
+		// DE 49
+		$currency = 356;
+		// DE 55
+		$chipdata = "" ; //$faker->word;
+		// DE 60
+		$addposdata = "" ; // $faker->word;
+		// DE 61
+		$reservedPrivate2 = "";
+		// DE 90
+		$original = "";
+		// DE 127
+		$reservedPrivate12 = "";
 
 		for ($i = 0; $i < $request->notxns; ++$i)
-	       	{
-		$pan = $faker->creditCardNumber;
-		$pan = str_pad($pan, 16, '0', STR_PAD_LEFT);	
-		$amnt = str_pad(rand(100,99999), 12, '0', STR_PAD_LEFT);	
-		$arrayCountry = [601, 715, 807, 950, 785, 963];
-		$country = array_random($arrayCountry);
-		$currency = mt_rand(611,999);
-		$de48 = "" ; //$faker->word;
-		$arrayProCode = [200004, 315007, 267007, 159008, 244007, 576009];
-		$procode = array_random($arrayProCode);
-		$arrayposem = ["010","020","050","900","950","011","021","051","901","951","012","022","052","902","952","016","026","056","906","956"];
-		$posem = array_random($arrayposem);
-		$arrayposcc = ["00","01","02","03","05","07","08","52","59"];
-		$poscc = array_random($arrayposcc);
-		$chipdata = "" ; //$faker->word;
-		$addposdata = "" ; // $faker->word;
+		{
+			// DE 2
+			$pan = $faker->creditCardNumber;
+			$pan = str_pad($pan, 16, '0', STR_PAD_LEFT);	
+			
+			// DE 4 5 6
+			$amnt = str_pad($faker->numberBetween($min = 10, $max = 10000), 12, '0', STR_PAD_LEFT);
+
+			// DE 7
+			$transmissionDate = $faker->date($format = 'mdHis', $max = 'now');
+
+			// DE 25
+			$arrayposcc = ["00","01","02","03","05","07","08","52","59"];
+			$poscc = array_random($arrayposcc);
+
+			// DE 32
+			$acquiringInstitution = $faker->numberBetween($min = 10, $max = 10000);
+			// DE 33
+			$forwardingInstitution = $faker->numberBetween($min = 10, $max = 10000);
+
+			// DE 38
+			$air = $faker->bothify('?#####');
+			
+			// DE 39
+			$responseCode = $faker->numerify('##');
+
+			// DE 52
+//			$personalIdentification = $faker->randomNumber(8);
 		$mcc = mt_rand(6000,9999);
 
 		//$dataElement->put("pan",$pan);
@@ -341,23 +415,37 @@ dd($predicted);
 		$dataElement->put("2",$pan);
 		$dataElement->put("3",$procode);
 		$dataElement->put("4",$amnt);
+		$dataElement->put("5",$amnt);
+		$dataElement->put("6",$amnt);
+		$dataElement->put("7",$transmissionDate);
 		$dataElement->put("18",$mcc);
 		$dataElement->put("19",$country);
 		$dataElement->put("22",$posem);
 		$dataElement->put("25",$poscc);
+		$dataElement->put("26",$poscapture);
+		$dataElement->put("32",$acquiringInstitution);
+		$dataElement->put("33",$forwardingInstitution);
+		$dataElement->put("38",$air);
+		$dataElement->put("39",$responseCode);
+		$dataElement->put("41",$cardAceptorTerminal);
+		$dataElement->put("42",$cardAceptorIdentification);
 		$dataElement->put("48",$de48);
 		$dataElement->put("49",$currency);
+		//$dataElement->put("52",$personalIdentification);
 		$dataElement->put("55",$chipdata);
 		$dataElement->put("60",$addposdata);
+		$dataElement->put("61",$reservedPrivate2);
+		$dataElement->put("90",$original);
+		$dataElement->put("127",$reservedPrivate12);
 
 		$isoMessage = $this->pack($mti,$dataElement);
 		
 		if (strpos($isoMessage, 'Error') !== false) {
-			//	return $isoMessage;
-			continue;
+				return $isoMessage;
+			//continue;
 		}
 		else{
-			 $this->store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship);
+			 $this->store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship,$situation);
 		}	
 
 		} // for loop ends
@@ -372,7 +460,7 @@ dd($predicted);
 
 	}
 
-	public function store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship)
+	public function store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship,$situation)
 	{
 		try{
 			$jak = new JAK8583();
@@ -397,6 +485,7 @@ dd($predicted);
 		$transaction = new Transaction();
 		$transaction->message = $isoMessage;
 		$transaction->mlmodel_id = $model;
+		$transaction->situation_id = $situation;
 		if($model == 1) $transaction->score = $score;
 		else $transaction->score = $this->trainedScore($dataSet,$model) ; 
 		//else $transaction->score = head($this->trainedScore($vector,$model))  ; 
@@ -406,21 +495,35 @@ dd($predicted);
 
 	    	DB::table('data')->insert([
 		            ['transaction_id' => $transaction->id  , 'field_id' => 0 ,  'value' => $mti],
-		            ['transaction_id' => $transaction->id  , 'field_id' => 1 ,  'value' => implode("",$vector)]
-//		            ['transaction_id' => $transaction->id  , 'field_id' => 2 ,  'value' => $dataElement->get("pan")],
-//		            ['transaction_id' => $transaction->id  , 'field_id' => 3 ,  'value' => $dataElement->get("procode")],
-//			    ['transaction_id' => $transaction->id  , 'field_id' => 4 ,  'value' => $dataElement->get("amnt")],
-//			    ['transaction_id' => $transaction->id  , 'field_id' => 18 ,  'value' => $dataElement->get("mcc")],
-//			    ['transaction_id' => $transaction->id  , 'field_id' => 19 ,  'value' => $dataElement->get("country")],
-//			    ['transaction_id' => $transaction->id  , 'field_id' => 22 ,  'value' => $dataElement->get("posem")],
-//			    ['transaction_id' => $transaction->id  , 'field_id' => 25 ,  'value' => $dataElement->get("poscc")],
-//			    ['transaction_id' => $transaction->id  , 'field_id' => 48 ,  'value' => $dataElement->get("de48")],
-//			    ['transaction_id' => $transaction->id  , 'field_id' => 49 ,  'value' => $dataElement->get("currency")],
-//			    ['transaction_id' => $transaction->id  , 'field_id' => 55 ,  'value' => $dataElement->get("chipdata")],
-//			    ['transaction_id' => $transaction->id  , 'field_id' => 60 ,  'value' => $dataElement->get("addposdata")]
+		            ['transaction_id' => $transaction->id  , 'field_id' => 1 ,  'value' => implode("",$vector)],
+		            ['transaction_id' => $transaction->id  , 'field_id' => 2 ,  'value' => $dataElement->get("2")],
+		            ['transaction_id' => $transaction->id  , 'field_id' => 3 ,  'value' => $dataElement->get("3")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 4 ,  'value' => $dataElement->get("4")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 5 ,  'value' => $dataElement->get("5")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 6 ,  'value' => $dataElement->get("6")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 7 ,  'value' => $dataElement->get("7")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 18 ,  'value' => $dataElement->get("18")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 19 ,  'value' => $dataElement->get("19")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 22 ,  'value' => $dataElement->get("22")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 25 ,  'value' => $dataElement->get("25")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 26 ,  'value' => $dataElement->get("26")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 32 ,  'value' => $dataElement->get("32")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 33 ,  'value' => $dataElement->get("33")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 38 ,  'value' => $dataElement->get("38")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 39 ,  'value' => $dataElement->get("39")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 41 ,  'value' => $dataElement->get("41")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 42 ,  'value' => $dataElement->get("42")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 48 ,  'value' => $dataElement->get("48")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 49 ,  'value' => $dataElement->get("49")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 55 ,  'value' => $dataElement->get("55")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 60 ,  'value' => $dataElement->get("60")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 61 ,  'value' => $dataElement->get("61")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 90 ,  'value' => $dataElement->get("90")],
+			    ['transaction_id' => $transaction->id  , 'field_id' => 127 ,  'value' => $dataElement->get("127")],
 		    ]);
 
-		foreach($dataElement as $number => $value)
+
+/*		foreach($dataElement as $number => $value)
 		{
 			if($value){
 				$data = new Data();
@@ -430,7 +533,7 @@ dd($predicted);
 				$data->save();
 			}
 		}
-
+ */
 
 		if($relationship)
 		{
@@ -456,10 +559,10 @@ dd($predicted);
 //	if($dataElement->get('poscc'))  $vector->push(($dataElement->get('poscc'))); else  $vector->push(0);
 //	if($dataElement->get('currency'))  $vector->push($dataElement->get('currency')); else  $vector->push(0);
 		
-	if($dataElement->get('posem')) $vectorString = $vectorString.$dataElement->get('posem'); else  $vectorString = $vectorString.'000';
-	if($dataElement->get('poscc'))  $vectorString = $vectorString.$dataElement->get('poscc'); else  $vectorString = $vectorString.'00';
+//	if($dataElement->get('posem')) $vectorString = $vectorString.$dataElement->get('posem'); else  $vectorString = $vectorString.'000';
+//	if($dataElement->get('poscc'))  $vectorString = $vectorString.$dataElement->get('poscc'); else  $vectorString = $vectorString.'00';
 
-	return	array_map('intval', str_split($vectorString));
+//	return	array_map('intval', str_split($vectorString));
 //	return $vector->toArray();
 
 	if($dataElement->get('pan')) $vector->push(1); else  $vector->push(0);
@@ -747,14 +850,28 @@ $schemaManager = new SchemaManager(new ISO8583(), $cacheManager);
 if($dataElement->get('2')) $schemaManager->setPan($dataElement->get('2'));
 if($dataElement->get('3')) $schemaManager->setProcessingCode($dataElement->get('3'));
 if($dataElement->get('4')) $schemaManager->setAmountTransaction($dataElement->get('4'));
+if($dataElement->get('5')) $schemaManager->setAmountSettlement($dataElement->get('5'));
+if($dataElement->get('6')) $schemaManager->setAmountCardholderBilling($dataElement->get('6'));
+if($dataElement->get('7')) $schemaManager->setTransmissionDateTime($dataElement->get('7'));
+if($dataElement->get('18')) $schemaManager->setMerchantType($dataElement->get('18'));
 if($dataElement->get('19')) $schemaManager->setCountryCodeAcquiring($dataElement->get('19'));
 if($dataElement->get('22')) $schemaManager->setPointOfServiceEntryMode($dataElement->get('22'));
 if($dataElement->get('25')) $schemaManager->setPointOfServiceCodeCondition($dataElement->get('25'));
+if($dataElement->get('26')) $schemaManager->setPointOfServiceCaptureCode($dataElement->get('26'));
+if($dataElement->get('32')) $schemaManager->setAcquiringInstitutionIdentificationCode($dataElement->get('32'));
+if($dataElement->get('33')) $schemaManager->setForwardingInstitutionIdentificationCode($dataElement->get('33'));
+if($dataElement->get('38')) $schemaManager->setAuthorizationIdentificationResponse($dataElement->get('38'));
+if($dataElement->get('39')) $schemaManager->setResponseCode($dataElement->get('39'));
+if($dataElement->get('41')) $schemaManager->setCardAcceptorTerminalIdentification($dataElement->get('41'));
+if($dataElement->get('42')) $schemaManager->setCardAcceptorIdentificationCode($dataElement->get('42'));
 if($dataElement->get('48')) $schemaManager->setAdditionalDataPrivate($dataElement->get('48'));
 if($dataElement->get('49')) $schemaManager->setCurrencyCodeTransaction($dataElement->get('49'));
 if($dataElement->get('55')) $schemaManager->setIsoReserved1($dataElement->get('55'));
 if($dataElement->get('60')) $schemaManager->setPrivateReserved1($dataElement->get('60'));
-if($dataElement->get('18')) $schemaManager->setMerchantType($dataElement->get('18'));
+if($dataElement->get('61')) $schemaManager->setPrivateReserved2($dataElement->get('61'));
+if($dataElement->get('90')) $schemaManager->setOriginalDataElements($dataElement->get('90'));
+if($dataElement->get('127')) $schemaManager->setPrivateReserved12($dataElement->get('127'));
+
 
 /** @var MessagePacker $message */
 $message = (new Financial($cacheManager))->pack($schemaManager);

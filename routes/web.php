@@ -44,6 +44,12 @@ Route::get('/relationship', function () {
 Route::get('/traindata', function () {
     return view('home');
 })->name('traindata');
+Route::get('/simulator', function () {
+    return view('home');
+})->name('simulator');
+Route::get('/transactions', function () {
+    return view('home');
+})->name('transactions');
 
 Route::get('/bp', 'TransactionsController@demo')->name('bp');
 
@@ -58,6 +64,64 @@ Route::get('/getmodels', 'TransactionsController@getModels');
 Route::get('/testdata', 'TransactionsController@testdata');
 
 Route::get('/test', function() {
+
+		$situation = \App\Situation::find(2);
+
+		$mti = '';
+		$procode = '';
+		$poscapture = '';
+		$posem = '';
+	dd($situation->scenarios);	
+		foreach( $situation->scenarios  as $scenario)
+		{
+			foreach($scenario->fields as $field)
+			{
+				// DE 0
+				if($field->pivot->field_id == '0')
+				{
+					$mti =  $field->pivot->value ;
+				}
+
+				// DE 3
+				if($field->pivot->field_id == '3')
+				{
+					$procode =  $field->pivot->value ;
+				}
+
+				// DE 26
+				if($field->pivot->field_id == '26')
+				{
+					$poscapture = $field->pivot->value ;			
+				}
+				// DE 22
+				if($field->pivot->field_id == '22')
+				{
+					if($scenario->question_id == '3') $posem = $field->pivot->value ;			
+
+					
+					if($field->pivot->scenario_id == '38') $posem = $posem.'0';
+					else if(($poscapture == '8') && ($scenario->question_id == '3')) $posem = $posem.'1';
+					else if(($poscapture == '4') && ($scenario->question_id == '6')) $posem = $posem.$field->pivot->value;
+				}
+			}
+		}
+
+	dd($mti,$procode,$poscapture,$posem);	
+
+	$situation = \App\Situation::find(2);
+
+	foreach( $situation->scenarios  as $scenario)
+	{
+			if($scenario->question_id == 6)
+			{
+				dd($scenario->fields);	
+			}
+		foreach($scenario->fields as $field)
+		{
+		}
+	}
+
+
 	dd(str_pad(base_convert('01200121', 2, 16),8,'0', STR_PAD_LEFT));
 dd(unpack("H*" , '76'));
 dd(hex2bin('76'));
@@ -156,3 +220,8 @@ Route::get('/labels', 'LabelsController@getlabels');
 
 Route::get('/getfields', 'FieldsController@getfields');
 Route::get('/allfields', 'FieldsController@getall');
+
+Route::get('/getquestions','ScenarioController@getquestions');
+
+Route::get('/situations', 'SituationController@index');
+Route::post('/situations', 'SituationController@store');

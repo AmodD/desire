@@ -22,6 +22,8 @@ Vue.component('demo', require('./components/demo.vue'));
 Vue.component('nn', require('./components/nn.vue'));
 Vue.component('relationship', require('./components/relationship.vue'));
 Vue.component('traindata', require('./components/data.vue'));
+Vue.component('simulator', require('./components/simulator.vue'));
+Vue.component('transactions', require('./components/transactions.vue'));
 
 const app = new Vue({
     el: '#app'

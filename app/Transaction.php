@@ -21,4 +21,10 @@ class Transaction extends Model
 	{
 		return $this->belongsToMany(Relationship::class)->withPivot('label_id')->using(RelationshipTransaction::class);
 	}
+	
+	public function situation()
+	{
+		return $this->belongsTo(Situation::class);
+	}
+	
 }
