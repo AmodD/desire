@@ -537,7 +537,7 @@ dd($predicted);
 		}
  */
 
-$ch = curl_init( 'http://demode48.amod/api/txncase' );
+$ch = curl_init( env('POC_URL').'api/txncase' );
 # Setup request to send json via POST.
 $txn = json_encode( array( "transaction" => $transaction , "de" => $dataElement , "aggregator" => $aggregator , "client" => $client ) );
 curl_setopt( $ch, CURLOPT_POSTFIELDS, $txn );
