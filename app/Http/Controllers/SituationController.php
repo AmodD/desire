@@ -16,8 +16,12 @@ class SituationController extends Controller
      */
     public function index()
     {
-	    return Situation::all();
-	   
+	    return Situation::withCount('transactions')->latest()->get();
+    }
+    
+    public function txncount(Situation $situation)
+    {
+	    return $situation->transactions->count();
     }
 
     /**

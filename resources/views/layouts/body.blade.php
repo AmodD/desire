@@ -20,7 +20,7 @@
 		<relationship></relationship>
 	@elseif(Route::currentRouteName() == 'simulator' )
 		<demo selected="simulator"></demo> 
-		<simulator></simulator>
+		<simulator pocurl="{{ env('POC_URL') }}"></simulator>
 	@elseif(Route::currentRouteName() == 'transactions' )
 		<demo selected="transactions"></demo> 
 		<transactions></transactions>

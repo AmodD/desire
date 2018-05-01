@@ -225,3 +225,4 @@ Route::get('/getquestions','ScenarioController@getquestions');
 
 Route::get('/situations', 'SituationController@index');
 Route::post('/situations', 'SituationController@store');
+Route::get('/txncount/{situation}', 'SituationController@txncount');

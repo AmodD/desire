@@ -71,6 +71,23 @@
 			</select>
 			</div>
 		  </div>
+		  <div class="control">
+	  		<div class="select">
+				<select name="aggregator" v-on:change="getclients()" v-model="aggregator"  required>
+				  <option value="" disabled>Select Aggregator</option>
+				  <option v-for="aggregator in aggregators" :value="aggregator.id">{{ aggregator.name }}</option>
+				</select>
+			</div>
+		  </div>	  
+		  <div class="control">
+	  		<div class="select">
+				<select name="client" v-model="client"  required>
+				  <option value="" disabled>Select Client</option>
+				  <option value=0>000000</option>
+				  <option v-for="client in clients" :value="client.id">{{ client.name }}</option>
+				</select>
+			</div>
+		  </div>	  
 	   </div>	  
 	   </form>	
 
@@ -80,12 +97,14 @@
 	      <tr>
 		<th></th>      
 	        <th>Simulation Scenario</th>
+	        <th>Transactions Count</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 		<tr v-for="situation in situations">
 			<td><label class="radio"><input type="radio" id="situationid" v-model="situationid" :value="situation.id"></label></td>
 			<td><span class="is-small">{{ situation.name }}</span></td>
+			<td><span>{{ situation.transactions_count }}</span></td>
 		</tr>
 	    </tbody>
 	  </table>
@@ -108,9 +127,15 @@
 			notxns : "",
 			label : '',
 			situations : [],
-			situationid: 1
+			situationid: 1,
+			aggregators : [],
+			clients : [],
+			aggregator : '',
+			client : ''
+
 		}
 	},
+	props : ['pocurl'],
 	computed : {
 		simulatorname : function () {
 			
@@ -159,7 +184,7 @@
 		},
 		generate(){
 			console.log("to generate ");
-			axios.get('/generate?model=1&notxns='+this.notxns+'&label='+this.label+'&relationship=1&situation='+this.situationid)
+			axios.get('/generate?model=1&notxns='+this.notxns+'&label='+this.label+'&relationship=1&situation='+this.situationid+'&aggregator='+this.aggregator+'&client='+this.client)
 			.then(response => this.results = response.data)
 			.catch(function (error) {
 			    console.log(error);
@@ -172,18 +197,40 @@
 			     console.log(error);
 			  });
 		},
-		getsituations(){
-			axios.get('/situations')
-			     .then(response => this.situations = response.data)
+		getaggregators(){
+			axios.get(this.pocurl+'api/getaggregators')
+			     .then(response => this.aggregators = response.data)
 			     .catch(function (error) {
 			     console.log(error);
 			  });
+		},
+		getclients(){
+			axios.get(this.pocurl+'api/getclients?aggregator='+this.aggregator)
+			     .then(response => this.clients = response.data)
+			     .catch(function (error) {
+			     console.log(error);
+			  });
+		},
+		getsituations(){
+			let self = this;
+			axios.get('/situations')
+//			     .then(response => this.situations = response.data)
+			     .then(function (response) {
+				     self.situations = response.data;
+				     if(self.situations[0]) self.situationid = self.situations[0].id;
+			     })
+			     .catch(function (error) {
+			     console.log(error);
+			  });
+
 		},
 	},
         mounted() {
                 console.log('Simulator Component mounted.');
 		this.getquestions();
 		this.getsituations();
+		this.getaggregators();
+		this.getclients();
 	}
     }
 </script>    

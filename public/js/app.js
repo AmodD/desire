@@ -2813,6 +2813,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -2828,9 +2847,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			notxns: "",
 			label: '',
 			situations: [],
-			situationid: 1
+			situationid: 1,
+			aggregators: [],
+			clients: [],
+			aggregator: '',
+			client: ''
+
 		};
 	},
+	props: ['pocurl'],
 	computed: {
 		simulatorname: function simulatorname() {
 
@@ -2883,7 +2908,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var _this = this;
 
 			console.log("to generate ");
-			axios.get('/generate?model=1&notxns=' + this.notxns + '&label=' + this.label + '&relationship=1&situation=' + this.situationid).then(function (response) {
+			axios.get('/generate?model=1&notxns=' + this.notxns + '&label=' + this.label + '&relationship=1&situation=' + this.situationid + '&aggregator=' + this.aggregator + '&client=' + this.client).then(function (response) {
 				return _this.results = response.data;
 			}).catch(function (error) {
 				console.log(error);
@@ -2898,11 +2923,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				console.log(error);
 			});
 		},
-		getsituations: function getsituations() {
+		getaggregators: function getaggregators() {
 			var _this3 = this;
 
-			axios.get('/situations').then(function (response) {
-				return _this3.situations = response.data;
+			axios.get(this.pocurl + 'api/getaggregators').then(function (response) {
+				return _this3.aggregators = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		getclients: function getclients() {
+			var _this4 = this;
+
+			axios.get(this.pocurl + 'api/getclients?aggregator=' + this.aggregator).then(function (response) {
+				return _this4.clients = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		getsituations: function getsituations() {
+			var self = this;
+			axios.get('/situations')
+			//			     .then(response => this.situations = response.data)
+			.then(function (response) {
+				self.situations = response.data;
+				if (self.situations[0]) self.situationid = self.situations[0].id;
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -2912,6 +2957,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		console.log('Simulator Component mounted.');
 		this.getquestions();
 		this.getsituations();
+		this.getaggregators();
+		this.getclients();
 	}
 });
 
@@ -2922,19 +2969,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -25905,6 +25939,105 @@ var render = function() {
               ]
             )
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control" }, [
+          _c("div", { staticClass: "select" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.aggregator,
+                    expression: "aggregator"
+                  }
+                ],
+                attrs: { name: "aggregator", required: "" },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.aggregator = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                    function($event) {
+                      _vm.getclients()
+                    }
+                  ]
+                }
+              },
+              [
+                _c("option", { attrs: { value: "", disabled: "" } }, [
+                  _vm._v("Select Aggregator")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.aggregators, function(aggregator) {
+                  return _c("option", { domProps: { value: aggregator.id } }, [
+                    _vm._v(_vm._s(aggregator.name))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control" }, [
+          _c("div", { staticClass: "select" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.client,
+                    expression: "client"
+                  }
+                ],
+                attrs: { name: "client", required: "" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.client = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { value: "", disabled: "" } }, [
+                  _vm._v("Select Client")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "0" } }, [_vm._v("000000")]),
+                _vm._v(" "),
+                _vm._l(_vm.clients, function(client) {
+                  return _c("option", { domProps: { value: client.id } }, [
+                    _vm._v(_vm._s(client.name))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
         ])
       ])
     ]),
@@ -25945,6 +26078,10 @@ var render = function() {
               _c("span", { staticClass: "is-small" }, [
                 _vm._v(_vm._s(situation.name))
               ])
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", [_vm._v(_vm._s(situation.transactions_count))])
             ])
           ])
         })
@@ -25961,7 +26098,9 @@ var staticRenderFns = [
       _c("tr", [
         _c("th"),
         _vm._v(" "),
-        _c("th", [_vm._v("Simulation Scenario")])
+        _c("th", [_vm._v("Simulation Scenario")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Transactions Count")])
       ])
     ])
   }
@@ -26957,110 +27096,36 @@ var render = function() {
           "div",
           { staticClass: "content" },
           [
-            _c("p", [
-              _c("strong", [_vm._v("ID")]),
-              _vm._v(" "),
-              _c("small", [_vm._v(_vm._s(result.id))]),
-              _vm._v(" "),
-              _c("strong", [_vm._v("Time")]),
-              _vm._v(" "),
-              _c("small", [_vm._v(_vm._s(result.created_at))]),
-              _vm._v(" "),
-              _c("strong", [_vm._v("Model Name")]),
-              _vm._v(" "),
-              _c("small", [_vm._v(_vm._s(result.mlmodel.name))]),
-              _vm._v(" "),
-              _c("strong", [_vm._v("Score")]),
-              _vm._v(" "),
-              _c("small", [_vm._v(_vm._s(result.score))]),
-              _vm._v(" "),
-              _c("br"),
-              _vm._v(" "),
-              _c("strong", [_vm._v("ISO8385 message")]),
-              _c("small", [_vm._v("  " + _vm._s(result.message))])
-            ]),
+            _c("strong", [_vm._v("ID")]),
+            _vm._v(" "),
+            _c("small", [_vm._v(_vm._s(result.id))]),
+            _vm._v(" "),
+            _c("strong", [_vm._v("Time")]),
+            _vm._v(" "),
+            _c("small", [_vm._v(_vm._s(result.created_at))]),
+            _vm._v(" "),
+            _c("strong", [_vm._v("Model Name")]),
+            _vm._v(" "),
+            _c("small", [_vm._v(_vm._s(result.mlmodel.name))]),
+            _vm._v(" "),
+            _c("strong", [_vm._v("Score")]),
+            _vm._v(" "),
+            _c("small", [_vm._v(_vm._s(result.score))]),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c("strong", [_vm._v("ISO8385 message")]),
+            _c("small", [_vm._v("  " + _vm._s(result.message))]),
+            _vm._v(" "),
             _vm._l(result.data, function(detail) {
-              return _c("div", [
-                detail.field_id == 1
-                  ? _c("div", [
-                      _c("strong", [_vm._v("Vector")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                detail.field_id == 0
-                  ? _c("span", [
-                      _c("strong", [_vm._v("MTI")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                detail.field_id == 2
-                  ? _c("span", [
-                      _c("strong", [_vm._v("PAN")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                detail.field_id == 3
-                  ? _c("span", [
-                      _c("strong", [_vm._v("Processing Code")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                detail.field_id == 4
-                  ? _c("span", [
-                      _c("strong", [_vm._v("Amount")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                detail.field_id == 18
-                  ? _c("span", [
-                      _c("strong", [_vm._v("Merchant Category Code")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                detail.field_id == 19
-                  ? _c("span", [
-                      _c("strong", [_vm._v("Country")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                detail.field_id == 22
-                  ? _c("span", [
-                      _c("strong", [_vm._v("POS Entry Mode")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                detail.field_id == 25
-                  ? _c("span", [
-                      _c("strong", [_vm._v("POS Condition Code")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                detail.field_id == 49
-                  ? _c("span", [
-                      _c("strong", [_vm._v("Currency")]),
-                      _vm._v(" "),
-                      _c("small", [_vm._v(_vm._s(detail.value))])
-                    ])
-                  : _vm._e()
-              ])
+              return detail.value
+                ? _c("span", [
+                    _c("strong", [_vm._v(_vm._s(detail.field.element))]),
+                    _vm._v(" "),
+                    _c("small", [_vm._v(_vm._s(detail.value))]),
+                    _vm._v("    \n\t\t")
+                  ])
+                : _vm._e()
             })
           ],
           2
@@ -39061,7 +39126,8 @@ var app = new Vue({
  */
 
 window.axios = __webpack_require__("./node_modules/axios/index.js");
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+//window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that

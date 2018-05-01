@@ -289,7 +289,7 @@ dd($predicted);
 			$relationship = Relationship::find($rel);
 			return $relationship->transactions;
 		}
-		else return Transaction::with('data','mlmodel')->take(10)->orderby('id','desc')->get();
+		else return Transaction::with('data','data.field','mlmodel')->take(10)->orderby('id','desc')->get();
 		
 	//	$label = request('label'):
 	//	$relationship = request('relationship');
@@ -305,6 +305,8 @@ dd($predicted);
 		$score = 1;//$request->label;
 		$label = $request->label;
 		$relationship = $request->relationship;
+		$aggregator = $request->aggregator;
+		$client = $request->client;
 		
 		$faker = \Faker\Factory::create('en_US');
 		$situation = \App\Situation::find($request->situation);
@@ -441,11 +443,11 @@ dd($predicted);
 		$isoMessage = $this->pack($mti,$dataElement);
 		
 		if (strpos($isoMessage, 'Error') !== false) {
-				return $isoMessage;
+			return $isoMessage;
 			//continue;
 		}
 		else{
-			 $this->store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship,$situation);
+			 $this->store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship,$situation,$aggregator,$client);
 		}	
 
 		} // for loop ends
@@ -460,7 +462,7 @@ dd($predicted);
 
 	}
 
-	public function store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship,$situation)
+	public function store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship,$situation,$aggregator,$client)
 	{
 		try{
 			$jak = new JAK8583();
@@ -485,7 +487,7 @@ dd($predicted);
 		$transaction = new Transaction();
 		$transaction->message = $isoMessage;
 		$transaction->mlmodel_id = $model;
-		$transaction->situation_id = $situation;
+		$transaction->situation_id = $situation->id;
 		if($model == 1) $transaction->score = $score;
 		else $transaction->score = $this->trainedScore($dataSet,$model) ; 
 		//else $transaction->score = head($this->trainedScore($vector,$model))  ; 
@@ -534,6 +536,19 @@ dd($predicted);
 			}
 		}
  */
+
+$ch = curl_init( 'http://demode48.amod/api/txncase' );
+# Setup request to send json via POST.
+$txn = json_encode( array( "transaction" => $transaction , "de" => $dataElement , "aggregator" => $aggregator , "client" => $client ) );
+curl_setopt( $ch, CURLOPT_POSTFIELDS, $txn );
+curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+# Return response instead of printing.
+curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+# Send request.
+$result = curl_exec($ch);
+curl_close($ch);
+
+//echo "<pre>$result</pre>";
 
 		if($relationship)
 		{

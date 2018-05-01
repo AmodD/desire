@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
 			    ['id' => 52 ,  'element' => 'Personal identification number data'],
 		            ['id' => 55 , 'element' => 'Chip Data'],
 		            ['id' => 60 , 'element' => 'Additional POS Data'],
-			    ['id' => 61 ,  'element' => 'Reserved (private) 2 (e.g. CVV2/service code   transactions)'],
+			    ['id' => 61 ,  'element' => 'Reserved (private) 2'],
 			    ['id' => 90 ,  'element' => 'Original data elements'],
 			    ['id' => 127 ,  'element' => 'Reserved for private use 12']
 
