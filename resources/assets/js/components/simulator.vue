@@ -46,7 +46,6 @@
 	  </form> 
 	  
 	  <h2 class="has-text-centered">Generate Transactions</h2>
-	  <form>
 	  <div class="field has-addons has-addons-centered">
 		  <div class="control">
 			<div class="select">  
@@ -89,7 +88,6 @@
 			</div>
 		  </div>	  
 	   </div>	  
-	   </form>	
 
 
 	<table class="table">

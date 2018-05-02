@@ -2830,8 +2830,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -25834,86 +25832,129 @@ var render = function() {
       _vm._v("Generate Transactions")
     ]),
     _vm._v(" "),
-    _c("form", [
-      _c("div", { staticClass: "field has-addons has-addons-centered" }, [
-        _c("div", { staticClass: "control" }, [
-          _c("div", { staticClass: "select" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.notxns,
-                    expression: "notxns"
-                  }
-                ],
-                attrs: { required: "" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.notxns = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              [
-                _c("option", { attrs: { value: "", disabled: "" } }, [
-                  _vm._v("Number of Txns")
-                ]),
-                _vm._v(" "),
-                _c("option", { domProps: { value: 1 } }, [_vm._v("1")]),
-                _vm._v(" "),
-                _c("option", { domProps: { value: 20 } }, [_vm._v("20")]),
-                _vm._v(" "),
-                _c("option", { domProps: { value: 500 } }, [_vm._v("500")]),
-                _vm._v(" "),
-                _c("option", { domProps: { value: 1000 } }, [_vm._v("1000")])
-              ]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "control" }, [
+    _c("div", { staticClass: "field has-addons has-addons-centered" }, [
+      _c("div", { staticClass: "control" }, [
+        _c("div", { staticClass: "select" }, [
           _c(
-            "button",
+            "select",
             {
-              staticClass: "button is-danger is-outlined ",
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.notxns,
+                  expression: "notxns"
+                }
+              ],
+              attrs: { required: "" },
               on: {
-                click: function($event) {
-                  _vm.generate()
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.notxns = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
                 }
               }
             },
-            [_vm._v("Let's Simulate")]
+            [
+              _c("option", { attrs: { value: "", disabled: "" } }, [
+                _vm._v("Number of Txns")
+              ]),
+              _vm._v(" "),
+              _c("option", { domProps: { value: 1 } }, [_vm._v("1")]),
+              _vm._v(" "),
+              _c("option", { domProps: { value: 20 } }, [_vm._v("20")]),
+              _vm._v(" "),
+              _c("option", { domProps: { value: 500 } }, [_vm._v("500")]),
+              _vm._v(" "),
+              _c("option", { domProps: { value: 1000 } }, [_vm._v("1000")])
+            ]
           )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "control" }, [
-          _c("div", { staticClass: "select" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.label,
-                    expression: "label"
-                  }
-                ],
-                attrs: { required: "" },
-                on: {
-                  change: function($event) {
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "control" }, [
+        _c(
+          "button",
+          {
+            staticClass: "button is-danger is-outlined ",
+            on: {
+              click: function($event) {
+                _vm.generate()
+              }
+            }
+          },
+          [_vm._v("Let's Simulate")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "control" }, [
+        _c("div", { staticClass: "select" }, [
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.label,
+                  expression: "label"
+                }
+              ],
+              attrs: { required: "" },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.label = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { value: "", disabled: "" } }, [
+                _vm._v("Select a Label")
+              ]),
+              _vm._v(" "),
+              _c("option", { domProps: { value: 1 } }, [_vm._v("Valid")]),
+              _vm._v(" "),
+              _c("option", { domProps: { value: 2 } }, [_vm._v("Invalid")])
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "control" }, [
+        _c("div", { staticClass: "select" }, [
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.aggregator,
+                  expression: "aggregator"
+                }
+              ],
+              attrs: { name: "aggregator", required: "" },
+              on: {
+                change: [
+                  function($event) {
                     var $$selectedVal = Array.prototype.filter
                       .call($event.target.options, function(o) {
                         return o.selected
@@ -25922,122 +25963,77 @@ var render = function() {
                         var val = "_value" in o ? o._value : o.value
                         return val
                       })
-                    _vm.label = $event.target.multiple
+                    _vm.aggregator = $event.target.multiple
                       ? $$selectedVal
                       : $$selectedVal[0]
+                  },
+                  function($event) {
+                    _vm.getclients()
                   }
+                ]
+              }
+            },
+            [
+              _c("option", { attrs: { value: "", disabled: "" } }, [
+                _vm._v("Select Aggregator")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.aggregators, function(aggregator) {
+                return _c("option", { domProps: { value: aggregator.id } }, [
+                  _vm._v(_vm._s(aggregator.name))
+                ])
+              })
+            ],
+            2
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "control" }, [
+        _c("div", { staticClass: "select" }, [
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.client,
+                  expression: "client"
                 }
-              },
-              [
-                _c("option", { attrs: { value: "", disabled: "" } }, [
-                  _vm._v("Select a Label")
-                ]),
-                _vm._v(" "),
-                _c("option", { domProps: { value: 1 } }, [_vm._v("Valid")]),
-                _vm._v(" "),
-                _c("option", { domProps: { value: 2 } }, [_vm._v("Invalid")])
-              ]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "control" }, [
-          _c("div", { staticClass: "select" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.aggregator,
-                    expression: "aggregator"
-                  }
-                ],
-                attrs: { name: "aggregator", required: "" },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.aggregator = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    function($event) {
-                      _vm.getclients()
-                    }
-                  ]
-                }
-              },
-              [
-                _c("option", { attrs: { value: "", disabled: "" } }, [
-                  _vm._v("Select Aggregator")
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.aggregators, function(aggregator) {
-                  return _c("option", { domProps: { value: aggregator.id } }, [
-                    _vm._v(_vm._s(aggregator.name))
-                  ])
-                })
               ],
-              2
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "control" }, [
-          _c("div", { staticClass: "select" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.client,
-                    expression: "client"
-                  }
-                ],
-                attrs: { name: "client", required: "" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.client = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
+              attrs: { name: "client", required: "" },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.client = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
                 }
-              },
-              [
-                _c("option", { attrs: { value: "", disabled: "" } }, [
-                  _vm._v("Select Client")
-                ]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "0" } }, [_vm._v("000000")]),
-                _vm._v(" "),
-                _vm._l(_vm.clients, function(client) {
-                  return _c("option", { domProps: { value: client.id } }, [
-                    _vm._v(_vm._s(client.name))
-                  ])
-                })
-              ],
-              2
-            )
-          ])
+              }
+            },
+            [
+              _c("option", { attrs: { value: "", disabled: "" } }, [
+                _vm._v("Select Client")
+              ]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "0" } }, [_vm._v("000000")]),
+              _vm._v(" "),
+              _vm._l(_vm.clients, function(client) {
+                return _c("option", { domProps: { value: client.id } }, [
+                  _vm._v(_vm._s(client.name))
+                ])
+              })
+            ],
+            2
+          )
         ])
       ])
     ]),
