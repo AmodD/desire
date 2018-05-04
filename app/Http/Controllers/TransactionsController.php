@@ -42,6 +42,12 @@ use Kaperys\Financial\Message\Unpacker\MessageUnpacker;
 
 class TransactionsController extends Controller
 {
+	public function show(Transaction $transaction)
+	{
+		return $transaction->with('data')->find($transaction->id);;
+	}
+
+
 	public function mldemo(Request $request)
 	{
 
@@ -340,11 +346,10 @@ dd($predicted);
 				// DE 22
 				if($field->pivot->field_id == '22')
 				{
-					if($scenario->question_id == '3') $posem = $field->pivot->value ;			
-
-					
+					if($scenario->question_id == '3') $posem = $field->pivot->value ;		
+	
 					if($field->pivot->scenario_id == '38') $posem = $posem.'0';
-					else if(($poscapture == '8') && ($scenario->question_id == '3')) $posem = $posem.'1';
+					else if(($poscapture == '8') && ($scenario->question_id == '6')) $posem = $posem.'1';
 					else if(($poscapture == '4') && ($scenario->question_id == '6')) $posem = $posem.$field->pivot->value;
 				}
 			}
@@ -452,7 +457,7 @@ dd($predicted);
 
 		} // for loop ends
 
-		return $this->lasttxns($relationship);
+	//	return $this->lasttxns($relationship);
 
 	} // method ends
 

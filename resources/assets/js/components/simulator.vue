@@ -36,7 +36,7 @@
 		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 5" :value="scenario.id">{{ scenario.name }}</option>
 		</select>
 	  </div>
-	  <div class="select" v-if="howQ == 38">
+	  <div class="select" v-if="(howQ != 38) && (whereQ != 1)">
 		<select v-model="pinQ"  required>
 		  <option value="" disabled> Pin Entry Capability ?</option>
 		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 6" :value="scenario.id">{{ scenario.name }}</option>

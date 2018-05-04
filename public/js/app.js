@@ -2988,6 +2988,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -25778,7 +25791,7 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _vm.howQ == 38
+        _vm.howQ != 38 && _vm.whereQ != 1
           ? _c("div", { staticClass: "select" }, [
               _c(
                 "select",
@@ -27086,48 +27099,88 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    _vm._l(_vm.results, function(result) {
-      return _c("div", { staticClass: "box" }, [
+    {
+      staticClass: "box content is-small",
+      staticStyle: { "overflow-x": "auto" }
+    },
+    [
+      _vm._l(_vm.results, function(result) {
+        return false
+          ? _c("div", { staticClass: "box" }, [
+              _c(
+                "div",
+                { staticClass: "content" },
+                [
+                  _c("strong", [_vm._v("ID")]),
+                  _vm._v(" "),
+                  _c("small", [_vm._v(_vm._s(result.id))]),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Time")]),
+                  _vm._v(" "),
+                  _c("small", [_vm._v(_vm._s(result.created_at))]),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Model Name")]),
+                  _vm._v(" "),
+                  _c("small", [_vm._v(_vm._s(result.mlmodel.name))]),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Score")]),
+                  _vm._v(" "),
+                  _c("small", [_vm._v(_vm._s(result.score))]),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("ISO8385 message")]),
+                  _c("small", [_vm._v("  " + _vm._s(result.message))]),
+                  _vm._v(" "),
+                  _vm._l(result.data, function(detail) {
+                    return detail.value
+                      ? _c("span", [
+                          _c("strong", [_vm._v(_vm._s(detail.field.element))]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(detail.value))]),
+                          _vm._v("    \n\t\t")
+                        ])
+                      : _vm._e()
+                  })
+                ],
+                2
+              )
+            ])
+          : _vm._e()
+      }),
+      _vm._v(" "),
+      _c("table", { staticClass: "table" }, [
         _c(
-          "div",
-          { staticClass: "content" },
-          [
-            _c("strong", [_vm._v("ID")]),
-            _vm._v(" "),
-            _c("small", [_vm._v(_vm._s(result.id))]),
-            _vm._v(" "),
-            _c("strong", [_vm._v("Time")]),
-            _vm._v(" "),
-            _c("small", [_vm._v(_vm._s(result.created_at))]),
-            _vm._v(" "),
-            _c("strong", [_vm._v("Model Name")]),
-            _vm._v(" "),
-            _c("small", [_vm._v(_vm._s(result.mlmodel.name))]),
-            _vm._v(" "),
-            _c("strong", [_vm._v("Score")]),
-            _vm._v(" "),
-            _c("small", [_vm._v(_vm._s(result.score))]),
-            _vm._v(" "),
-            _c("br"),
-            _vm._v(" "),
-            _c("strong", [_vm._v("ISO8385 message")]),
-            _c("small", [_vm._v("  " + _vm._s(result.message))]),
-            _vm._v(" "),
-            _vm._l(result.data, function(detail) {
-              return detail.value
-                ? _c("span", [
-                    _c("strong", [_vm._v(_vm._s(detail.field.element))]),
-                    _vm._v(" "),
-                    _c("small", [_vm._v(_vm._s(detail.value))]),
-                    _vm._v("    \n\t\t")
+          "thead",
+          _vm._l(_vm.results[0].data, function(detail) {
+            return detail.field.id != 1
+              ? _c("th", [
+                  _c("span", { staticClass: "is-size-7" }, [
+                    _vm._v("DE" + _vm._s(detail.field.id))
                   ])
-                : _vm._e()
-            })
-          ],
-          2
+                ])
+              : _vm._e()
+          })
+        ),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.results, function(result) {
+            return _c(
+              "tr",
+              _vm._l(result.data, function(detail) {
+                return _c("td", [
+                  _c("span", { staticClass: "is-size-7" }, [
+                    _vm._v(_vm._s(detail.value))
+                  ])
+                ])
+              })
+            )
+          })
         )
       ])
-    })
+    ],
+    2
   )
 }
 var staticRenderFns = []

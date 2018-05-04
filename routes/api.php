@@ -22,3 +22,4 @@ Route::get('/test', function (Request $request) {
 Route::get('/fields', function (Request $request) {
     return (new \App\Field)->where('id','>',2)->get();
 });
+Route::get('/transactions/{transaction}', 'TransactionsController@show');
