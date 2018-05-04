@@ -2879,7 +2879,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var self = this;
 
 			if (!this.whereQ || !this.whatQ || !this.howQ || !this.whoQ || !this.whyQ) return;
-			if (this.howQ == 38 && !this.pinQ) return;
+			if (this.howQ != 38 && this.whereQ != 1 && !this.pinQ) return;
 
 			console.log("about to creating situation");
 
