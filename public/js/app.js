@@ -2830,10 +2830,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
+			showsituation: false,
 			progress: 0,
 			whereQ: '',
 			whatQ: '',
@@ -2967,18 +3011,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -25528,446 +25560,480 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "content" }, [
     _c("form", [
-      _c("h4", { staticClass: "has-text-centered" }, [
-        _c(
-          "button",
-          {
-            staticClass: "button is-success is-outlined ",
-            on: { click: _vm.createsituation }
-          },
-          [_vm._v("Click to Create a Situation")]
-        )
-      ]),
+      !_vm.showsituation
+        ? _c(
+            "a",
+            {
+              staticClass: "button is-primary is-rounded is-medium",
+              attrs: { href: "javascript:void(0);" },
+              on: {
+                click: function($event) {
+                  _vm.showsituation = true
+                }
+              }
+            },
+            [_vm._v("Create Situation")]
+          )
+        : _vm._e(),
       _vm._v(" "),
-      _c("progress", {
-        staticClass: "progress is-primary",
-        attrs: { max: "100" },
-        domProps: { value: _vm.progress }
-      }),
+      _vm.showsituation
+        ? _c(
+            "a",
+            {
+              staticClass: "button is-dark is-small is-pulled-right",
+              on: {
+                click: function($event) {
+                  _vm.showsituation = false
+                }
+              }
+            },
+            [_vm._m(0, false, false), _vm._v("Close")]
+          )
+        : _vm._e(),
       _vm._v(" "),
-      _c("div", { staticClass: "has-text-centered" }, [
-        _c("div", { staticClass: "select" }, [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.whereQ,
-                  expression: "whereQ"
-                }
-              ],
-              attrs: { required: "" },
-              on: {
-                "~change": function($event) {
-                  _vm.progress = _vm.progress + 20
-                },
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.whereQ = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "", disabled: "" } }, [
-                _vm._v(" Where ?")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.scenarios, function(scenario) {
-                return scenario.question_id == 1
-                  ? _c("option", { domProps: { value: scenario.id } }, [
-                      _vm._v(_vm._s(scenario.name))
-                    ])
-                  : _vm._e()
-              })
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "select" }, [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.whatQ,
-                  expression: "whatQ"
-                }
-              ],
-              attrs: { required: "" },
-              on: {
-                "~change": function($event) {
-                  _vm.progress = _vm.progress + 20
-                },
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.whatQ = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "", disabled: "" } }, [
-                _vm._v(" What ?")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.scenarios, function(scenario) {
-                return scenario.question_id == 2
-                  ? _c("option", { domProps: { value: scenario.id } }, [
-                      _vm._v(_vm._s(scenario.name))
-                    ])
-                  : _vm._e()
-              })
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "select" }, [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.howQ,
-                  expression: "howQ"
-                }
-              ],
-              attrs: { required: "" },
-              on: {
-                "~change": function($event) {
-                  _vm.progress = _vm.progress + 20
-                },
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.howQ = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "", disabled: "" } }, [
-                _vm._v(" How ?")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.scenarios, function(scenario) {
-                return scenario.question_id == 3
-                  ? _c("option", { domProps: { value: scenario.id } }, [
-                      _vm._v(_vm._s(scenario.name))
-                    ])
-                  : _vm._e()
-              })
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "select" }, [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.whoQ,
-                  expression: "whoQ"
-                }
-              ],
-              attrs: { required: "" },
-              on: {
-                "~change": function($event) {
-                  _vm.progress = _vm.progress + 20
-                },
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.whoQ = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "", disabled: "" } }, [
-                _vm._v(" Who ?")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.scenarios, function(scenario) {
-                return scenario.question_id == 4
-                  ? _c("option", { domProps: { value: scenario.id } }, [
-                      _vm._v(_vm._s(scenario.name))
-                    ])
-                  : _vm._e()
-              })
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "select" }, [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.whyQ,
-                  expression: "whyQ"
-                }
-              ],
-              attrs: { required: "" },
-              on: {
-                "~change": function($event) {
-                  _vm.progress = _vm.progress + 20
-                },
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.whyQ = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "", disabled: "" } }, [
-                _vm._v(" Why ?")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.scenarios, function(scenario) {
-                return scenario.question_id == 5
-                  ? _c("option", { domProps: { value: scenario.id } }, [
-                      _vm._v(_vm._s(scenario.name))
-                    ])
-                  : _vm._e()
-              })
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _vm.howQ != 38 && _vm.whereQ != 1
-          ? _c("div", { staticClass: "select" }, [
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.pinQ,
-                      expression: "pinQ"
-                    }
-                  ],
-                  attrs: { required: "" },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.pinQ = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { value: "", disabled: "" } }, [
-                    _vm._v(" Pin Entry Capability ?")
+      _vm.showsituation
+        ? _c("div", { staticClass: "box" }, [
+            _c("div", { staticClass: "tile is-ancestor" }, [
+              _c("div", { staticClass: "tile is-vertical is-8" }, [
+                _c("div", { staticClass: "tile" }, [
+                  _c("div", { staticClass: "tile is-parent is-vertical" }, [
+                    _c(
+                      "article",
+                      { staticClass: "tile is-child notification is-primary" },
+                      [
+                        _c("p", { staticClass: "subtitle" }, [
+                          _vm._v("Where ?")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "select" }, [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.whereQ,
+                                  expression: "whereQ"
+                                }
+                              ],
+                              attrs: { required: "" },
+                              on: {
+                                "~change": function($event) {
+                                  _vm.progress = _vm.progress + 20
+                                },
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.whereQ = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "option",
+                                { attrs: { value: "", disabled: "" } },
+                                [_vm._v(" select scenario")]
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.scenarios, function(scenario) {
+                                return scenario.question_id == 1
+                                  ? _c(
+                                      "option",
+                                      { domProps: { value: scenario.id } },
+                                      [_vm._v(_vm._s(scenario.name))]
+                                    )
+                                  : _vm._e()
+                              })
+                            ],
+                            2
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "article",
+                      { staticClass: "tile is-child notification is-warning" },
+                      [
+                        _c("p", { staticClass: "subtitle" }, [
+                          _vm._v("What ?")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "select" }, [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.whatQ,
+                                  expression: "whatQ"
+                                }
+                              ],
+                              attrs: { required: "" },
+                              on: {
+                                "~change": function($event) {
+                                  _vm.progress = _vm.progress + 20
+                                },
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.whatQ = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "option",
+                                { attrs: { value: "", disabled: "" } },
+                                [_vm._v(" select scenario")]
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.scenarios, function(scenario) {
+                                return scenario.question_id == 2
+                                  ? _c(
+                                      "option",
+                                      { domProps: { value: scenario.id } },
+                                      [_vm._v(_vm._s(scenario.name))]
+                                    )
+                                  : _vm._e()
+                              })
+                            ],
+                            2
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "article",
+                      { staticClass: "tile is-child notification is-danger" },
+                      [
+                        _c("p", { staticClass: "subtitle" }, [_vm._v("How?")]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "select" }, [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.howQ,
+                                  expression: "howQ"
+                                }
+                              ],
+                              attrs: { required: "" },
+                              on: {
+                                "~change": function($event) {
+                                  _vm.progress = _vm.progress + 20
+                                },
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.howQ = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "option",
+                                { attrs: { value: "", disabled: "" } },
+                                [_vm._v(" select scenario")]
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.scenarios, function(scenario) {
+                                return scenario.question_id == 3
+                                  ? _c(
+                                      "option",
+                                      { domProps: { value: scenario.id } },
+                                      [_vm._v(_vm._s(scenario.name))]
+                                    )
+                                  : _vm._e()
+                              })
+                            ],
+                            2
+                          )
+                        ])
+                      ]
+                    )
                   ]),
                   _vm._v(" "),
-                  _vm._l(_vm.scenarios, function(scenario) {
-                    return scenario.question_id == 6
-                      ? _c("option", { domProps: { value: scenario.id } }, [
-                          _vm._v(_vm._s(scenario.name))
-                        ])
-                      : _vm._e()
-                  })
+                  _c("div", { staticClass: "tile is-parent" }, [
+                    _c(
+                      "article",
+                      { staticClass: "tile is-child notification is-info" },
+                      [
+                        _c("h4", { staticClass: "has-text-centered" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button is-success ",
+                              on: { click: _vm.createsituation }
+                            },
+                            [_vm._v("Click to Create a Situation")]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "title has-text-centered" }, [
+                          _vm._v("The Situation")
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(1, false, false)
+                      ]
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "tile is-parent is-vertical" }, [
+                _c(
+                  "article",
+                  { staticClass: "tile is-child notification is-primary" },
+                  [
+                    _c("p", { staticClass: "subtitle" }, [_vm._v("Who?")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "select" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.whoQ,
+                              expression: "whoQ"
+                            }
+                          ],
+                          attrs: { required: "" },
+                          on: {
+                            "~change": function($event) {
+                              _vm.progress = _vm.progress + 20
+                            },
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.whoQ = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            }
+                          }
+                        },
+                        [
+                          _c("option", { attrs: { value: "", disabled: "" } }, [
+                            _vm._v(" select scenario")
+                          ]),
+                          _vm._v(" "),
+                          _vm._l(_vm.scenarios, function(scenario) {
+                            return scenario.question_id == 4
+                              ? _c(
+                                  "option",
+                                  { domProps: { value: scenario.id } },
+                                  [_vm._v(_vm._s(scenario.name))]
+                                )
+                              : _vm._e()
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "article",
+                  { staticClass: "tile is-child notification is-warning" },
+                  [
+                    _c("p", { staticClass: "subtitle" }, [_vm._v("Why?")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "select" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.whyQ,
+                              expression: "whyQ"
+                            }
+                          ],
+                          attrs: { required: "" },
+                          on: {
+                            "~change": function($event) {
+                              _vm.progress = _vm.progress + 20
+                            },
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.whyQ = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            }
+                          }
+                        },
+                        [
+                          _c("option", { attrs: { value: "", disabled: "" } }, [
+                            _vm._v(" select scenario")
+                          ]),
+                          _vm._v(" "),
+                          _vm._l(_vm.scenarios, function(scenario) {
+                            return scenario.question_id == 5
+                              ? _c(
+                                  "option",
+                                  { domProps: { value: scenario.id } },
+                                  [_vm._v(_vm._s(scenario.name))]
+                                )
+                              : _vm._e()
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _vm.howQ != 38 && _vm.whereQ != 1
+                  ? _c(
+                      "article",
+                      { staticClass: "tile is-child notification is-danger" },
+                      [
+                        _c("p", { staticClass: "subtitle" }, [
+                          _vm._v("Pin Entry Capability ?")
+                        ]),
+                        _vm._v(" "),
+                        _vm.howQ != 38 && _vm.whereQ != 1
+                          ? _c("div", { staticClass: "select" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.pinQ,
+                                      expression: "pinQ"
+                                    }
+                                  ],
+                                  attrs: { required: "" },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.pinQ = $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "option",
+                                    { attrs: { value: "", disabled: "" } },
+                                    [_vm._v(" select scenario")]
+                                  ),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.scenarios, function(scenario) {
+                                    return scenario.question_id == 6
+                                      ? _c(
+                                          "option",
+                                          { domProps: { value: scenario.id } },
+                                          [_vm._v(_vm._s(scenario.name))]
+                                        )
+                                      : _vm._e()
+                                  })
+                                ],
+                                2
+                              )
+                            ])
+                          : _vm._e()
+                      ]
+                    )
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _c("progress", {
+              staticClass: "progress is-success",
+              attrs: { max: "100" },
+              domProps: { value: _vm.progress }
+            })
+          ])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("form", [
+      _c("h2", { staticClass: "has-text-centered" }, [
+        _vm._v("Generate Transactions")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field has-addons has-addons-centered" }, [
+        _c("div", { staticClass: "control" }, [
+          _c("div", { staticClass: "select" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.notxns,
+                    expression: "notxns"
+                  }
                 ],
-                2
-              )
-            ])
-          : _vm._e()
-      ])
-    ]),
-    _vm._v(" "),
-    _c("h2", { staticClass: "has-text-centered" }, [
-      _vm._v("Generate Transactions")
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field has-addons has-addons-centered" }, [
-      _c("div", { staticClass: "control" }, [
-        _c("div", { staticClass: "select" }, [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.notxns,
-                  expression: "notxns"
-                }
-              ],
-              attrs: { required: "" },
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.notxns = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "", disabled: "" } }, [
-                _vm._v("Number of Txns")
-              ]),
-              _vm._v(" "),
-              _c("option", { domProps: { value: 1 } }, [_vm._v("1")]),
-              _vm._v(" "),
-              _c("option", { domProps: { value: 20 } }, [_vm._v("20")]),
-              _vm._v(" "),
-              _c("option", { domProps: { value: 500 } }, [_vm._v("500")]),
-              _vm._v(" "),
-              _c("option", { domProps: { value: 1000 } }, [_vm._v("1000")])
-            ]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "control" }, [
-        _c(
-          "button",
-          {
-            staticClass: "button is-danger is-outlined ",
-            on: {
-              click: function($event) {
-                _vm.generate()
-              }
-            }
-          },
-          [_vm._v("Let's Simulate")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "control" }, [
-        _c("div", { staticClass: "select" }, [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.label,
-                  expression: "label"
-                }
-              ],
-              attrs: { required: "" },
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.label = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "", disabled: "" } }, [
-                _vm._v("Select a Label")
-              ]),
-              _vm._v(" "),
-              _c("option", { domProps: { value: 1 } }, [_vm._v("Valid")]),
-              _vm._v(" "),
-              _c("option", { domProps: { value: 2 } }, [_vm._v("Invalid")])
-            ]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "control" }, [
-        _c("div", { staticClass: "select" }, [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.aggregator,
-                  expression: "aggregator"
-                }
-              ],
-              attrs: { name: "aggregator", required: "" },
-              on: {
-                change: [
-                  function($event) {
+                attrs: { required: "" },
+                on: {
+                  change: function($event) {
                     var $$selectedVal = Array.prototype.filter
                       .call($event.target.options, function(o) {
                         return o.selected
@@ -25976,83 +26042,190 @@ var render = function() {
                         var val = "_value" in o ? o._value : o.value
                         return val
                       })
-                    _vm.aggregator = $event.target.multiple
+                    _vm.notxns = $event.target.multiple
                       ? $$selectedVal
                       : $$selectedVal[0]
-                  },
-                  function($event) {
-                    _vm.getclients()
                   }
-                ]
-              }
-            },
-            [
-              _c("option", { attrs: { value: "", disabled: "" } }, [
-                _vm._v("Select Aggregator")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.aggregators, function(aggregator) {
-                return _c("option", { domProps: { value: aggregator.id } }, [
-                  _vm._v(_vm._s(aggregator.name))
-                ])
-              })
-            ],
-            2
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "control" }, [
-        _c("div", { staticClass: "select" }, [
+                }
+              },
+              [
+                _c("option", { attrs: { value: "", disabled: "" } }, [
+                  _vm._v("Number of Txns")
+                ]),
+                _vm._v(" "),
+                _c("option", { domProps: { value: 1 } }, [_vm._v("1")]),
+                _vm._v(" "),
+                _c("option", { domProps: { value: 20 } }, [_vm._v("20")]),
+                _vm._v(" "),
+                _c("option", { domProps: { value: 500 } }, [_vm._v("500")]),
+                _vm._v(" "),
+                _c("option", { domProps: { value: 1000 } }, [_vm._v("1000")])
+              ]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control" }, [
           _c(
-            "select",
+            "button",
             {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.client,
-                  expression: "client"
-                }
-              ],
-              attrs: { name: "client", required: "" },
+              staticClass: "button is-danger is-outlined ",
               on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.client = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
+                click: function($event) {
+                  _vm.generate()
                 }
               }
             },
-            [
-              _c("option", { attrs: { value: "", disabled: "" } }, [
-                _vm._v("Select Client")
-              ]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "0" } }, [_vm._v("000000")]),
-              _vm._v(" "),
-              _vm._l(_vm.clients, function(client) {
-                return _c("option", { domProps: { value: client.id } }, [
-                  _vm._v(_vm._s(client.name))
-                ])
-              })
-            ],
-            2
+            [_vm._v("Let's Simulate")]
           )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control" }, [
+          _c("div", { staticClass: "select" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.label,
+                    expression: "label"
+                  }
+                ],
+                attrs: { required: "" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.label = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { value: "", disabled: "" } }, [
+                  _vm._v("Select a Label")
+                ]),
+                _vm._v(" "),
+                _c("option", { domProps: { value: 1 } }, [_vm._v("Valid")]),
+                _vm._v(" "),
+                _c("option", { domProps: { value: 2 } }, [_vm._v("Invalid")])
+              ]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control" }, [
+          _c("div", { staticClass: "select" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.aggregator,
+                    expression: "aggregator"
+                  }
+                ],
+                attrs: { name: "aggregator", required: "" },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.aggregator = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                    function($event) {
+                      _vm.getclients()
+                    }
+                  ]
+                }
+              },
+              [
+                _c("option", { attrs: { value: "", disabled: "" } }, [
+                  _vm._v("Select Aggregator")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.aggregators, function(aggregator) {
+                  return _c("option", { domProps: { value: aggregator.id } }, [
+                    _vm._v(_vm._s(aggregator.name))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control" }, [
+          _c("div", { staticClass: "select" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.client,
+                    expression: "client"
+                  }
+                ],
+                attrs: { name: "client", required: "" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.client = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { value: "", disabled: "" } }, [
+                  _vm._v("Select Client")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "0" } }, [_vm._v("000000")]),
+                _vm._v(" "),
+                _vm._l(_vm.clients, function(client) {
+                  return _c("option", { domProps: { value: client.id } }, [
+                    _vm._v(_vm._s(client.name))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
         ])
       ])
     ]),
     _vm._v(" "),
     _c("table", { staticClass: "table" }, [
-      _vm._m(0, false, false),
+      _vm._m(2, false, false),
       _vm._v(" "),
       _c(
         "tbody",
@@ -26099,6 +26272,24 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "icon has-text-danger" }, [
+      _c("i", { staticClass: "fa fa-bug" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("figure", { staticClass: "image is-4by3" }, [
+      _c("img", {
+        attrs: { src: "https://bulma.io/images/placeholders/640x480.png" }
+      })
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -27104,86 +27295,57 @@ var render = function() {
       staticStyle: { "overflow-x": "auto" }
     },
     [
-      _vm._l(_vm.results, function(result) {
-        return false
-          ? _c("div", { staticClass: "box" }, [
-              _c(
-                "div",
-                { staticClass: "content" },
-                [
-                  _c("strong", [_vm._v("ID")]),
-                  _vm._v(" "),
-                  _c("small", [_vm._v(_vm._s(result.id))]),
-                  _vm._v(" "),
-                  _c("strong", [_vm._v("Time")]),
-                  _vm._v(" "),
-                  _c("small", [_vm._v(_vm._s(result.created_at))]),
-                  _vm._v(" "),
-                  _c("strong", [_vm._v("Model Name")]),
-                  _vm._v(" "),
-                  _c("small", [_vm._v(_vm._s(result.mlmodel.name))]),
-                  _vm._v(" "),
-                  _c("strong", [_vm._v("Score")]),
-                  _vm._v(" "),
-                  _c("small", [_vm._v(_vm._s(result.score))]),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("strong", [_vm._v("ISO8385 message")]),
-                  _c("small", [_vm._v("  " + _vm._s(result.message))]),
-                  _vm._v(" "),
-                  _vm._l(result.data, function(detail) {
-                    return detail.value
-                      ? _c("span", [
-                          _c("strong", [_vm._v(_vm._s(detail.field.element))]),
-                          _vm._v(" "),
-                          _c("small", [_vm._v(_vm._s(detail.value))]),
-                          _vm._v("    \n\t\t")
-                        ])
-                      : _vm._e()
-                  })
-                ],
-                2
-              )
-            ])
-          : _vm._e()
-      }),
-      _vm._v(" "),
       _c("table", { staticClass: "table" }, [
-        _c(
-          "thead",
-          _vm._l(_vm.results[0].data, function(detail) {
-            return detail.field.id != 1
-              ? _c("th", [
-                  _c("span", { staticClass: "is-size-7" }, [
-                    _vm._v("DE" + _vm._s(detail.field.id))
+        _vm.results.data
+          ? _c(
+              "thead",
+              [
+                _vm._m(0, false, false),
+                _vm._v(" "),
+                _vm._l(_vm.results.data[0].data, function(field) {
+                  return _c("th", [
+                    _c("span", { staticClass: "is-size-7" }, [
+                      _vm._v("DE" + _vm._s(field.field_id))
+                    ])
                   ])
-                ])
-              : _vm._e()
-          })
-        ),
+                })
+              ],
+              2
+            )
+          : _vm._e(),
         _vm._v(" "),
         _c(
           "tbody",
-          _vm._l(_vm.results, function(result) {
+          _vm._l(_vm.results.data, function(txn) {
             return _c(
               "tr",
-              _vm._l(result.data, function(detail) {
-                return _c("td", [
-                  _c("span", { staticClass: "is-size-7" }, [
-                    _vm._v(_vm._s(detail.value))
+              [
+                _c("td", [_vm._v(_vm._s(txn.id))]),
+                _vm._v(" "),
+                _vm._l(txn.data, function(txndetail) {
+                  return _c("td", [
+                    _c("span", { staticClass: "is-size-7" }, [
+                      _vm._v(_vm._s(txndetail.value))
+                    ])
                   ])
-                ])
-              })
+                })
+              ],
+              2
             )
           })
         )
       ])
-    ],
-    2
+    ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("th", [_c("span", { staticClass: "is-size-7" }, [_vm._v("ID")])])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

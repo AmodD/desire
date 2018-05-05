@@ -2,49 +2,92 @@
 <template>
 	<div class="content">
 	<form>
-		<h4 class="has-text-centered"><button v-on:click="createsituation" class="button is-success is-outlined ">Click to Create a Situation</button></h4>
-		<progress class="progress is-primary" :value="progress" max="100"> </progress>
 
-	  <div class="has-text-centered">	
+<a v-if="!showsituation" href="javascript:void(0);" @click="showsituation = true" class="button is-primary is-rounded is-medium">Create Situation</a>
+
+<a v-if="showsituation" @click="showsituation = false" class="button is-dark is-small is-pulled-right"><span class="icon has-text-danger"><i class="fa fa-bug"></i></span>Close</a>	
+<div class="box" v-if="showsituation">
+<div  class="tile is-ancestor">
+  <div class="tile is-vertical is-8">
+    <div class="tile">
+      <div class="tile is-parent is-vertical">
+        <article class="tile is-child notification is-primary">
+          <p class="subtitle">Where ?</p>
 	  <div class="select">
 		<select v-model="whereQ" @change.once="progress = progress +  20" required>
-		  <option value="" disabled> Where ?</option>
+		  <option value="" disabled> select scenario</option>
 		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 1" :value="scenario.id">{{ scenario.name }}</option>
 		</select>
 	  </div>
+        </article>
+        <article class="tile is-child notification is-warning">
+          <p class="subtitle">What ?</p>
 	  <div class="select">
 		<select v-model="whatQ" @change.once="progress = progress +  20" required>
-		  <option value="" disabled> What ?</option>
+		  <option value="" disabled> select scenario</option>
 		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 2" :value="scenario.id">{{ scenario.name }}</option>
 		</select>
 	  </div>
+        </article>
+        <article class="tile is-child notification is-danger">
+          <p class="subtitle">How?</p>
 	  <div class="select">
 		<select v-model="howQ" @change.once="progress = progress +  20" required>
-		  <option value="" disabled> How ?</option>
+		  <option value="" disabled> select scenario</option>
 		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 3" :value="scenario.id">{{ scenario.name }}</option>
 		</select>
 	  </div>
+        </article>
+      </div>
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-info">
+		<h4 class="has-text-centered"><button v-on:click="createsituation" class="button is-success ">Click to Create a Situation</button></h4>
+          <p class="title has-text-centered">The Situation</p>
+          <figure class="image is-4by3">
+            <img src="https://bulma.io/images/placeholders/640x480.png">
+          </figure>
+        </article>
+      </div>
+    </div>
+  </div>
+  <div class="tile is-parent is-vertical">
+        <article class="tile is-child notification is-primary">
+          <p class="subtitle">Who?</p>
 	  <div class="select">
 		<select v-model="whoQ" @change.once="progress = progress +  20" required>
-		  <option value="" disabled> Who ?</option>
+		  <option value="" disabled> select scenario</option>
 		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 4" :value="scenario.id">{{ scenario.name }}</option>
 		</select>
 	  </div>
+        </article>
+        <article class="tile is-child notification is-warning">
+          <p class="subtitle">Why?</p>
 	  <div class="select">
 		<select v-model="whyQ" @change.once="progress = progress +  20" required>
-		  <option value="" disabled> Why ?</option>
+		  <option value="" disabled> select scenario</option>
 		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 5" :value="scenario.id">{{ scenario.name }}</option>
 		</select>
 	  </div>
+        </article>
+        <article class="tile is-child notification is-danger" v-if="(howQ != 38) && (whereQ != 1)">
+          <p class="subtitle">Pin Entry Capability ?</p>
 	  <div class="select" v-if="(howQ != 38) && (whereQ != 1)">
 		<select v-model="pinQ"  required>
-		  <option value="" disabled> Pin Entry Capability ?</option>
+		  <option value="" disabled> select scenario</option>
 		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 6" :value="scenario.id">{{ scenario.name }}</option>
 		</select>
 	  </div>
-	  </div>
-	  </form> 
-	  
+        </article>
+  </div>
+</div>
+
+<progress class="progress is-success" :value="progress" max="100"> </progress>
+
+</div>
+
+</form> 
+
+<form>
 	  <h2 class="has-text-centered">Generate Transactions</h2>
 	  <div class="field has-addons has-addons-centered">
 		  <div class="control">
@@ -88,7 +131,7 @@
 			</div>
 		  </div>	  
 	   </div>	  
-
+</form>
 
 	<table class="table">
 	    <thead>
@@ -114,6 +157,7 @@
     export default {
 	data : function() {
 		return {
+			showsituation : false,
 			progress : 0,
 			whereQ : '',
 			whatQ : '',

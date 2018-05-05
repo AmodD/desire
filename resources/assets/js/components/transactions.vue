@@ -1,28 +1,16 @@
 <template>
 
 <div class="box content is-small" style="overflow-x: auto;">	
-<div v-if="false" class="box" v-for="result in results">
-	<div class="content">
-		<strong>ID</strong> <small>{{ result.id }}</small>
-		<strong>Time</strong> <small>{{ result.created_at }}</small>
-		<strong>Model Name</strong> <small>{{ result.mlmodel.name }}</small>
-		<strong>Score</strong> <small>{{ result.score }}</small>
-	          <br>
-		  <strong>ISO8385 message</strong><small>  {{ result.message }}</small>
-		<span v-for="detail in result.data" v-if="detail.value">
-			<strong>{{ detail.field.element }}</strong> <small>{{ detail.value }}</small>  &nbsp;&nbsp;
-		</span>
-       	</div>
-</div>	
-
 
 <table class="table">
-	<thead>
-		<th v-for="detail in results[0].data" v-if="detail.field.id != 1"><span class="is-size-7">DE{{ detail.field.id }}</span></th>
+	<thead v-if="results.data">
+		<th><span class="is-size-7">ID</span></th>
+		<th v-for="field in results.data[0].data" ><span class="is-size-7">DE{{ field.field_id }}</span></th>
 	</thead>	
 	<tbody>
-		<tr v-for="result in results">
-			<td v-for="detail in result.data"><span class="is-size-7">{{ detail.value }}</span></td>
+		<tr v-for="txn in results.data">
+			<td>{{ txn.id }}</td>
+			<td v-for="txndetail in txn.data"><span class="is-size-7">{{ txndetail.value }}</span></td>
 		</tr>
 	</tbody>	
 </table>	

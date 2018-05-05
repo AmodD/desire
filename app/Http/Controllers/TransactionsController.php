@@ -295,7 +295,7 @@ dd($predicted);
 			$relationship = Relationship::find($rel);
 			return $relationship->transactions;
 		}
-		else return Transaction::with('data','data.field','mlmodel')->take(10)->orderby('id','desc')->get();
+		else return Transaction::with('data')->orderBy('id', 'desc')->paginate(15);
 		
 	//	$label = request('label'):
 	//	$relationship = request('relationship');
