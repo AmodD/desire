@@ -78,6 +78,15 @@
 		</select>
 	  </div>
         </article>
+        <article class="tile is-child notification is-link">
+          <p class="subtitle">MCC?</p>
+	  <div class="select">
+		<select v-model="mccQ" @change.once="progress = progress +  20" required>
+		  <option value="" disabled> select scenario</option>
+		  <option v-for="scenario in scenarios" v-if="scenario.question_id == 7" :value="scenario.id">{{ scenario.name }}</option>
+		</select>
+	  </div>
+        </article>
   </div>
 </div>
 
@@ -165,6 +174,7 @@
 			whoQ : '',
 			whyQ : '',
 			pinQ : '',
+			mccQ : '',
 			scenarios : '',
 			notxns : "",
 			label : '',
@@ -186,14 +196,16 @@
 			let howQname = '';	
 			let whoQname = '';	
 			let whyQname = '';
+			let mccQname = '';
 
 			if(this.scenarios[(this.whereQ - 1)]) whereQname =  this.scenarios[(this.whereQ -1)].name;
 			if(this.scenarios[(this.whatQ - 1)]) whatQname =  this.scenarios[(this.whatQ -1)].name;
 			if(this.scenarios[(this.howQ - 1)]) howQname =  this.scenarios[(this.howQ -1)].name;
 			if(this.scenarios[(this.whoQ - 1)]) whoQname =  this.scenarios[(this.whoQ -1)].name;
 			if(this.scenarios[(this.whyQ - 1)]) whyQname =  this.scenarios[(this.whyQ -1)].name;
+			if(this.scenarios[(this.mccQ - 1)]) mccQname =  this.scenarios[(this.mccQ -1)].name;
 
-			return whereQname +  '-' + whatQname + '-' + howQname + '-' + whoQname + '-' + whyQname ;
+			return whereQname +  '-' + whatQname + '-' + howQname + '-' + whoQname + '-' + whyQname + '-' + mccQname ;
 		}
 	},
 	methods : {
@@ -202,7 +214,7 @@
 			
 			let self = this ;
 			
-			if(!this.whereQ || !this.whatQ || !this.howQ || !this.whoQ || !this.whyQ ) return ;
+			if(!this.whereQ || !this.whatQ || !this.howQ || !this.whoQ || !this.whyQ || !this.mccQ ) return ;
 			if(this.howQ != 38 && this.whereQ != 1  && !this.pinQ) return ;
 			
 			console.log("about to creating situation");
@@ -217,6 +229,7 @@
 				   	 whoQ: self.whoQ,
 				   	 whyQ: self.whyQ,
 					 pinQ: self.pinQ,
+					 mccQ: self.mccQ,
 			        	 name: self.simulatorname
 				       }
 				})

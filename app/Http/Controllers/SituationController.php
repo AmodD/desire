@@ -55,6 +55,7 @@ class SituationController extends Controller
 		['situation_id' => $situation->id , 'scenario_id' => $request->whoQ  ],
 		['situation_id' => $situation->id , 'scenario_id' => $request->whyQ  ],
 		['situation_id' => $situation->id , 'scenario_id' => ($request->pinQ) ? $request->pinQ : 0],
+		['situation_id' => $situation->id , 'scenario_id' => $request->mccQ  ],
 	    ]);
 
     }

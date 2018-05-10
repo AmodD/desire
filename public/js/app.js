@@ -2873,6 +2873,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -2885,6 +2894,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			whoQ: '',
 			whyQ: '',
 			pinQ: '',
+			mccQ: '',
 			scenarios: '',
 			notxns: "",
 			label: '',
@@ -2906,14 +2916,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var howQname = '';
 			var whoQname = '';
 			var whyQname = '';
+			var mccQname = '';
 
 			if (this.scenarios[this.whereQ - 1]) whereQname = this.scenarios[this.whereQ - 1].name;
 			if (this.scenarios[this.whatQ - 1]) whatQname = this.scenarios[this.whatQ - 1].name;
 			if (this.scenarios[this.howQ - 1]) howQname = this.scenarios[this.howQ - 1].name;
 			if (this.scenarios[this.whoQ - 1]) whoQname = this.scenarios[this.whoQ - 1].name;
 			if (this.scenarios[this.whyQ - 1]) whyQname = this.scenarios[this.whyQ - 1].name;
+			if (this.scenarios[this.mccQ - 1]) mccQname = this.scenarios[this.mccQ - 1].name;
 
-			return whereQname + '-' + whatQname + '-' + howQname + '-' + whoQname + '-' + whyQname;
+			return whereQname + '-' + whatQname + '-' + howQname + '-' + whoQname + '-' + whyQname + '-' + mccQname;
 		}
 	},
 	methods: {
@@ -2922,7 +2934,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			var self = this;
 
-			if (!this.whereQ || !this.whatQ || !this.howQ || !this.whoQ || !this.whyQ) return;
+			if (!this.whereQ || !this.whatQ || !this.howQ || !this.whoQ || !this.whyQ || !this.mccQ) return;
 			if (this.howQ != 38 && this.whereQ != 1 && !this.pinQ) return;
 
 			console.log("about to creating situation");
@@ -2937,6 +2949,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					whoQ: self.whoQ,
 					whyQ: self.whyQ,
 					pinQ: self.pinQ,
+					mccQ: self.mccQ,
 					name: self.simulatorname
 				}
 			}).then(function (response) {
@@ -25999,7 +26012,66 @@ var render = function() {
                           : _vm._e()
                       ]
                     )
-                  : _vm._e()
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "article",
+                  { staticClass: "tile is-child notification is-link" },
+                  [
+                    _c("p", { staticClass: "subtitle" }, [_vm._v("MCC?")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "select" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.mccQ,
+                              expression: "mccQ"
+                            }
+                          ],
+                          attrs: { required: "" },
+                          on: {
+                            "~change": function($event) {
+                              _vm.progress = _vm.progress + 20
+                            },
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.mccQ = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            }
+                          }
+                        },
+                        [
+                          _c("option", { attrs: { value: "", disabled: "" } }, [
+                            _vm._v(" select scenario")
+                          ]),
+                          _vm._v(" "),
+                          _vm._l(_vm.scenarios, function(scenario) {
+                            return scenario.question_id == 7
+                              ? _c(
+                                  "option",
+                                  { domProps: { value: scenario.id } },
+                                  [_vm._v(_vm._s(scenario.name))]
+                                )
+                              : _vm._e()
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  ]
+                )
               ])
             ]),
             _vm._v(" "),

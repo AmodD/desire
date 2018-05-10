@@ -140,6 +140,17 @@ class DatabaseSeeder extends Seeder
 			    ['id' => 57 , 'name' => 'SIGNATURE' , 'question_id' => '6' , 'question_name' => 'Pin'],
 			    ['id' => 58 , 'name' => 'SIGNATURE OR NO CVM' , 'question_id' => '6' , 'question_name' => 'Pin'],
 			    ['id' => 59 , 'name' => 'UNKNOWN' , 'question_id' => '6' , 'question_name' => 'Pin'],
+			    
+			    ['id' => 60 , 'name' => 'APPAREL & ACCESSORIES' , 'question_id' => '7' , 'question_name' => 'MCC'],
+			    ['id' => 61 , 'name' => 'DINING & RESTAURANTS' , 'question_id' => '7' , 'question_name' => 'MCC'],
+			    ['id' => 62 , 'name' => 'ENTERTAINMENT' , 'question_id' => '7' , 'question_name' => 'MCC'],
+			    ['id' => 63 , 'name' => 'GAS & AUTOMOTIVE' , 'question_id' => '7' , 'question_name' => 'MCC'],
+			    ['id' => 64 , 'name' => 'GROCERIES & PHARMACIES' , 'question_id' => '7' , 'question_name' => 'MCC'],
+			    ['id' => 65 , 'name' => 'HARDWARE & ELECTRONICS' , 'question_id' => '7' , 'question_name' => 'MCC'],
+			    ['id' => 66 , 'name' => 'MISC SHOPPING' , 'question_id' => '7' , 'question_name' => 'MCC'],
+			    ['id' => 67 , 'name' => 'TRAVEL' , 'question_id' => '7' , 'question_name' => 'MCC'],
+			    ['id' => 68 , 'name' => 'UTILITIES' , 'question_id' => '7' , 'question_name' => 'MCC'],
+			    ['id' => 69 , 'name' => 'OFFICE SUPPLIES' , 'question_id' => '7' , 'question_name' => 'MCC'],
 	    ]);
 
 
@@ -222,6 +233,17 @@ class DatabaseSeeder extends Seeder
 		    ['id' => 60 ,  'scenario_id' => '57', 'field_id' => 22 , 'value' => "2"],
 		    ['id' => 61 ,  'scenario_id' => '58', 'field_id' => 22 , 'value' => "2"],
 		    ['id' => 62 ,  'scenario_id' => '59', 'field_id' => 22 , 'value' => "0"],
+		    
+		    ['id' => 63 ,  'scenario_id' => '60', 'field_id' => 18 , 'value' => "0"],
+		    ['id' => 64 ,  'scenario_id' => '61', 'field_id' => 18 , 'value' => "1"],
+		    ['id' => 65 ,  'scenario_id' => '62', 'field_id' => 18 , 'value' => "2"],
+		    ['id' => 66 ,  'scenario_id' => '63', 'field_id' => 18 , 'value' => "3"],
+		    ['id' => 67 ,  'scenario_id' => '64', 'field_id' => 18 , 'value' => "4"],
+		    ['id' => 68 ,  'scenario_id' => '65', 'field_id' => 18 , 'value' => "5"],
+		    ['id' => 69 ,  'scenario_id' => '66', 'field_id' => 18 , 'value' => "6"],
+		    ['id' => 70 ,  'scenario_id' => '67', 'field_id' => 18 , 'value' => "7"],
+		    ['id' => 71 ,  'scenario_id' => '68', 'field_id' => 18 , 'value' => "8"],
+		    ['id' => 72 ,  'scenario_id' => '69', 'field_id' => 18 , 'value' => "9"],
 	    ]);
 
     }

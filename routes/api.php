@@ -22,4 +22,8 @@ Route::get('/test', function (Request $request) {
 Route::get('/fields', function (Request $request) {
     return (new \App\Field)->where('id','>',2)->get();
 });
+Route::get('/mcc', function (Request $request) {
+    return (new \App\Scenario)->where('question_id',7)->get();
+});
 Route::get('/transactions/{transaction}', 'TransactionsController@show');
+Route::get('/getmcc', 'TransactionsController@getmcc');

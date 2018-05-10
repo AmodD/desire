@@ -321,6 +321,7 @@ dd($predicted);
 		$procode = '';
 		$poscapture = '';
 		$posem = '';
+		$mcc = '';
 		
 		foreach( $situation->scenarios  as $scenario)
 		{
@@ -337,12 +338,19 @@ dd($predicted);
 				{
 					$procode =  $field->pivot->value ;
 				}
+				
+				// DE 18
+				if($field->pivot->field_id == '18')
+				{
+					$mcc = $this->getmcc($field->pivot->value) ;			
+				}
 
 				// DE 26
 				if($field->pivot->field_id == '26')
 				{
 					$poscapture = $field->pivot->value ;			
 				}
+
 				// DE 22
 				if($field->pivot->field_id == '22')
 				{
@@ -405,7 +413,7 @@ dd($predicted);
 
 			// DE 52
 //			$personalIdentification = $faker->randomNumber(8);
-		$mcc = mt_rand(6000,9999);
+//		$mcc = mt_rand(6000,9999);
 
 		//$dataElement->put("pan",$pan);
 	//	$dataElement->put("amnt",$amnt);
@@ -461,10 +469,35 @@ dd($predicted);
 
 	} // method ends
 
-	public function testdata()
+	public function getmcc($category = "0")
 	{
 
+		$apparel = [5611, 5631, 5641, 5655, 5621, 5661, 5691, 5697, 5699, 5941, 7296];
+		$dining = [5812,5814];
+		$entertainment = [7032, 7832, 7841, 7911, 7922, 7929, 7932, 7933, 7991, 7992, 7994,7999];
+		$gas = [5541, 5542, 5983];
+		$groceries = [5122, 5411, 5441, 5451, 5462, 5499, 5811, 5912 ];	
+		$electronics = [4816, 5200, 5211, 5231, 5251, 5712, 5713, 5718, 5719, 5732, 7622, 7623, 7629, 7641];
+		$shopping = [5261, 5300, 5309,5311, 5331, 5698, 5714, 5733, 5735, 5921, 5931,5933, 5937, 5940, 5942, 5944,5945, 5947,5950, 5970,5973, 5975,5977, 5992,5999, 7278, 7631, 7993];
+		$travel = [ 3000,3003, 3005,3033, 3035,3055, 3058,3068, 3071, 3072, 3075,3079, 3082,3085, 3087,3090, 3094, 3096,3100, 3102, 3103, 3106, 3111, 3112, 3117, 3125, 3127, 3129,3132, 3135, 3136, 3144, 3146, 3148, 3151, 3156, 3159, 3161, 3164, 3167, 3171, 3172, 3174, 3175, 3177, 3178, 3180,3188, 3190,3193, 3196, 3197, 3200, 3204, 3206, 3211,3213, 3217, 3219,3223, 3226, 3228, 3229, 3231, 3234, 3236, 3239,3243, 3245,3248, 3252, 3253, 3256, 3260, 3261, 3263, 3266, 3267, 3280, 3282, 3285,3287, 3292,3299, 3501,3755, 3757,3815, 3817,3821, 4411, 4511, 4582, 4722, 7011, 7012, 7033,3351,3355, 3357, 3359,3362, 3364, 3366, 3368, 3370, 3374, 3376, 3380, 3381, 3385,3391, 3393,3396, 3398, 3400, 3405, 3409, 3412, 3420, 3421, 3423, 3425, 3427,3436, 3438, 3439, 3441, 4011, 4111, 4112, 4121, 4131, 4214, 4457, 4468, 4784, 4789, 5271, 5511, 5521, 5531,5533, 5551, 5561, 5571, 5592, 5598, 5599, 7511,7513, 7519, 7523, 7531, 7534, 7535, 7538, 7542, 7549, 8675 ];
+		$utilities = [4814, 4899, 4900];
+		$office = [4215, 4812,  5111, 5722, 5734, 5943, 5946, 7333, 7338, 7372, 7375, 7394, 9402];
 
+		switch($category)
+		{
+			case 0 : return array_random($apparel);
+			case 1 : return array_random($dining);
+			case 2 : return array_random($entertainment);
+			case 3 : return array_random($gas);
+			case 4 : return array_random($groceries);
+			case 5 : return array_random($electronics);
+			case 6 : return array_random($shopping);
+			case 7 : return array_random($travel);
+			case 8 : return array_random($utilities);
+			case 9 : return array_random($office);
+			default : return "5611";
+
+		}	
 	}
 
 	public function store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship,$situation,$aggregator,$client)
