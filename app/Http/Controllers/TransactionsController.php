@@ -401,9 +401,11 @@ dd($predicted);
 			$poscc = array_random($arrayposcc);
 
 			// DE 32
-			$acquiringInstitution = $faker->numberBetween($min = 10, $max = 10000);
+		//	$acquiringInstitution = intval($faker->numberBetween($min = 10, $max = 10000));
+			$acquiringInstitution =  1234;
 			// DE 33
-			$forwardingInstitution = $faker->numberBetween($min = 10, $max = 10000);
+		//	$forwardingInstitution = intval($faker->numberBetween($min = 10, $max = 10000));
+			$forwardingInstitution =   5678;
 
 			// DE 38
 			$air = $faker->bothify('?#####');

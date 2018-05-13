@@ -28,7 +28,7 @@
 		<demo selected="home"></demo> 
 		<div class="content">
 			<h1>POC 8385 ML</h1>
-			<h2>Goals</h2>
+			<h2><span class="icon has-text-danger "><i class="fas fa-bullseye"></i></span> Goals </h2>
 			<h5><u>Stage 3</u> <span class="tag is-warning">In Progress</span></h5>
 			<p>Simulator & Expansion of Fields Coverage</p>
 			<ul>

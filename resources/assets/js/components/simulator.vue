@@ -3,9 +3,7 @@
 	<div class="content">
 	<form>
 
-<a v-if="!showsituation" href="javascript:void(0);" @click="showsituation = true" class="button is-primary is-rounded is-medium">Create Situation</a>
-
-<a v-if="showsituation" @click="showsituation = false" class="button is-dark is-small is-pulled-right"><span class="icon has-text-danger"><i class="fa fa-bug"></i></span>Close</a>	
+<a v-if="showsituation" @click="showsituation = false" class="button is-dark is-pulled-right"><span class="icon has-text-danger"><i class="fas fa-times"></i></span></a>	
 <div class="box" v-if="showsituation">
 <div  class="tile is-ancestor">
   <div class="tile is-vertical is-8">
@@ -41,7 +39,7 @@
       </div>
       <div class="tile is-parent">
         <article class="tile is-child notification is-info">
-		<h4 class="has-text-centered"><button v-on:click="createsituation" class="button is-success ">Click to Create a Situation</button></h4>
+		<h4 class="has-text-centered"><button v-on:click="createsituation" class="button is-medium is-focused is-success ">Click to Create a Situation</button></h4>
           <p class="title has-text-centered">The Situation</p>
           <figure class="image is-4by3">
             <img src="https://bulma.io/images/placeholders/640x480.png">
@@ -96,27 +94,18 @@
 
 </form> 
 
-<form>
-	  <h2 class="has-text-centered">Generate Transactions</h2>
+	  <h2 class="has-text-centered">Generate Transactions
+	  <a  v-if="loading" class="button is-loading is-small is-info is-rounded" v-on:click="generate(20)" >20</a>
+	  <a  v-if="!loading" class="button is-small is-info is-rounded" v-on:click="generate(20)" >20</a>
+ 	  <a  v-if="loading" class="button is-loading is-small is-warning is-rounded" v-on:click="generate(100)" >100</a>
+ 	  <a  v-if="!loading" class="button is-small is-warning is-rounded" v-on:click="generate(100)" >100</a>
+	  <a  v-if="loading" class="button is-loading is-small is-danger is-rounded" v-on:click="generate(500)" >500</a>
+	  <a  v-if="!loading" class="button is-small is-danger is-rounded" v-on:click="generate(500)" >500</a>
+	  </h2>
 	  <div class="field has-addons has-addons-centered">
 		  <div class="control">
 			<div class="select">  
-			<select v-model="notxns" required>
-		  		<option value="" disabled>Number of Txns</option>
-				<option :value="1">1</option>
-				<option :value="20">20</option>
-				<option :value="500">500</option>
-				<option :value="1000">1000</option>
-			</select>
-			</div>
-		  </div>
-		  <div class="control">
-	  		<button v-on:click="generate()" class="button is-danger is-outlined ">Let's Simulate</button>
-		  </div>
-		  <div class="control">
-			<div class="select">  
 			<select v-model="label" required>
-		  		<option value="" disabled>Select a Label</option>
 				<option :value="1">Valid</option>
 				<option :value="2">Invalid</option>
 			</select>
@@ -125,7 +114,6 @@
 		  <div class="control">
 	  		<div class="select">
 				<select name="aggregator" v-on:change="getclients()" v-model="aggregator"  required>
-				  <option value="" disabled>Select Aggregator</option>
 				  <option v-for="aggregator in aggregators" :value="aggregator.id">{{ aggregator.name }}</option>
 				</select>
 			</div>
@@ -133,20 +121,20 @@
 		  <div class="control">
 	  		<div class="select">
 				<select name="client" v-model="client"  required>
-				  <option value="" disabled>Select Client</option>
-				  <option value=0>000000</option>
+				  <option value="0">000000</option>
 				  <option v-for="client in clients" :value="client.id">{{ client.name }}</option>
 				</select>
 			</div>
 		  </div>	  
 	   </div>	  
-</form>
 
 	<table class="table">
 	    <thead>
 	      <tr>
 		<th></th>      
-	        <th>Simulation Scenario</th>
+	        <th>Simulation Scenario 
+		<a href="javascript:void(0);" @click="showsituation = true" class=" is-success is-medium"><span class="icon has-text-success"><i class="fas fa-plus"></i></span></a>	
+		</th>
 	        <th>Transactions Count</th>
 	      </tr>
 	    </thead>
@@ -176,14 +164,14 @@
 			pinQ : '',
 			mccQ : '',
 			scenarios : '',
-			notxns : "",
-			label : '',
+			label : '1',
 			situations : [],
 			situationid: 1,
 			aggregators : [],
 			clients : [],
-			aggregator : '',
-			client : ''
+			aggregator : '1',
+			client : '0',
+			loading : false
 
 		}
 	},
@@ -237,10 +225,17 @@
 				.catch(function (error) {console.log(error);});
 //				.catch(error => this.errors.record(error.response.data.errors));
 		},
-		generate(){
+		generate(notxns){
 			console.log("to generate ");
-			axios.get('/generate?model=1&notxns='+this.notxns+'&label='+this.label+'&relationship=1&situation='+this.situationid+'&aggregator='+this.aggregator+'&client='+this.client)
-			.then(response => this.results = response.data)
+			let self = this;
+			self.loading = true;
+			axios.get('/generate?model=1&notxns='+notxns+'&label='+this.label+'&relationship=1&situation='+this.situationid+'&aggregator='+this.aggregator+'&client='+this.client)
+//			.then(response => this.results = response.data)
+			.then( function (response)  {
+				self.results = response.data;
+				self.loading = false;
+				location.reload();
+			})
 			.catch(function (error) {
 			    console.log(error);
 			  });
