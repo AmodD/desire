@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Situation extends Model
 {
     //
-	
+
 	public function scenarios()
 	{
 		return $this->belongsToMany(Scenario::class);

@@ -17,8 +17,9 @@ class CreateTransactionsTable extends Migration
             $table->increments('id');
 	    $table->mediumText('message');
 	    $table->integer('score');
-	    $table->smallInteger('mlmodel_id');
 	    $table->smallInteger('situation_id');
+	    $table->integer('aggregator_id')->default(1);
+	    $table->integer('client_id')->default(0);
             $table->timestamps();
         });
     }

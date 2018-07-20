@@ -462,6 +462,8 @@ dd($predicted);
 			//continue;
 		}
 		else{
+//			$this->tempJAK($mti,$dataElement,$isoMessage);	
+
 			 $this->store($mti,$isoMessage,$dataElement,$model,$score,$label,$relationship,$situation,$aggregator,$client);
 		}	
 
@@ -470,6 +472,20 @@ dd($predicted);
 	//	return $this->lasttxns($relationship);
 
 	} // method ends
+
+	public function tempJAK($mti,$dataElement,$isoMessage)
+	{
+		$jak = new JAK8583();
+		$jak->addMTI($mti);
+		
+		foreach($dataElement as $bit => $data)
+		{
+			$jak->addData($bit,$data);	
+		}
+
+		dd($jak->getBitmap(),$jak->getISO(),$isoMessage);
+
+	}
 
 	public function getmcc($category = "0")
 	{
@@ -528,6 +544,8 @@ dd($predicted);
 		$transaction->message = $isoMessage;
 		$transaction->mlmodel_id = $model;
 		$transaction->situation_id = $situation->id;
+		$transaction->aggregator = $aggregator;
+		$transaction->client = $client;
 		if($model == 1) $transaction->score = $score;
 		else $transaction->score = $this->trainedScore($dataSet,$model) ; 
 		//else $transaction->score = head($this->trainedScore($vector,$model))  ; 
@@ -895,7 +913,10 @@ $n->addTestData(array (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	{
 
 
-try {
+		try {
+
+
+
 $cacheManager = new CacheManager();
 $cacheManager->generateSchemaCache(new ISO8583());
 

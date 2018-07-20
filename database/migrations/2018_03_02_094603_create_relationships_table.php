@@ -16,6 +16,8 @@ class CreateRelationshipsTable extends Migration
         Schema::create('relationships', function (Blueprint $table) {
 		$table->increments('id');
 		$table->string('name');
+	    $table->integer('aggregator_id')->default(1);
+	    $table->integer('client_id')->default(0);
             $table->timestamps();
 	});
 

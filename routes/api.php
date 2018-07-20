@@ -27,3 +27,4 @@ Route::get('/mcc', function (Request $request) {
 });
 Route::get('/transactions/{transaction}', 'TransactionsController@show');
 Route::get('/getmcc', 'TransactionsController@getmcc');
+Route::post('/relationship', 'RelationshipsController@store');
